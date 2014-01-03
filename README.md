@@ -6,7 +6,7 @@ Na [ovim](http://morgoth.zemris.fer.hr/apiproz/) web stranicama dostupni su rezu
 ![Prikaz procesa provoðenja provjere znanja temeljene na ispitnim obrascima](https://github.com/KarloKnezevic/Ferko/blob/master/res_gh/PPZ.gif)
 
 Arhitektura sustava opisana je na slici 2.
-![Predložena arhitektura sustava](https://github.com/KarloKnezevic/Ferko/blob/master/res_gh/Arhitektura.gif)
+![Predložena arhitektura sustav](https://github.com/KarloKnezevic/Ferko/blob/master/res_gh/Arhitektura.gif)
 
 Razvijena su rješenja u programskom jeziku Java, èime je osiguran rad na svim operacijskim sustavima za koje postoji JVM (javin virtualni stroj).
 Programski paketi i ostale informacije dostupne su na [FER_JCMS](http://morgoth.zemris.fer.hr/apiproz/).

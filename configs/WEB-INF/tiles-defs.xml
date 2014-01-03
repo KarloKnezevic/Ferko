@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+       
+<tiles-definitions>
+
+	<definition name="MainLayout" template="/WEB-INF/pages/v2/base.jsp">
+		<put-attribute name="header" value="/WEB-INF/pages/global/Header.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/pages/global/Footer.jsp" />
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="customhead" value="" type="string" /> 
+	</definition>
+
+	<definition name="CourseLayout" template="/WEB-INF/pages/v2/course.jsp" />
+
+
+
+	<definition name="main.showFatalMessage" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ShowFatalMessage.jsp" />
+	</definition>
+
+	<definition name="Poll.Index" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/index.jsp" />
+	</definition>
+
+	<definition name="Poll.View" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/view.jsp" />
+	</definition>
+
+	<definition name="Poll.Results" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/results.jsp" />
+	</definition>
+
+	<definition name="Poll.Answer" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/answer.jsp" />
+	</definition>
+
+	<definition name="Poll.Create" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/create.jsp" />
+	</definition>
+
+	<definition name="Poll.AddUsers" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/add_users.jsp" />
+	</definition>
+
+	<definition name="PollTag.Index" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/poll_tag_index.jsp" />
+	</definition>
+
+	<definition name="PollTag.Create" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/create_poll_tag.jsp" />
+	</definition>
+
+	<definition name="PollTag.Update" extends="MainLayout">
+		<put-attribute name="body" value="/WEB-INF/pages/poll/edit_poll_tag.jsp" />
+	</definition>
+
+	<definition name="Course.Poll.Create" extends="MainLayout">
+		<put-attribute name="body">
+			<definition extends="CourseLayout">
+				<put-attribute name="body" value="/WEB-INF/pages/poll/create.jsp" />
+			</definition>
+		</put-attribute>
+	</definition>
+
+	<definition name="Course.Poll.Edit" extends="MainLayout">
+		<put-attribute name="body">
+			<definition extends="CourseLayout">
+				<put-attribute name="body" value="/WEB-INF/pages/poll/edit.jsp" />
+			</definition>
+		</put-attribute>
+	</definition>
+
+	<definition name="Course.Poll.Prolong" extends="MainLayout">
+		<put-attribute name="body">
+			<definition extends="CourseLayout">
+				<put-attribute name="body" value="/WEB-INF/pages/poll/prolong_poll.jsp" />
+			</definition>
+		</put-attribute>
+	</definition>
+
+	<definition name="Course.Poll.AddGroups" extends="MainLayout">
+		<put-attribute name="body">
+			<definition extends="CourseLayout">
+				<put-attribute name="body" value="/WEB-INF/pages/poll/add_course_groups.jsp" />
+			</definition>
+		</put-attribute>
+	</definition>
+
+	<definition name="Course.Poll.CoursePollOverview" extends="MainLayout">
+		<put-attribute name="body">
+			<definition extends="CourseLayout">
+				<put-attribute name="body" value="/WEB-INF/pages/poll/course_poll_overview.jsp" />
+			</definition>
+		</put-attribute>
+	</definition>
+
+	<definition name="Course.Poll.Results" extends="MainLayout">
+		<put-attribute name="body">
+			<definition extends="CourseLayout">
+				<put-attribute name="body" value="/WEB-INF/pages/poll/course_results.jsp" />
+			</definition>
+		</put-attribute>
+	</definition>
+
+	<definition name="Course.Poll.SingleResults" extends="MainLayout">
+		<put-attribute name="body">
+			<definition extends="CourseLayout">
+				<put-attribute name="body" value="/WEB-INF/pages/poll/single_course_results.jsp" />
+			</definition>
+		</put-attribute>
+	</definition>
+
+</tiles-definitions>

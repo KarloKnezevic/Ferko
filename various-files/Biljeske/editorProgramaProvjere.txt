@@ -1,0 +1,15 @@
+Provjera    FaktorDoprinosa      GarantiraniMinimum        OdsijeciNaMaksimum      MoraBitiPristupljena     MoraBitiPolozena
+
+Dodatna obrada:
+
+Prethodnu sumu skaliraj faktorom: ___________ i zatim ogranièi na interval:  ____________ do ____________
+
+Uvjeti za prolaz:
+
+Konaèna suma mora biti barem: _____________
+Ukupno mora pristupiti na barem ovoliko provjera: _____________
+Ukupno mora položiti barem ovoliko provjera: _____________
+
+
+
+Ako je provjera 

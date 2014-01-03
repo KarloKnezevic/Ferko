@@ -1,0 +1,9 @@
+<Context path="/nescume" docBase="nescume" debug="99" reloadable="true">
+
+    <Realm className="org.apache.catalina.realm.JAASRealm" 
+           appName="Nescume"
+           userClassNames="hr.fer.zemris.jcms.jaas.principals.UserPrincipal"
+           roleClassNames="hr.fer.zemris.jcms.jaas.principals.RolePrincipal"
+           debug="0"/>
+
+</Context>

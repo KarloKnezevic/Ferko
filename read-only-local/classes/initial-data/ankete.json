@@ -1,0 +1,19 @@
+{"polls": [
+
+	{"title":"Središnja anketa",
+	 "description":"Ispunite ovu anketu kako bi mogli poboljšati predavanja.",
+	 "startDate":"17.06.2008.",
+	 "endDate":"10.09.2008.",
+	 "public":false,
+	 "questions": [
+			{"question":"Zašo volite ispunjavati ankete?", "type":"text", "validation":"bigtext"},
+			{"question":"Po kojem programu studirate?", "type":"singlechoice", "validation":"required", "options": ["FER-1", "FER-2"]},
+			{"question":"Jeste li slušali baze podataka ili neki sličan predmet?", "type":"singlechoice", "options": ["Da", "Ne"], "validation":"required"},
+			{"question":"Jeste li slušali mreže računala ili neki sličan predmet?", "type":"singlechoice", "options": ["Da", "Ne"], "validation":"required"},
+			{"question":"Izaberite vaše omiljene jezike:", "type":"multichoice", "options": ["Java", "Python", "Erlang", "Lisp", "Scala", "Neki drugi"]},
+			{"question":"Primjedbe u vezi nastave?", "type":"text", "validation":"bigtext"}
+	 ]
+	}
+
+	]
+}

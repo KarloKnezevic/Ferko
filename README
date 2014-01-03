@@ -1,0 +1,30 @@
+
+                                 Ferko
+ 
+
+  What is it? 
+  -----------
+  
+  Ferko is a Java based web-oriented course management system. Its capabilities
+  range form coarse-grained tasks such managing course enrollments to fine-grained
+  tasks such as creating assessment rooms-schedule, creating test sheets for 
+  optical answer recognition, etc.
+  
+
+  The Latest Version
+  ------------------
+
+  Details of the latest official version can be found on the Ferko
+  Project web site <http://morgoth.zemris.fer.hr/apiproz>.
+  More information is available at development site:
+  <http://morgoth.zemris.fer.hr/trac/jcms>.
+
+
+  Licensing
+  ---------
+
+  This software is licensed under the terms you may find in the file 
+  named "LICENSE" in this directory.
+  
+
+  Thanks for using Ferko.

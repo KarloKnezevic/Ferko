@@ -1,0 +1,116 @@
+How to install
+--------------
+
+1) OBAVEZNO stvori bazu podataka i korisnike:
+
+   create database jcmsdb default character set 'utf8' default collate 'utf8_bin';
+   grant all on jcmsdb.* to 'jcms_user'@'localhost' identified by 'tajna3';
+   grant all on jcmsdb.* to 'jcms_user'@'%' identified by 'tajna3';
+   FLUSH PRIVILEGES;
+
+2) Podesavanje certifikata
+
+   Bit ce objasnjeno naknadno, za autorizaciju preko FERWeb-a.
+
+   -Djavax.net.ssl.trustStore=C:\eclipse_workspaces\ws3\jcms\certifikati\keystore
+
+3) Podesavanje kodne stranice za mySQL bazu
+
+	Locirati my.ini datotetu mySQL instalacije koja se koristi.
+	
+	U [mysqld] dijelu dodati:
+
+	default-character-set=utf8
+	default-collation=utf8_bin
+	character-set-server=utf8
+	collation-server=utf8_bin
+
+	U [client] dijelu dodati:
+
+	default-character-set=utf8
+
+	Potrebno napraviti restart baze!
+	
+4) Priprema potrebnih direktorija i izgradnja sustava
+
+   Napravite direktorij allConfigs. U njega iskopirajte configuration-sample.properties
+   pod nazivom configuration.properties (originalnu datoteku ne smijete brisati). Daljnja
+   konfiguracija ferka obavlja se iskljucivo kroz datoteke u direktoriju allConfigs.
+   Otvorite tu datoteku (allConfigs/configuration.properties) i u njoj podesite sve potrebne
+   parametre (korisnicke accounte, lokaciju baze i sve sto je jos potrebno).
+   
+   Ako radite razvoj, a planirate koristiti podsustav za rezervacije dvorana, obavezno pročitajte
+   poglavlja "UPORABA PODSUSTAVA ZA REZERVACIJE DVORANA" i 
+   "UPORABA PODSUSTAVA ZA REZERVACIJE DVORANA - ZA TESTIRANJE" pa tek tada krenite na korake u
+   nastavku.
+
+   Pokrenite:
+   
+   ant local
+   ant package
+   ant war
+      
+   U direktoriju build dobit cete ferko.war; to je web aplikacija koja se moze deployati na
+   tomcat. Ako stvarate produkcijsku verziju sustava, tada napravite ovaj korak, i potom napravite
+   pripremu kako je opisano u tocki 5 (preko URL-a). Ako instalirate razvojnu verziju (za testiranje,
+   lokalni razvoj i sl.) tada najprije napravite točku 5, i to samo dio opisan u InicijalizacijaSvihPodataka.txt.
+   Nakon toga napravite deploy na tomcat.
+
+   Bez "ant local" projekt necete moci ispravno ukljuciti niti u Eclipse.
+
+5) Pripremite bazu podataka tako da posjetite http://localhost:8080/ferko/Prepare.action
+   Za detaljniju pripremu pogledajte file: InicijalizacijaSvihPodataka.txt
+
+------------------------------------------------------------------------------------------------------------------
+UPORABA PODSUSTAVA ZA REZERVACIJE DVORANA
+------------------------------------------------------------------------------------------------------------------
+
+   Ferko koristi modularan podsustav za rezervacije dvorana. Za svaku se dvoranu pamte dva važna podatka:
+   1) venue, tj. lokacija (primjerice FER)
+   2) shortName (primjerice A101)
+   
+   Podsustav za rezervacije dvorana u Ferku je modeliran kroz dva sučelja: IReservationManager te IReservationManagerFactory.
+   Za svaku lokaciju Ferko dozvoljava definiranje modula koji će se koristiti u svrhu rezervacija dvorana te lokacije.
+   Ovo se podešava u datoteci reservation-managers.properties (nalazi se u configs/classes; prilikom deploya u tomcat završit
+   će u WEB-INF/classes).
+
+   Datoteka trenutno sadrži jedan zapis: 
+
+   FER = hr.fer.zemris.jcms.service.reservations.impl.ferweb.FERWebReservationManagerFactory
+   
+   koji govori da se za dvorane na lokaciji FER koristi implementacija podsustava zadana kao vrijednost ključa. Ako se u sustavu
+   koriste dvorane na više lokacija, dovoljno je za svaku lokaciju implementirati odgovarajući podsustav, i registrirati ga u
+   navedenoj datoteci.
+   
+------------------------------------------------------------------------------------------------------------------
+UPORABA PODSUSTAVA ZA REZERVACIJE DVORANA - ZA TESTIRANJE
+------------------------------------------------------------------------------------------------------------------
+
+   Ako ste developer, tada nemate mogućnost (tj. dozvole) komunicirati s FERWebovim sustavom rezervacija dvorana. Kako biste
+   ipak mogli raditi testiranja i razvoj programa, u sustav je dodana još jedna implementacija sustava za rezervacije dvorana:
+   
+   hr.fer.zemris.jcms.service.reservations.impl.file.FileReservationManagerFactory
+
+   To je "dummy" implementacija popunjena "izmišljenim" (ali smislenim) podatcima. Kako biste mogli koristiti ovaj sustav rezervacija,
+   promijenite u datoteci reservation-managers.properties redak:
+
+   FER = hr.fer.zemris.jcms.service.reservations.impl.ferweb.FERWebReservationManagerFactory
+   
+   u redak:
+   
+   FER = hr.fer.zemris.jcms.service.reservations.impl.file.FileReservationManagerFactory
+
+   Baza koju koristi ova implementacija nalazi se u datoteci various-files/noviPodatci/file-reservations.bin. Ova datoteka čuva originalne
+   zapise i NE SMIJETE je direktno koristiti (datoteka se također nalazi i pod svn-om, pa ne želimo svaku promjenu commitati u repozitorij).
+   Umjesto toga, datoteku iskopirajte u direktorij koji ste namijenili kao jcms-var (pogledajte u datoteku configuration.properties koji ste
+   direktorij postavili pod ključem "jcms.rootDir"; to bi morao biti direktorij koji nije u vašem projektu, i koji nije pod tomcatovim
+   webapps direktorijem). U njega iskopirajte datoteku various-files/noviPodatci/file-reservations.bin. Potom u datoteci 
+   configuration.properties pronađite ključ reservations.module.file.dummy.fileName, i vrijednost mu postavite na stazu do baze; npr:
+   
+   reservations.module.file.dummy.fileName=/var/tomcat/instance1/jcms-var/file-reservations.bin
+   
+   Da bi ove promjene postale aktivne, izvršite "ant clean", ručno obrišite "read-only-local", pokrenite ponovno "ant local", "ant war".
+   
+   Nakon ovoga moći ćete raditi upite i rezervirati termine. Baza termina popunjenja je s terminima za period od 2009-09-07 do 2010-01-31.
+   
+   

@@ -1,0 +1,41 @@
+Datoteka persistence.xml
+
+Ako zelite vidjeti sql naredbe koje izdaje hibernate, postavite 
+hibernate.show_sql i hibernate.format_sql na true; inace ih stavite na 
+false. Napomena: kada se postavi na true, dosta usporava rad hibernate-a.
+
+  <property name="hibernate.show_sql" value="true"/>
+  <property name="hibernate.format_sql" value="true"/>
+
+Prilikom svakog pokretanja hibernate gleda property hibernate.hbm2ddl.auto.
+Ako je na create, pokusava dropati postojece tablice, i zatim ih ponovno 
+kreirati. Ako u tablicama ima podataka, to mu obicno ne uspije (zbog 
+referencijskog integriteta) i stvar pukne (kako rijesiti ovo, pogledajte
+u RucnoBrisanjeTablicaBaze.txt). Alternativa je da se hibernate-u kaze da 
+pogleda postojece tablice i pokusa ih samo prilagoditi (i eventualno dodati
+nove koje nedostaju). To se postize sa hibernate.hbm2ddl.auto=update, i 
+obicno prode dobro (ne uvijek). 
+Ako ne prode, rucno obrisite tablice i ponovno pokrenite hibernate.
+
+  <property name="hibernate.hbm2ddl.auto" value="update"/>  
+  
+  <!-- kasnije stavi na update; mogucnosti su create, create-drop, update -->
+
+Kako napuniti bazu inicijalnim podacima? Otvorite u Eclipse-u test BasicDBTesting, 
+provjerite da je u metodi setUp() otkomentirana mysql baza (a ne H2):
+
+		//emf = Persistence.createEntityManagerFactory("jcmstestdb");
+		emf = Persistence.createEntityManagerFactory("jcmsdb");
+
+i pokrenite test. Ovo je ekvivalentno onoj inicijalizaciji koju radi 
+Prepare.action PLUS sto jos ucita i sve korisnike i njihov razmjestaj po 
+kolegijima (Prepare.action ne napravi ovaj zadnji dio). Potom pokrenite 
+aplikaciju normalno u tomcat-u i logirajte se kao bilo koji korisnik (student). 
+Studentske sifre su 12 velikih slova A, dakle "AAAAAAAAAAAA".
+
+Dodano je i logiranje u datoteku na disku (u trenutni direktorij, stvara se 
+datoteka imena jcms_output.log), ako vam u eclipseovoj konzoli stvari promaknu prebrzo.
+
+Za naèin kako u program ugraditi logiranje poruka u log datoteku, pogledajte 
+razred SynchronizerService, i metode logger.debug, logger.trace, logger.info, ...
+

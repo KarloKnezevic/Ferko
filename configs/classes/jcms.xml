@@ -1,0 +1,1795 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<package name="json" namespace="/json" extends="json-default">
+		<action name="getJSON*" class="hr.fer.zemris.jcms.web.actions.GetJSON{1}">
+			<result type="json"/>
+		</action>
+	</package>
+
+	<package name="ical" namespace="/ical" extends="struts-default">
+
+		<interceptors>
+		  <interceptor-stack name="pBasicStack">
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+		  </interceptor-stack>
+		</interceptors>
+
+		<action name="ICal*" class="hr.fer.zemris.jcms.web.actions.ICal{1}" />
+	</package>
+
+    <package name="jcms" namespace="/" extends="struts-default">
+    
+        <result-types>
+			<result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
+		</result-types>
+
+		<interceptors>
+		  <interceptor name="currectUserSetter" class="hr.fer.zemris.jcms.web.interceptors.CurrectUserInterceptor"></interceptor>
+		  <interceptor-stack name="pBasicStack">
+		    <interceptor-ref name="i18n"></interceptor-ref>
+		    <interceptor-ref name="currectUserSetter"></interceptor-ref>
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+		  </interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="pBasicStack"></default-interceptor-ref>
+
+        <global-results>
+          <result name="nopermission" type="redirect-action">NoPermission</result>
+          <result name="notLoggedIn" type="redirect-action">Login</result>
+          <result name="defaultShowMessage">/WEB-INF/pages/main/ShowMessage.jsp</result>
+          <result name="showFatalMessage" type="tiles">main.showFatalMessage</result>
+        </global-results>
+
+        <action name="Prepare" class="hr.fer.zemris.jcms.web.actions.Prepare">
+            <result>/WEB-INF/pages/main/Prepare.jsp</result>
+        </action>
+
+        <action name="Main" class="hr.fer.zemris.jcms.web.actions2.Main">
+            <result type="tiles">v2.main.main</result>
+        </action>
+
+        <action name="SimpleCalendar" class="hr.fer.zemris.jcms.web.actions2.SimpleCalendar">
+            <result type="tiles">v2.main.simpleCalendar</result>
+        </action>
+
+        <action name="Main2" class="hr.fer.zemris.jcms.web.actions.Main">
+            <result type="tiles">main2</result>
+        </action>
+
+        <action name="SSO" class="hr.fer.zemris.jcms.web.actions.SSO">
+            <result name="alreadyLoggedIn" type="redirect-action">
+              <param name="actionName">Main</param>
+            </result>
+            <result name="gotoMain" type="redirect-action">
+              <param name="actionName">Main</param>
+            </result>
+            <result name="gotoCourse" type="redirect-action">
+              <param name="actionName">ShowCourse</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+            </result>
+        </action>
+
+        <action name="go" class="hr.fer.zemris.jcms.web.actions.Go">
+            <result name="RES_HOME" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="RES_ADMINASSESSMENTVIEW" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.object.id}</param>
+            </result>
+            <result name="RES_ASSESSMENT" type="redirect-action">
+              <param name="actionName">AssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.object.courseInstance.id}</param>
+              <param name="assessmentID">${data.object.id}</param>
+            </result>
+            <result name="RES_ASSESSMENT_ST" type="redirect-action">
+              <param name="actionName">AssessmentView</param>
+              <param name="method">staff</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.object.courseInstance.id}</param>
+              <param name="assessmentID">${data.object.id}</param>
+            </result>
+            <result name="RES_ASSESSMENT_GU" type="redirect-action">
+              <param name="actionName">AssessmentView</param>
+              <param name="method">guest</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.object.courseInstance.id}</param>
+              <param name="assessmentID">${data.object.id}</param>
+            </result>
+            <result name="RES_SEMINAR" type="redirect-action">
+              <param name="actionName">ViewSeminarInfo</param>
+              <param name="parse">true</param>
+              <param name="id">${data.object.id}</param>
+            </result>
+            <result name="RES_COURSEINSTANCE" type="redirect-action">
+              <param name="actionName">ShowCourse</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.object.id}</param>
+            </result>
+            <result name="RES_COURSECOMPONENTITEM" type="redirect-action">
+              <param name="actionName">CCIManager</param>
+              <param name="method">viewItem</param>
+              <param name="parse">true</param>
+              <param name="id">${data.object.id}</param>
+            </result>
+        </action>
+
+        <action name="goa" class="hr.fer.zemris.jcms.web.actions2.ActivityGo">
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="RES_ASSESSMENT" type="redirect-action">
+              <param name="actionName">AssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.object.courseInstance.id}</param>
+              <param name="assessmentID">${data.object.id}</param>
+            </result>
+            <result name="RES_SEMINAR" type="redirect-action">
+              <param name="actionName">ViewSeminarInfo</param>
+              <param name="parse">true</param>
+              <param name="id">${data.object.id}</param>
+            </result>
+            <result name="RES_COURSEINSTANCE" type="redirect-action">
+              <param name="actionName">ShowCourse</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstanceID}</param>
+            </result>
+            <result name="RES_A_SUMMARYVIEW" type="redirect-action">
+              <param name="actionName">AssessmentSummaryView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstanceID}</param>
+            </result>
+            <result name="RES_STUDENT_APPLICATION_VIEW" type="redirect-action">
+              <param name="actionName">ApplicationStudentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstanceID}</param>
+              <param name="applicationID">${data.studentApplicationID}</param>
+            </result>
+            <result name="RES_MP_VIEW" type="redirect-action">
+              <param name="actionName">MPView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstanceID}</param>
+              <param name="parentID">${data.parentID}</param>
+            </result>
+            <result name="RES_ITEM_VIEW" type="redirect-action">
+              <param name="actionName">CCIManager</param>
+              <param name="method">viewItem</param>
+              <param name="parse">true</param>
+              <param name="id">${data.itemID}</param>
+            </result>
+            <result name="RES_COURSECOMPONENTITEM" type="redirect-action">
+              <param name="actionName">CCIManager</param>
+              <param name="method">viewItem</param>
+              <param name="parse">true</param>
+              <param name="id">${data.object.id}</param>
+            </result>
+            <result name="RES_ISSUE_VIEW" type="redirect-action">
+              <param name="actionName">ViewIssue</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstanceID}</param>
+              <param name="issueID">${data.issueID}</param>
+            </result>
+        </action>
+
+        <action name="ShowActivities" class="hr.fer.zemris.jcms.web.actions2.ShowActivities">
+            <result type="tiles">v2.main.showActivities</result>
+        </action>
+        
+        <action name="InitEvents" class="hr.fer.zemris.jcms.web.actions.InitEvents">
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="YearSemesterEdit" class="hr.fer.zemris.jcms.web.actions.YearSemesterEdit">
+            <result name="input" type="tiles">main.yearSemesterEdit</result>
+            <result name="list" type="tiles">main.yearSemesterEdit.list</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="SetCalendarType" class="hr.fer.zemris.jcms.web.actions.SetCalendarType">
+            <result name="success" type="redirect-action">
+              <param name="actionName">SimpleCalendar</param>
+            </result>
+        </action>
+
+        <action name="ShowCourse" class="hr.fer.zemris.jcms.web.actions2.course.ShowCourse">
+            <result type="tiles">v2.course.home</result>
+        </action>
+        
+        <action name="CourseWiki" class="hr.fer.zemris.jcms.web.actions2.course.wiki.CourseWiki">
+            <result type="tiles">v2.course.wiki.home</result>
+            <result name="input" type="tiles">v2.course.wiki.home</result>
+            <result name="redirect" type="redirect-action">
+              <param name="actionName">CourseWiki</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="pageURL">${data.pageURL}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+<!-- 
+        <action name="ShowCourse" class="hr.fer.zemris.jcms.web.actions.ShowCourse">
+            <result type="tiles">main.course.home</result>
+        </action>
+-->
+        <action name="ExternalGoToLabosiSSO" class="hr.fer.zemris.jcms.web.actions.ExternalGoToLabosiSSO">
+            <result type="tiles">main.course.externalGoToLabosiSSO</result>
+        </action>
+
+        <action name="ShowCourseEvents" class="hr.fer.zemris.jcms.web.actions2.course.ShowCourseEvents">
+            <result type="tiles">v2.course.events</result>
+        </action>
+
+        <action name="About" class="hr.fer.zemris.jcms.web.actions2.FerkoAboutTutorial">
+            <result type="tiles">v2.about</result>
+        </action>
+        
+        <action name="Tutorials" method="showTutorials" class="hr.fer.zemris.jcms.web.actions2.FerkoAboutTutorial">
+            <result type="tiles">v2.tutorials</result>
+        </action>
+
+        <action name="LoginProblems" method="loginProblems" class="hr.fer.zemris.jcms.web.actions2.FerkoAboutTutorial">
+            <result type="tiles">v2.loginProblems</result>
+        </action>
+
+        <action name="AssessmentSummaryView" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AssessmentSummaryView">
+            <result type="tiles">v2.course.assessments.studentSummaryView</result>
+            <result name="popup" type="tiles">v2.course.assessments.popup.studentScore</result>
+        </action>
+
+        <action name="AdminAssessmentSummaryView" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AdminAssessmentSummaryView">
+            <result type="tiles">v2.course.assessments.adminAssessmentSummaryView</result>
+        </action>
+
+        <action name="Help" class="hr.fer.zemris.jcms.web.actions.Help">
+            <result type="tiles">main.help</result>
+        </action>
+
+        <action name="ShowGroupUsers" class="hr.fer.zemris.jcms.web.actions2.course.groups.ShowGroupUsers">
+            <result type="tiles">v2.course.groups.groupUsers</result>
+        </action>
+
+        <action name="ShowGroupTree" class="hr.fer.zemris.jcms.web.actions2.course.groups.ShowGroupTree">
+            <result type="tiles">v2.course.groups.tree</result>
+            <result name="addSubgroups" type="tiles">v2.course.groups.add</result>
+            <result name="redirect" type="redirect-action">
+              <param name="actionName">ShowGroupTree</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="UpdateUserGroupMembership" class="hr.fer.zemris.jcms.web.actions2.course.groups.UpdateUserGroupMembership">
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowGroupUsers</param>
+              <param name="parse">true</param>
+              <param name="groupID">${data.group.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="ListGroupEvents" class="hr.fer.zemris.jcms.web.actions2.course.groups.ListGroupEvents">
+            <result type="tiles">v2.course.groups.listGroupsEvents</result>
+        </action>
+
+        <action name="ChangeUsersGroup" class="hr.fer.zemris.jcms.web.actions2.course.groups.ChangeUsersGroup">
+            <result name="input" type="tiles">v2.course.groups.changeUsersGroup</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowGroupUsers</param>
+              <param name="parse">true</param>
+              <param name="groupID">${data.viewedGroupID}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="SynchronizeCourseIsvu" class="hr.fer.zemris.jcms.web.actions2.sysadmin.SynchronizeCourseIsvu">
+            <result name="input" type="tiles">v2.sysadmin.syncCourseDataZIPIsvu</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="SynchronizeCourseStudents" class="hr.fer.zemris.jcms.web.actions2.sysadmin.SynchronizeCourseStudents">
+            <result name="input" type="tiles">v2.sysadmin.syncEnrollment</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentsReserveRooms" class="hr.fer.zemris.jcms.web.actions2.sysadmin.AdminAssessmentsReserveRooms">
+            <result name="input" type="tiles">v2.sysadmin.assessmentsReserveRooms</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="OpenCourseInstances" class="hr.fer.zemris.jcms.web.actions2.sysadmin.OpenCourseInstances">
+            <result name="input" type="tiles">v2.sysadmin.openCourseInstances</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="SynchronizeRooms" class="hr.fer.zemris.jcms.web.actions.SynchronizeRooms">
+            <result name="input" type="tiles">main.synchronizeRooms</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="SynchronizeCourseLectureSchedule" class="hr.fer.zemris.jcms.web.actions.SynchronizeCourseLectureSchedule">
+            <result name="input" type="tiles">main.synchronizeCourseLectureSchedule</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="SynchronizeLabSchedule" class="hr.fer.zemris.jcms.web.actions2.sysadmin.SynchronizeLabSchedule">
+            <result name="input" type="tiles">v2.sysadmin.syncComponentSchedule</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="UpdateCourseInstanceRoles" class="hr.fer.zemris.jcms.web.actions.UpdateCourseInstanceRoles">
+            <result name="input" type="tiles">main.updateCourseInstanceRoles</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="ImportCourseMPConstraints" class="hr.fer.zemris.jcms.web.actions.ImportCourseMPConstraints">
+            <result name="input" type="tiles">main.importCourseMPConstraints</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="StudentScheduleAnalyzer" class="hr.fer.zemris.jcms.web.actions.StudentScheduleAnalyzer">
+            <result name="showApplet" type="tiles">main.studentScheduleAnalyzerInput.showApplet</result>
+            <result name="inputSemester" type="tiles">main.studentScheduleAnalyzerInput</result>
+            <result name="inputSemesterAndUsers" type="tiles">main.studentScheduleAnalyzerInputUsers</result>
+            <result name="viewForSemester" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+            <result name="viewForSemesterAndUsers" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="StudentScoreBrowserSettings" class="hr.fer.zemris.jcms.web.actions2.course.StudentScoreBrowserSettings">
+            <result name="success" type="tiles">v2.course.assessments.studentScoreBrowserSettingsApplet</result>
+            <result name="TEXTOK" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="StudentScoreBrowserSelection" class="hr.fer.zemris.jcms.web.actions2.course.StudentScoreBrowserSelection">
+            <result name="success" type="tiles">v2.course.assessments.studentScoreBrowserSelection</result>
+            <result name="redirect" type="redirect-action">
+              <param name="actionName">StudentScoreBrowserSelection</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+            </result>
+        </action>
+        
+        <action name="UploadStudentTags" class="hr.fer.zemris.jcms.web.actions2.course.groups.UploadStudentTags">
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowGroupUsers</param>
+              <param name="parse">true</param>
+              <param name="groupID">${data.group.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="MPDirectMove" class="hr.fer.zemris.jcms.web.actions2.course.market.MPDirectMove">
+            <result name="success" type="redirect-action">
+              <param name="actionName">MPView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="parentID">${data.parent.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="MPSendGroupOffer" class="hr.fer.zemris.jcms.web.actions2.course.market.MPSendGroupOffer">
+            <result name="success" type="redirect-action">
+              <param name="actionName">MPView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="parentID">${data.parent.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="MPDeleteOffer" class="hr.fer.zemris.jcms.web.actions2.course.market.MPDeleteOffer">
+            <result name="success" type="redirect-action">
+              <param name="actionName">MPView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="parentID">${data.parent.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="MPAcceptOffer" class="hr.fer.zemris.jcms.web.actions2.course.market.MPAcceptOffer">
+            <result name="success" type="redirect-action">
+              <param name="actionName">MPView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="parentID">${data.parent.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="MPSendDirectOffer" class="hr.fer.zemris.jcms.web.actions2.course.market.MPSendDirectOffer">
+            <result name="success" type="redirect-action">
+              <param name="actionName">MPView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="parentID">${data.parent.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="MPGroupsList" class="hr.fer.zemris.jcms.web.actions2.course.market.MPGroupsList">
+            <result type="tiles">v2.course.market.home</result>
+        </action>
+
+        <action name="MPGroupsAdmin" class="hr.fer.zemris.jcms.web.actions2.course.market.MPGroupsAdmin">
+            <result name="input" type="tiles">v2.course.market.adminView</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">MPGroupsAdmin</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="parentID">${data.parent.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="MPView" class="hr.fer.zemris.jcms.web.actions2.course.market.MPView">
+            <result name="success" type="tiles">v2.course.market.view</result>
+        </action>
+
+        <action name="JMBAGUsernameImport" class="hr.fer.zemris.jcms.web.actions.JMBAGUsernameImport">
+            <result name="input" type="tiles">main.jmbagUsernameImport</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="UserImport" class="hr.fer.zemris.jcms.web.actions.UserImport">
+            <result name="input" type="tiles">main.userImport</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="GroupOwnership" class="hr.fer.zemris.jcms.web.actions.GroupOwnership">
+            <result name="input" type="tiles">main.groupOwnership</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowCourse</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="ViewSeminarInfo" class="hr.fer.zemris.jcms.web.actions2.course.ViewSeminarInfo">
+            <result name="success" type="tiles">v2.course.viewSeminarInfo</result>
+        </action>
+
+        <action name="User" class="hr.fer.zemris.jcms.web.actions.UserAction">
+            <result name="searchForm" type="tiles">main.userSearchForm</result>
+            <result name="input" type="tiles">main.userEditForm</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">User</param>
+              <param name="method">find</param>
+              <param name="parse">true</param>
+              <param name="bean.id">${data.user.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="SeminarRootEdit" class="hr.fer.zemris.jcms.web.actions.SeminarRootEdit">
+            <result name="list" type="tiles">main.seminarRootEdit.list</result>
+            <result name="input" type="tiles">main.seminarRootEdit</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminSendPSMessage" class="hr.fer.zemris.jcms.web.actions.AdminSendPSMessage">
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="CourseParametersList" class="hr.fer.zemris.jcms.web.actions2.course.parameters.CourseParametersList">
+            <result type="tiles">v2.course.parameters.adminList</result>
+        </action>
+
+        <action name="CourseParameters1" class="hr.fer.zemris.jcms.web.actions2.course.parameters.CourseParameters1">
+            <result type="tiles">v2.course.parameters.param1</result>
+            <result name="input" type="tiles">v2.course.parameters.param1</result>
+            <result name="redirect" type="redirect-action">
+              <param name="actionName">CourseParameters1</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="CourseParameters2" class="hr.fer.zemris.jcms.web.actions2.course.parameters.CourseParameters2">
+            <result type="tiles">v2.course.parameters.param2</result>
+            <result name="input" type="tiles">v2.course.parameters.param2</result>
+            <result name="redirect" type="redirect-action">
+              <param name="actionName">CourseParameters2</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentList" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AdminAssessmentList">
+            <result type="tiles">v2.course.assessments.adminList</result>
+        </action>
+
+        <action name="AssessmentStat" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AssessmentStat">
+            <result name="success" type="tiles">v2.course.assessments.assessmentStat</result>
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="StudentAssessmentStat" class="hr.fer.zemris.jcms.web.actions2.course.assessments.StudentAssessmentStat">
+            <result name="success" type="tiles">v2.course.assessments.studentAssessmentStat</result>
+            <result name="popup" type="tiles">v2.course.assessments.popup.studentAssessmentStat</result>
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="CourseUsersListJSON" class="hr.fer.zemris.jcms.web.actions.CourseUsersListJSON">
+            <result>/WEB-INF/pages/main/UserListJSON.jsp</result>
+        </action>
+
+        <action name="StaffUsersListJSON" class="hr.fer.zemris.jcms.web.actions.StaffUsersListJSON">
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="UserFetcher" class="hr.fer.zemris.jcms.web.actions2.UserFetcher">
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="FerkoCalendarJSONFetcher" class="hr.fer.zemris.jcms.web.actions2.FerkoCalendarJSONFetcher">
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="CourseInstanceImage" class="hr.fer.zemris.jcms.web.actions2.CourseInstanceImage">
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="Feed" class="hr.fer.zemris.jcms.web.actions2.Feed">
+        	<result name="not-found" type="httpheader">
+              <param name="status">404</param>
+        	</result>
+        	<result name="forbidden" type="httpheader">
+              <param name="status">403</param>
+        	</result>
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="EditCoursePermissions" class="hr.fer.zemris.jcms.web.actions.EditCoursePermissions">
+        	<result type="tiles">main.course.editCoursePermissions</result>
+            <result name="redirect" type="redirect-action">
+              <param name="actionName">EditCoursePermissions</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentView" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AdminAssessmentView">
+            <result name="success" type="tiles">v2.course.assessments.adminAssessmentView</result>
+        </action>
+
+        <action name="AssessmentView" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AssessmentView">
+            <result name="popup" type="tiles">v2.course.assessments.popup.studentAssessmentView</result>
+            <result type="tiles">v2.course.assessments.studentAssessmentView</result>
+            <result name="successStaff" type="tiles">v2.course.assessments.staffAssessmentView</result>
+        </action>
+
+        <action name="AssessmentFileDownload" class="hr.fer.zemris.jcms.web.actions.AssessmentFileDownload">
+            <result name="success" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.file.mimeType}</param>
+              <param name="contentLength">${length}</param>
+              <param name="inputName">stream</param>
+              <param name="contentDisposition">filename="${data.nameToSend}"</param>
+            </result>
+        </action>
+
+        <action name="GroupMembershipExport" class="hr.fer.zemris.jcms.web.actions.GroupMembershipExport">
+            <result name="input" type="tiles">main.groupMembershipExport</result>
+            <result name="success" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.mimeType}</param>
+              <param name="contentLength">${data.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="ExportGroupMembershipTree" class="hr.fer.zemris.jcms.web.actions2.course.groups.ExportGroupMembershipTree">
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="AssessmentFilesUpload" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AssessmentFilesUpload">
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="GroupCoarseStat" class="hr.fer.zemris.jcms.web.actions.GroupCoarseStat">
+            <result name="input" type="tiles">main.groupCoarseStatInput</result>
+            <result name="success" type="tiles">main.groupCoarseStat</result>
+        </action>
+
+        <action name="MPGroupSettingsView" class="hr.fer.zemris.jcms.web.actions2.sysadmin.MPGroupSettingsView">
+            <result name="input" type="tiles">v2.sysadmin.mp.groupSettings.input</result>
+            <result name="success" type="tiles">v2.sysadmin.mp.groupSettings.view</result>
+            <result name="redirect" type="redirect-action">
+              <param name="actionName">MPGroupSettingsView</param>
+              <param name="method">view</param>
+              <param name="parse">true</param>
+              <param name="semesterID">${data.semesterID}</param>
+              <param name="parentRelativePath">${data.parentRelativePath}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentFlagEdit" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AdminAssessmentFlagEdit">
+            <result name="input" type="tiles">v2.course.assessments.adminAssessmentFlagEdit</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentList</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentFlagData" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AdminAssessmentFlagData">
+            <result name="confirm" type="tiles">v2.course.assessments.adminAssessmentFlagData_ResetConfirm</result>
+            <result name="input" type="tiles">v2.course.assessments.adminAssessmentFlagData</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentFlagData</param>
+              <param name="parse">true</param>
+              <param name="assessmentFlagID">${data.assessmentFlag.id}</param>
+              <param name="data.letter">${data.letter}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="redirectList" type="redirect-action">
+              <param name="actionName">AdminAssessmentList</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AddQuestionGroup" class="hr.fer.zemris.jcms.web.actions2.course.questions.browser.AddQuestionGroup">
+            <result name="input" type="tiles">v2.course.questions.browser.editQuestionGroup</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowCourse</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="EditGroupEvent" class="hr.fer.zemris.jcms.web.actions2.course.groups.EditGroupEvent">
+            <result name="input" type="tiles">v2.course.groups.editGroupsEvents</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ListGroupEvents</param>
+              <param name="parse">true</param>
+              <param name="groupID">${data.group.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentEdit" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AdminAssessmentEdit">
+            <result name="input" type="tiles">v2.course.assessments.adminAssessmentEdit</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="ConfPreloadScoreEdit" class="hr.fer.zemris.jcms.web.actions.ConfPreloadScoreEdit">
+            <result name="input" type="tiles">main.confPreloadScoreEdit</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ConfPreloadScoreEdit</param>
+              <param name="method">edit</param>
+              <param name="parse">true</param>
+              <param name="bean.courseInstanceID">${data.courseInstance.id}</param>
+              <param name="bean.assessmentID">${data.assessment.id}</param>
+              <param name="bean.letter">${bean.letter}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AssessmentPreloadInsight" class="hr.fer.zemris.jcms.web.actions.AssessmentPreloadInsight">
+            <result type="tiles">main.assessmentPreloadInsight</result>
+        </action>
+        
+        <action name="AssessmentProblemsInsight" class="hr.fer.zemris.jcms.web.actions.AssessmentProblemsInsight">
+            <result type="tiles">main.assessmentProblemsInsight</result>
+        </action>
+        
+        <action name="AssessmentChoiceInsight" class="hr.fer.zemris.jcms.web.actions.AssessmentChoiceInsight">
+            <result type="tiles">main.assessmentChoiceInsight</result>
+        </action>
+        
+        <action name="AssessmentCreateAppeal" class="hr.fer.zemris.jcms.web.actions.AssessmentCreateAppeal">
+			<result name="success" type="redirect-action">
+              <param name="actionName">AssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminProcessAssessmentAppeal" class="hr.fer.zemris.jcms.web.actions.AdminProcessAssessmentAppeal">
+			<result name="success" type="redirect-action">
+              <param name="actionName">AdminListAppeals</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminListAppeals" class="hr.fer.zemris.jcms.web.actions.AdminListAppeals">
+			<result name="success" type="tiles">main.adminListAppeals</result>
+        </action>
+        
+        <action name="AdminAssessmentAppeal" class="hr.fer.zemris.jcms.web.actions.AdminAssessmentAppeal">
+			<result name="success" type="tiles">main.adminAssessmentAppeal</result>
+        </action>
+        
+        <action name="AdminUpdatePreloadConf" class="hr.fer.zemris.jcms.web.actions.AdminUpdatePreloadConf">
+            <result name="input" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminUploadPreloadConf" class="hr.fer.zemris.jcms.web.actions.AdminUploadPreloadConf">
+            <result name="input" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminUploadProblemsConf" class="hr.fer.zemris.jcms.web.actions.AdminUploadProblemsConf">
+            <result name="input" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminUploadChoiceConf" class="hr.fer.zemris.jcms.web.actions2.course.assessments.types.choice.UploadStudentResults">
+            <result name="input" type="tiles">v2.course.assessments.types.choice.resultsUpload</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminSetDetailedChoiceConf" class="hr.fer.zemris.jcms.web.actions2.course.assessments.types.choice.ChoiceEdit">
+            <result name="success" type="tiles">v2.course.assessments.types.choice.edit</result>
+            <result name="input" type="tiles">v2.course.assessments.types.choice.edit</result>
+            <result name="redirectBack" type="redirect-action">
+              <param name="actionName">AdminSetDetailedChoiceConf</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="selectedView">${data.selectedView}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminSetProblemsConf" class="hr.fer.zemris.jcms.web.actions.AdminSetProblemsConf">
+            <result name="input" type="tiles">main.adminAssessmentView</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="ConfProblemsScoreEdit" class="hr.fer.zemris.jcms.web.actions.ConfProblemsScoreEdit">
+            <result name="input" type="tiles">main.confProblemsScoreEdit</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ConfProblemsScoreEdit</param>
+              <param name="method">edit</param>
+              <param name="parse">true</param>
+              <param name="bean.courseInstanceID">${data.courseInstance.id}</param>
+              <param name="bean.assessmentID">${data.assessment.id}</param>
+              <param name="bean.letter">${bean.letter}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="ConfChoiceScoreEdit" class="hr.fer.zemris.jcms.web.actions2.course.assessments.types.choice.ResultsEdit">
+            <result name="input" type="tiles">v2.course.assessments.types.choice.resultsEdit</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ConfChoiceScoreEdit</param>
+              <param name="method">edit</param>
+              <param name="parse">true</param>
+              <param name="bean.assessmentID">${data.assessment.id}</param>
+              <param name="bean.letter">${bean.letter}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="CalculateConfProblemsResults" class="hr.fer.zemris.jcms.web.actions.CalculateConfProblemsResults">
+            <result name="input" type="tiles">main.adminAssessmentView</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="FetchConfExternalResults" class="hr.fer.zemris.jcms.web.actions.FetchConfExternalResults">
+            <result name="input" type="tiles">main.adminAssessmentView</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="CalculateConfChoiceResults" class="hr.fer.zemris.jcms.web.actions.CalculateConfChoiceResults">
+            <result name="input" type="tiles">main.adminAssessmentView</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminAssessmentConfSelect" class="hr.fer.zemris.jcms.web.actions.AdminAssessmentConfSelect">
+            <result name="input" type="tiles">main.course.adminAssessmentConfSelect</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentView</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentFlagImport" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AdminAssessmentFlagImport">
+            <result name="input" type="tiles">v2.course.assessments.adminAssessmentFlagImport</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AdminAssessmentList</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.assessmentFlag.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentRecalc" class="hr.fer.zemris.jcms.web.actions2.course.assessments.AssessmentRecalc">
+            <result type="redirect-action">
+              <param name="actionName">AdminAssessmentList</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AdminAssessmentsImport" class="hr.fer.zemris.jcms.web.actions.AdminAssessmentsImport">
+            <result name="input" type="tiles">main.adminAssessmentsImport</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Main</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="AssessmentRoomSchedule" class="hr.fer.zemris.jcms.web.actions2.course.assessments.schedule.AssessmentRoomSchedule">
+        	<result name="input" type="tiles">v2.course.assessments.schedule.rooms</result>
+        	<result name="confirmAutoChoose" type="tiles">v2.course.assessments.schedule.confirmAutoChooseRooms</result>
+        	<result name="confirmUpdate" type="tiles">v2.course.assessments.schedule.confirmRoomsUpdate</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">AssessmentRoomSchedule</param>
+              <param name="method">editRooms</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+              <param name="data.sort">${data.sort}</param>
+              <param name="data.type">${data.type}</param>
+            </result>
+        </action>
+
+        <action name="AssessmentSchedule" class="hr.fer.zemris.jcms.web.actions2.course.assessments.schedule.AssessmentSchedule">
+        	<result name="info" type="tiles">v2.course.assessments.schedule.roomInfo</result>
+        	<result type="tiles">v2.course.assessments.schedule.home</result>
+        	<result name="input" type="tiles">v2.course.assessments.schedule.import</result>
+        	<result name="confirmSynchronize" type="tiles">v2.course.assessments.schedule.confirmSynchronizeStudents</result>
+        	<result name="confirmMakeSchedule" type="tiles">v2.course.assessments.schedule.confirmMakeStudentSchedule</result>
+        	<result name="confirmImportSchedule" type="tiles">v2.course.assessments.schedule.confirmImportSchedule</result>
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${stream.mimeType}</param>
+              <param name="contentLength">${stream.length}</param>
+              <param name="inputName">stream</param>
+              <param name="contentDisposition">filename="${stream.fileName}"</param>
+            </result>
+        	<result name="redirect" type="redirect-action">
+        	  <param name="actionName">AssessmentSchedule</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        </action>
+        
+        <action name="BarcodeStickers" class="hr.fer.zemris.jcms.web.actions.BarcodeStickers">
+        	<result name="input" type="tiles">main.course.barcodeStickers</result>
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${stream.mimeType}</param>
+              <param name="contentLength">${stream.length}</param>
+              <param name="inputName">stream</param>
+              <param name="contentDisposition">filename="${stream.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="GroupEdit" class="hr.fer.zemris.jcms.web.actions2.course.groups.GroupEdit">
+        	<result name="input" type="tiles">v2.course.groups.edit</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowGroupTree</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="GroupDelete" class="hr.fer.zemris.jcms.web.actions2.course.groups.GroupDelete">
+        	<result name="confirm" type="tiles">v2.course.groups.confirmDeleteGroup</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowGroupTree</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="TransferUsersFromGroup" class="hr.fer.zemris.jcms.web.actions2.course.groups.TransferUsersFromGroup">
+            <result name="success" type="redirect-action">
+              <param name="actionName">ShowGroupUsers</param>
+              <param name="parse">true</param>
+              <param name="groupID">${data.group.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+
+        <action name="AdminAssessmentSummaryExport" class="hr.fer.zemris.jcms.web.actions.AdminAssessmentSummaryExport">
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${stream.mimeType}</param>
+              <param name="contentLength">${stream.length}</param>
+              <param name="inputName">stream</param>
+              <param name="contentDisposition">filename="${stream.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="AssessmentScoreExport" class="hr.fer.zemris.jcms.web.actions.AssessmentScoreExport">
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${stream.mimeType}</param>
+              <param name="contentLength">${stream.length}</param>
+              <param name="inputName">stream</param>
+              <param name="contentDisposition">filename="${stream.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="AssessmentFlagExport" class="hr.fer.zemris.jcms.web.actions.AssessmentFlagExport">
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${stream.mimeType}</param>
+              <param name="contentLength">${stream.length}</param>
+              <param name="inputName">stream</param>
+              <param name="contentDisposition">filename="${stream.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="AssessmentAssistantSchedule" class="hr.fer.zemris.jcms.web.actions2.course.assessments.schedule.AssessmentAssistantSchedule">
+        	<result name="assistantInput" type="tiles">v2.course.assessments.schedule.as_edit</result>
+        	<result name="scheduleInput" type="tiles">v2.course.assessments.schedule.as_sch_edit</result>
+        	<result name="importInput" type="tiles">v2.course.assessments.schedule.as_import</result>
+        	<result name="assistantSuccess" type="redirect-action">
+        	  <param name="actionName">AssessmentAssistantSchedule</param>
+        	  <param name="method">editAssistants</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="scheduleSuccess" type="redirect-action">
+        	  <param name="actionName">AssessmentAssistantSchedule</param>
+        	  <param name="method">editAssistantsSchedule</param>
+              <param name="parse">true</param>
+              <param name="assessmentID">${data.assessment.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        </action>    
+        
+	<!-- CourseComponents -->
+	
+        <action name="CCManager" class="hr.fer.zemris.jcms.web.actions.components.CCManager">
+        	<result name="success" type="tiles">main.courseComponentList</result>
+        	<result name="redirectSuccess" type="redirect-action">
+        	  <param name="actionName">CCManager</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        </action>
+        
+        <action name="CCIManager" class="hr.fer.zemris.jcms.web.actions.components.CCIManager">
+        	<result name="input" type="tiles">main.courseComponentItemEdit</result>
+        	<result name="viewSuccess" type="tiles">main.courseComponentItemView</result>
+        	<result name="viewEditDef" type="tiles">main.courseComponentDefEdit</result>
+        	<result name="viewItemScores" type="tiles">main.courseComponentItemScoresView</result>
+        	<result name="viewGroupOwners" type="tiles">main.viewGroupOwners</result>
+        	<result name="viewUserScores" type="tiles">main.itemSingleScores</result>
+        	<result name="redirectUserScores" type="redirect-action">
+        	  <param name="actionName">CCIManager</param>
+        	  <param name="method">viewUserScores</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentItem.id}</param>
+              <param name="groupID">${data.group.id}</param>
+              <param name="jmbag">${data.jmbag}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectSuccess" type="redirect-action">
+        	  <param name="actionName">CCManager</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectView" type="redirect-action">
+        	  <param name="actionName">CCIManager</param>
+        	  <param name="method">viewItem</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentItem.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectGroupView" type="redirect-action">
+        	  <param name="actionName">CCIManager</param>
+        	  <param name="method">viewGroupScores</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentItem.id}</param>
+              <param name="groupID">${data.group.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectItemScores" type="redirect-action">
+        	  <param name="actionName">CCIManager</param>
+        	  <param name="method">viewItemScores</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentItem.id}</param>
+              <param name="editItemScoreBean.letter">${editItemScoreBean.letter}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectGroupOwners" type="redirect-action">
+        	  <param name="actionName">CCIManager</param>
+        	  <param name="method">editGroupOwners</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentItem.id}</param>              
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="viewFile" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.downloadBean.mimeType}</param>
+              <param name="contentLength">${data.downloadBean.length}</param>
+              <param name="inputName">data.downloadBean.stream</param>
+              <param name="contentDisposition">filename="${data.downloadBean.fileName}"</param>
+            </result>
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+
+        <action name="ShowGradingPolicy" class="hr.fer.zemris.jcms.web.actions2.course.grades.ShowGradingPolicy">
+        	<result name="success" type="tiles">v2.course.grades.home</result>
+        	<result name="input" type="tiles">v2.course.grades.home</result>
+        	<result name="show-grades" type="tiles">v2.course.grades.allGrades</result>
+        	<result name="locking-redirect" type="redirect-action">
+        	  <param name="actionName">ShowGradingPolicy</param>
+        	  <param name="method">executelo</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>              
+        	</result>
+        	<result name="redirect-show" type="redirect-action">
+        	  <param name="actionName">ShowGradingPolicy</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>              
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+            <result name="stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="SubgroupOwners" class="hr.fer.zemris.jcms.web.actions2.course.groups.SubgroupOwners">
+        	<result name="input" type="tiles">v2.course.groups.subgroupOwners</result>
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="CCTManager" class="hr.fer.zemris.jcms.web.actions.components.CCTManager">
+        	<result name="input" type="tiles">main.courseComponentTaskEdit</result>
+        	<result name="success" type="tiles">main.courseComponentTaskView</result>
+        	<result name="viewTaskInfo" type="tiles">main.componentTaskInfoView</result>
+        	<result name="taskAssignImport" type="tiles">main.componentTaskAssignImport</result>
+        	<result name="viewReviewers" type="tiles">main.componentTaskReviewers</result>
+        	<result name="viewTaskUsers" type="tiles">main.componentTaskUsers</result>
+        	<result name="viewAssignment" type="tiles">main.componentViewAssignment</result>
+        	<result name="redirectReviewers" type="redirect-action">
+        	  <param name="actionName">CCTManager</param>
+        	  <param name="method">viewReviewers</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentTask.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectAssignment" type="redirect-action">
+        	  <param name="actionName">CCTManager</param>
+        	  <param name="method">viewAssignmentStatus</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentTaskAssignment.id}</param>
+              <param name="filterGroupID">${data.filterGroupID}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectTaskInfo" type="redirect-action">
+        	  <param name="actionName">CCTManager</param>
+        	  <param name="method">viewTaskInfo</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentTask.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectItem" type="redirect-action">
+        	  <param name="actionName">CCIManager</param>
+        	  <param name="method">viewItem</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentItem.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="redirectSuccess" type="redirect-action">
+        	  <param name="actionName">CCTManager</param>
+        	  <param name="method">viewUserTask</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentTask.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="viewFile" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${fileBean.mimeType}</param>
+              <param name="contentLength">${fileBean.length}</param>
+              <param name="inputName">fileBean.stream</param>
+              <param name="contentDisposition">filename="${fileBean.fileName}"</param>
+            </result>
+        	<result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        	<result name="showMatrix" type="tiles">main.course.CCTAManagerShowMatrix</result>
+        </action>
+        
+        <action name="CCIAManager" class="hr.fer.zemris.jcms.web.actions.components.CCIAManager">
+        	<result name="input" type="tiles">main.courseComponentItemAssessmentEdit</result>
+        	<result name="redirectItem" type="redirect-action">
+        	  <param name="actionName">CCIManager</param>
+        	  <param name="method">viewItem</param>
+              <param name="parse">true</param>
+              <param name="id">${data.courseComponentItem.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        	<result name="showMatrix" type="tiles">main.course.CCIAManagerShowMatrix</result>
+        </action>
+	<!-- END -->
+
+        <action name="Login" class="hr.fer.zemris.jcms.web.actions.Login">
+            <result name="input" type="tiles">main.login</result>
+            <result type="redirect-action">Main</result>
+        </action>
+
+        <action name="Logout" class="hr.fer.zemris.jcms.web.actions.Logout">
+            <result type="redirect-action">Main</result>
+        </action>
+
+        <action name="NoPermission" class="hr.fer.zemris.jcms.web.actions.NoPermission">
+            <result>/WEB-INF/pages/main/NoPermission.jsp</result>
+        </action>
+        
+        <action name="EditRepository" class="hr.fer.zemris.jcms.web.actions2.sysadmin.EditRepository">
+            <result name="input" type="tiles">v2.sysadmin.editRepository</result>
+        	<result name="success" type="redirect-action">
+        	  <param name="actionName">EditRepository</param>
+        	  <param name="method">input</param>
+              <param name="parse">true</param>
+              <param name="dmsgid">${dmsgid}</param>
+        	</result>
+        </action>
+        
+        <action name="ToDo" class="hr.fer.zemris.jcms.web.actions.ToDo">
+            <result type="tiles">main.todo</result>
+            <result name="input" type="tiles">main.todonewtask</result>
+            <result name="subtasks" type="tiles">main.subtasks</result>
+            <result name="proslijedi" type="redirect-action">
+              <param name="actionName">ToDo</param>
+            </result>
+        </action>
+        
+        <action name="ToDoUsersListJSON" class="hr.fer.zemris.jcms.web.actions.ToDoUsersListJSON">
+            <result>/WEB-INF/pages/main/ToDoUserListJSON.jsp</result>
+        </action>
+
+       <action name="Planning" class="hr.fer.zemris.jcms.web.actions.planning.Planning">
+            <result type="tiles">main.course.planning</result>
+            <result name="newplan" type="tiles">main.course.newplan</result>
+            <result name="gotoCourse" type="redirect-action">
+              <param name="actionName">ShowCourse</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+            </result>
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+            <result name="localScheduler" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+            <result name="listPlans" type="redirect-action">
+              <param name="actionName">Planning</param>
+              <param name="courseInstanceID">${courseInstanceID}</param>
+              <param name="planID">${planID}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="ScheduleUpload" class="hr.fer.zemris.jcms.web.actions.planning.ScheduleUpload">
+            <result name="listPlans" type="redirect-action">
+              <param name="actionName">Planning</param>
+              <param name="courseInstanceID">${courseInstanceID}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            
+        </action>
+
+        <action name="SchedulePublication" class="hr.fer.zemris.jcms.web.actions.planning.SchedulePublication">
+            <result type="tiles">main.course.schedulePublication</result>
+            <result name="finalCheck" type="tiles">main.course.schedulePublicationCheck</result>
+            <result name="listPlans" type="redirect-action">
+              <param name="actionName">Planning</param>
+              <param name="courseInstanceID">${courseInstanceID}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="Issues" class="hr.fer.zemris.jcms.web.actions2.course.issues.Issues">
+            <result type="tiles">v2.course.issues.issueList</result>
+            <result name="topics" type="tiles">v2.course.issues.topics</result>
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="IssueListJSON" class="hr.fer.zemris.jcms.web.actions2.course.issues.IssueListJSON">
+           <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>
+        
+        <action name="NewIssue" class="hr.fer.zemris.jcms.web.actions2.course.issues.NewIssue">
+            <result name="input" type="tiles">v2.course.issues.newissue</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">Issues</param>
+              <param name="courseInstanceID">${courseInstanceID}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>       
+        
+        <action name="ViewIssue" class="hr.fer.zemris.jcms.web.actions2.course.issues.ViewIssue">
+			<result type="tiles">v2.course.issues.viewissue</result> 
+			<result name="input" type="tiles">v2.course.issues.newanswer</result>
+			<result name="done" type="redirect-action">
+              <param name="actionName">ViewIssue</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="issueID">${issueID}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="list" type="redirect-action">
+              <param name="actionName">Issues</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+            <result name="wrapped-stream" type="stream">
+              <param name="parse">true</param>
+              <param name="contentType">${streamWrapper.mimeType}</param>
+              <param name="contentLength">${streamWrapper.length}</param>
+              <param name="inputName">streamWrapper.stream</param>
+              <param name="contentDisposition">filename="${streamWrapper.fileName}"</param>
+            </result>
+        </action>       
+        
+        <action name="IssuesInitialization" class="hr.fer.zemris.jcms.web.actions2.course.issues.IssuesInitialization">
+			<result name="success" type="redirect-action">
+				<param name="actionName">Main</param>
+				<param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>
+				
+        <action name="Repository" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result type="tiles">v2.course.repositories.home</result>
+		</action>
+
+		<action name="UploadFilePrep" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository" method="uploadFilePrep">
+			<result type="tiles">v2.course.repositories.uploadFile</result>
+		</action>
+
+		<action name="UploadVersionPrep" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository" method="uploadVersionPrep">
+			<result type="tiles">v2.course.repositories.uploadVersion</result>
+		</action>
+
+		<action name="NewCategoryPrep" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository" method="newCategoryPrep">
+			<result type="tiles">v2.course.repositories.newCategory</result>
+		</action>
+
+		 <action name="NewCategory" method="newCategory" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="input" type="tiles">v2.course.repositories.newCategory</result>
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>	
+		
+		<action name="DeleteCategory" method="deleteCategory" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>
+
+		<action name="UploadFile" method="uploadFile" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="input" type="tiles">v2.course.repositories.uploadFile</result>
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>			
+
+		<action name="UploadVersion" method="uploadVersion" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="input" type="tiles">v2.course.repositories.uploadVersion</result>
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>				
+
+		<action name="DeleteFile" method="deleteFile" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>			
+
+		<action name="DeleteFileAndVersions" method="deleteFileAndVersions" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>	
+		
+		<action name="DownloadFile" method="downloadFile" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="success" type="stream">
+              <param name="parse">true</param>
+              <param name="contentLength">${data.stream.length}</param>
+              <param name="contentType">${data.stream.mimeType}</param>
+              <param name="inputName">data.stream</param>
+              <param name="contentDisposition">filename="${data.stream.fileName}"</param>
+            </result>
+        </action>
+		
+		<action name="HideFile" method="hideFile" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>	
+		
+		<action name="ShowFile" method="showFile" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository">
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>	
+		
+		<action name="ViewAllVersions" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository" method="viewAllVersions">
+			<result type="tiles">v2.course.repositories.viewAllVersions</result>
+		</action>
+		
+		<action name="ViewFileInfo" class="hr.fer.zemris.jcms.web.actions2.course.repositories.Repository" method="viewFileInfo">
+			<result type="tiles">v2.course.repositories.viewFileInfo</result>
+		</action>
+		
+		<action name="ShowFilePage" class="hr.fer.zemris.jcms.web.actions.RepositoryFilePage" >
+			<result type="tiles">main.course.repositoryShowFilePage</result>
+		</action>
+		
+		<action name="AddFilePageCommentPrep" class="hr.fer.zemris.jcms.web.actions.RepositoryFilePage" method="addFilePageCommentPrep" >
+			<result type="tiles">main.course.repositoryAddFilePageCommentPrep</result>
+		</action>
+		
+		<action name="AddFilePageComment" class="hr.fer.zemris.jcms.web.actions.RepositoryFilePage" method="addFilePageComment" >
+			<result name="success" type="redirect-action">
+			  <param name="actionName">Repository</param>
+			  <param name="parse">true</param>
+			  <param name="message">${data.actionMessage}</param>
+			  <param name="courseInstanceID">${data.courseInstance.id}</param>
+			  <param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>	
+
+		
+		
+		
+	<!-- Application actions -->
+        <action name="ApplicationMain" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationMain">
+            <result type="tiles">v2.course.applications.home</result>
+        </action>
+        
+        <action name="ApplicationStudentView" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationStudentView">
+            <result type="tiles">v2.course.applications.studentViewAppl</result>
+        </action>
+        
+         <action name="ApplicationAdminEdit" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationAdminEdit">
+            <result name="input" type="tiles">v2.course.applications.editDef</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ApplicationMain</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="ApplicationStudentSubmit" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationStudentSubmit">
+            <result name="input" type="tiles">v2.course.applications.studentFill</result>
+            <result name="success" type="redirect-action">
+              <param name="actionName">ApplicationMain</param>
+              <param name="parse">true</param>
+              <param name="courseInstanceID">${data.courseInstance.id}</param>
+              <param name="dmsgid">${dmsgid}</param>
+            </result>
+        </action>
+        
+        <action name="ApplicationListStudents" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationListStudents">
+            <result type="tiles">v2.course.applications.studentList</result>
+        </action>
+        
+        <action name="ApplicationAdminTable" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationAdminTable">
+            <result type="tiles">v2.course.applications.matrixView</result>
+        </action>
+        
+        <action name="ApplicationAdminAprove" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationAdminAprove">
+        	<result name="input" type="tiles">v2.course.applications.aprovalView</result>
+        	<result name="success" type="redirect-action">
+        		<param name="actionName">ApplicationAdminTable</param>
+        		<param name="parse">true</param>
+        		<param name="courseInstanceID">
+        			${data.courseInstanceID}
+        		</param>
+        		<param name="dmsgid">${dmsgid}</param>
+        	</result>
+        	<result name="success-list" type="redirect-action">
+        		<param name="actionName">ApplicationListStudents</param>
+        		<param name="parse">true</param>
+        		<param name="courseInstanceID">
+        			${data.courseInstanceID}
+        		</param>
+        		<param name="definitionID">
+        			${data.fromDefinitionID}
+        		</param>
+        		<param name="dmsgid">${dmsgid}</param>
+        	</result>
+        </action>
+
+        <action name="ApplicationExportList" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationExportList">
+        	<result name="success" type="stream">
+        		<param name="parse">true</param>
+        		<param name="contentType">${data.mimeType}</param>
+        		<param name="contentLength">${data.length}</param>
+        		<param name="inputName">data.stream</param>
+        		<param name="contentDisposition">
+        			filename="${data.fileName}"
+        		</param>
+        	</result>
+        </action>
+        
+        <action name="ApplicationExportTable" class="hr.fer.zemris.jcms.web.actions2.course.applications.ApplicationExportTable">
+        	<result name="success" type="stream">
+        		<param name="parse">true</param>
+        		<param name="contentType">${data.mimeType}</param>
+        		<param name="contentLength">${data.length}</param>
+        		<param name="inputName">data.stream</param>
+        		<param name="contentDisposition">
+        			filename="${data.fileName}"
+        		</param>
+        	</result>
+        </action>
+		<!-- END -->
+		
+    </package>
+
+    <package name="external" namespace="/external" extends="struts-default">
+
+        <result-types>
+			<result-type name="nullresult" class="hr.fer.zemris.jcms.results.NullResult"/>
+			<result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
+		</result-types>
+
+		<interceptors>
+		  <interceptor name="currectUserSetter" class="hr.fer.zemris.jcms.web.interceptors.CurrectUserInterceptor"></interceptor>
+		  <interceptor-stack name="pBasicStack">
+		    <interceptor-ref name="currectUserSetter"></interceptor-ref>
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+		  </interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="pBasicStack"></default-interceptor-ref>
+
+        <global-results>
+          <result name="nopermission" type="redirect-action">NoPermission</result>
+          <result name="notLoggedIn" type="redirect-action">Login</result>
+          <result name="defaultShowMessage">/WEB-INF/pages/main/ShowMessage.jsp</result>
+          <result name="showFatalMessage" type="tiles">main.showFatalMessage</result>
+        </global-results>
+
+        <action name="StudTest2" class="hr.fer.zemris.jcms.web.actions.external.StudTest2Action">
+            <result name="success" type="nullresult" />
+        </action>
+
+        <action name="StudTest2P" class="hr.fer.zemris.jcms.web.actions.external.StudTest2PAction">
+            <result name="success" type="nullresult" />
+        </action>
+        
+	</package>
+
+</struts>

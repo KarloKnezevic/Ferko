@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+	
+<struts>
+	<!-- temp -->
+	<package name="search" namespace="/search" extends="json-default">
+        <action name="UserSearch" class="hr.fer.zemris.jcms.web.actions.UserGroupSearch">
+            <result name="success" type="json" />
+        </action>
+	</package>
+
+	<package name="poll" namespace="/poll" extends="struts-default">		
+		<result-types>
+			<result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
+		</result-types>
+		
+		<interceptors>
+		  <interceptor name="currectUserSetter" class="hr.fer.zemris.jcms.web.interceptors.CurrectUserInterceptor"></interceptor>
+		  <interceptor-stack name="pBasicStack">
+		    <interceptor-ref name="currectUserSetter"></interceptor-ref>
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+		  </interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="pBasicStack" />
+
+		<global-results>
+			<result name="not_found" type="httpheader">
+				<param name="status">404</param>
+			</result>
+			<result name="notLoggedIn" type="redirect-action">
+              <param name="actionName">Login</param>
+              <param name="namespace">/</param>
+			</result>
+			<result name="showFatalMessage" type="tiles">main.showFatalMessage</result>
+            <!--result name="showFatalMessage" type="redirect-action">
+				<param name="actionName">Login</param>
+				<param name="namespace">/</param>
+			</result-->
+		</global-results>
+
+		<action name="Index" class="hr.fer.zemris.jcms.web.actions2.poll.IndexAction">
+			<result name="success" type="tiles">Poll.Index</result>
+		</action>
+
+		<action name="AddUsers" method="addUsers" class="hr.fer.zemris.jcms.web.actions2.poll.EditAction">
+			<result name="input" type="tiles">Poll.AddUsers</result>
+			<result name="success" type="redirect-action">Index</result>
+		</action>
+
+		<action name="Create" method="createPoll" class="hr.fer.zemris.jcms.web.actions2.poll.EditAction">
+			<result name="input" type="tiles">Poll.Create</result>
+			<result name="success" type="redirect-action">
+              <param name="actionName">AddUsers</param>
+              <param name="method">addUsers</param>
+              <param name="id">${id}</param>
+			</result>
+		</action>
+
+		<action name="CourseCreate" method="createPoll" class="hr.fer.zemris.jcms.web.actions2.poll.EditAction">
+			<result name="input" type="tiles">Course.Poll.Create</result>
+			<result name="success" type="redirect-action">
+              <param name="actionName">AddCourseGroups</param>
+              <param name="method">addGroups</param>
+              <param name="id">${id}</param>
+			  <param name="courseInstanceID">${courseInstanceID}</param>
+			</result>
+		</action>
+
+		<action name="CourseEdit" method="editPoll" class="hr.fer.zemris.jcms.web.actions2.poll.EditAction">
+			<result name="input" type="tiles">Course.Poll.Edit</result>
+			<result name="success" type="redirect-action">
+              <param name="actionName">CourseIndex</param>
+			  <param name="courseInstanceID">${courseInstanceID}</param>
+			</result>
+		</action>
+
+		<action name="CourseProlong" method="prolong" class="hr.fer.zemris.jcms.web.actions2.poll.EditAction">
+			<result name="input" type="tiles">Course.Poll.Prolong</result>
+			<result name="success" type="redirect-action">
+              <param name="actionName">CourseIndex</param>
+			  <param name="courseInstanceID">${courseInstanceID}</param>
+			</result>
+		</action>
+
+		<action name="Results" method="viewResults" class="hr.fer.zemris.jcms.web.actions2.poll.ViewResultsAction">
+			<result name="success" type="tiles">Poll.Results</result>
+		</action>
+
+		<action name="CSVResults" class="hr.fer.zemris.jcms.web.actions2.poll.CSVResultsAction">
+			<result name="success">/WEB-INF/pages/poll/csv_results.jsp</result>
+		</action>
+
+		<action name="SinglePollResults" method="viewSinglePollResults" class="hr.fer.zemris.jcms.web.actions2.poll.CourseResultsAction">
+			<result name="success" type="tiles">Course.Poll.SingleResults</result>
+		</action>
+
+		<action name="Delete" method="deletePoll" class="hr.fer.zemris.jcms.web.actions2.poll.EditAction">
+			<result name="success" type="redirect-action">
+              <param name="actionName">CourseIndex</param>
+			  <param name="courseInstanceID">${courseInstanceID}</param>
+			</result>
+		</action>
+
+		<action name="Answer" class="hr.fer.zemris.jcms.web.actions2.poll.AnswerAction">
+			<result name="input" type="tiles">Poll.Answer</result>
+			<result name="success" type="redirect-action">Index</result>
+		</action>
+
+		<action name="AddCourseGroups" method="addGroups" class="hr.fer.zemris.jcms.web.actions2.poll.CoursePollAction">
+			<result name="input" type="tiles">Course.Poll.AddGroups</result>
+			<result name="success" type="redirect-action">
+              <param name="actionName">CourseIndex</param>
+			  <param name="courseInstanceID">${courseInstanceID}</param>
+			</result>
+		</action>
+
+		<action name="CourseIndex" method="viewPollsWithResults" class="hr.fer.zemris.jcms.web.actions2.poll.CoursePollOverviewAction">
+			<result name="success" type="tiles">Course.Poll.CoursePollOverview</result>
+		</action>
+
+		<action name="CourseResults" method="viewResults" class="hr.fer.zemris.jcms.web.actions2.poll.CourseResultsAction">
+			<result name="success" type="tiles">Course.Poll.Results</result>
+		</action>
+
+		<action name="CreatePollTag" method="create" class="hr.fer.zemris.jcms.web.actions2.poll.PollTagEditAction">
+			<result name="input" type="tiles">PollTag.Create</result>
+			<result name="success" type="redirect-action">ListPollTag</result>
+		</action>
+
+		<action name="DeletePollTag" method="delete" class="hr.fer.zemris.jcms.web.actions2.poll.PollTagEditAction">
+			<result name="success" type="redirect-action">ListPollTag</result>
+		</action>
+
+		<action name="UpdatePollTag" method="edit" class="hr.fer.zemris.jcms.web.actions2.poll.PollTagEditAction">
+			<result name="input" type="tiles">PollTag.Update</result>
+			<result name="success" type="redirect-action">ListPollTag</result>
+		</action>
+
+		<action name="ListPollTag" class="hr.fer.zemris.jcms.web.actions2.poll.PollTagIndexAction">
+			<result name="success" type="tiles">PollTag.Index</result>
+		</action>
+	</package>
+</struts>

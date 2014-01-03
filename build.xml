@@ -1,0 +1,366 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project name="jcms" basedir="." default="package">
+
+  <property name="app.name" value="ferko"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="clib.dir" value="clib"/>
+  <property name="jlib.dir" value="jlib"/>
+  <property name="build.dir" value="build"/>
+  <property name="meta.dir" value="metadata"/>
+  <property name="web.dir" value="web"/>
+  <property name="properties.dir" value="src/java/hr/fer/zemris/jcms/web/actions" />
+  
+  <property environment="env"/> 
+  <property name="tomcat.dir" value="${env.CATALINA_HOME}"/>
+	
+  <path id="src.class.path">
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${clib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement path="${build.dir}/classes"/>
+  </path>
+
+  <path id="src.desktop.path">
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${clib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement path="${build.dir}/classes"/>
+    <pathelement path="${build.dir}/desktop"/>
+  </path>
+
+  <path id="tests.src.class.path">
+    <path refid="src.class.path"/>
+    <pathelement path="${build.dir}/tests"/>
+  </path>
+
+  <path id="planning.class.path">
+  	<path refid="src.class.path"/>
+  	<pathelement path="${build.dir}/planning"/>
+  	<fileset dir="${web.dir}/applet">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+	
+  <path id="occviz.class.path">
+  	<pathelement path="${build.dir}/occviz"/>
+  </path>
+	
+  <path id="sscoretree.class.path">
+  	<pathelement path="${build.dir}/sscoretree"/>
+  </path>
+	
+  <path id="tests.run.class.path">
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${clib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${jlib.dir}">
+      <include name="${app.name}.jar"/>
+      <include name="${app.name}-tests.jar"/>
+    </fileset>
+    <pathelement path="metadata/properties"/>
+  </path>
+
+  <condition property="build.configuration.file" value="configuration-${build.type}.properties" else="configuration.properties">
+    <isset property="build.type"/>
+  </condition>
+
+  <property name="build.configuration.file.path" value="${basedir}/allConfigs/${build.configuration.file}" />
+  
+  <available property="build.configuration.file.available" file="${build.configuration.file.path}" />
+
+  <target name="init">
+  	<tstamp/>
+    <mkdir dir="${jlib.dir}"/>
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.dir}/desktop"/>
+    <mkdir dir="${build.dir}/classes"/>
+    <mkdir dir="${build.dir}/tests"/>
+    <mkdir dir="${build.dir}/prod"/>
+  	<mkdir dir="${build.dir}/planning"/>
+  	<mkdir dir="${build.dir}/occviz"/>
+  	<mkdir dir="${build.dir}/sscoretree"/>
+    <echo>$${build.configuration.file.path} = ${build.configuration.file.path}</echo>
+    <fail unless="build.configuration.file.available">
+      Missing file:
+      ${build.configuration.file.path}. 
+      Can not proceed. Please check if directory allConfigs is present.
+      If not, please create it, and then copy into it file configuration-sample.properties and rename it to
+      match your requested filename: ${build.configuration.file}
+      Directory allConfigs is under svn:ignore attribute, so DO NOT attempt to add configurations
+      from there to svn repository.
+      Based your selected configuration, directories:
+      * read-only-local, and
+      * ${build.dir}/prod
+      will be automatically created. DO NOT edit them or try to add them to svn repository. Instead
+      work with tracked files in directory configs/. Tasks "local" and "war2" will automatically
+      recreate those directories and synchronize them with your selected configuration.
+    </fail>
+  </target>
+
+  <target name="clean">
+   <delete quiet="true" includeEmptyDirs="true" failonerror="false">
+      <fileset dir="${build.dir}"/>
+      <fileset dir="${jlib.dir}"/>
+   	  <fileset dir="${web.dir}/applet"/>
+    </delete>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac destdir="${build.dir}/classes" includes="**/*.java" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source" encoding="UTF-8">
+      <src path="src/auth"/>
+      <src path="src/java"/>
+      <classpath refid="src.class.path"/>
+    </javac>
+    
+    <javac destdir="${build.dir}/desktop" includes="**/*.java" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source" encoding="UTF-8">
+      <src path="src/desktop"/>
+      <classpath refid="src.desktop.path"/>
+    </javac>
+
+  	<javac destdir="${build.dir}/tests" includes="**/*.java" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source" encoding="UTF-8">
+      <src path="src/tests"/>
+      <classpath refid="tests.src.class.path"/>
+    </javac>
+  	
+  	<javac destdir="${build.dir}/planning" includes="**/*.java" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source" encoding="UTF-8">
+      <src path="src/planning"/>
+  	  <classpath refid="planning.class.path"/>
+    </javac>
+  	
+  	<javac destdir="${build.dir}/occviz" includes="**/*.java" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source" encoding="UTF-8">
+      <src path="src/occvisualizer"/>
+  	  <classpath refid="occviz.class.path"/>
+    </javac>
+  	
+  	<javac destdir="${build.dir}/sscoretree" includes="**/*.java" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source" encoding="UTF-8">
+      <src path="src/sscoretree"/>
+  	  <classpath refid="sscoretree.class.path"/>
+    </javac>
+  </target>
+
+  <target name="properties">
+    <native2ascii src="${properties.dir}" dest="${properties.dir}" encoding="UTF-8"
+      includes="**/*.utf8_properties" ext=".properties"/>
+  </target>
+
+  <target name="package" depends="compile, properties">
+    <jar destfile="${jlib.dir}/${app.name}.jar">
+    	<fileset dir="${build.dir}/classes"/>
+    	<fileset dir="src/auth" includes="**/*.properties"/>
+    	<fileset dir="src/java" includes="**/*.properties"/>
+    </jar>
+    <jar destfile="${jlib.dir}/${app.name}-GenZip.jar" manifest="various-files/GenZip_MANIFEST.MF">
+    	<fileset dir="${build.dir}/desktop" includes="hr/fer/zemris/jcms/desktop/ispiti/GenerirajZIPSaSlikama*"/>
+    </jar>
+    <jar destfile="${jlib.dir}/${app.name}-tests.jar">
+    	<fileset dir="${build.dir}/tests"/>
+    </jar>
+    <jar destfile="${jlib.dir}/jcms-jaas-1.0.jar">
+    	<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/jcms/bcon/*.class"/>
+    	<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/jcms/jaas/module/*.class"/>
+    	<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/jcms/jaas/principals/*.class"/>
+    </jar>
+    <jar destfile="${jlib.dir}/jcms-bni-client-1.0.jar">
+    	<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/jcms/bcon/*.class" excludes="hr/fer/zemris/jcms/bcon/impl/**.class"/>
+    </jar>
+    <jar destfile="${jlib.dir}/${app.name}-occviz.jar">
+    	<fileset dir="${build.dir}/occviz"/>
+    </jar>
+    <jar destfile="${jlib.dir}/${app.name}-sscoretree.jar">
+    	<fileset dir="${build.dir}/sscoretree"/>
+    </jar>
+  	
+    <delete>
+    	  <fileset file="${web.dir}/applet/jcms-planning.jar"/>
+    </delete>
+    <jar destfile="${web.dir}/applet/jcms-planning.jar">
+    	<fileset dir="${build.dir}/planning"/>
+    	<fileset dir="${build.dir}/classes" includes="/hr/fer/zemris/jcms/model/planning/*.class,/hr/fer/zemris/jcms/model/extra/Plan*.class,/hr/fer/zemris/util/scheduling/support/*.class,/hr/fer/zemris/util/time/*.class,/hr/fer/zemris/jcms/exceptions/*ParameterException.class" excludes="**/*Descriptor.class"/>
+    	<fileset dir="${build.dir}/classes" includes="/hr/fer/zemris/util/scheduling/support/algorithmview/*.class" />
+    </jar>
+  	<copy todir="${web.dir}/applet/">
+  		<fileset dir="${lib.dir}" includes="jxfilters.jar,jx-layer-ferko.jar" />
+  		<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/util/scheduling/support/*.class,hr/fer/zemris/util/scheduling/LocalStarter*.class" /> 
+  		<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/util/scheduling/algorithms/**" />
+  		<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/util/scheduling/support/algorithmview/*.class" />
+  		<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/jcms/model/planning/*.class" />
+  		<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/util/time/*.class" />
+  		<fileset dir="${build.dir}/classes" includes="hr/fer/zemris/jcms/exceptions/IllegalParameterException.class" />
+  	</copy>
+  	<unzip src="${lib.dir}/jfreechart-1.0.12.jar" dest="${web.dir}/applet/">
+  	    <patternset>
+  	        <include name="**/*.class"/>
+  	    	<include name="**/*.properties"/>
+  	        <exclude name="**/*.mf"/>
+  	    </patternset>
+  	</unzip>  
+  	<unzip src="${lib.dir}/jcommon-1.0.15.jar" dest="${web.dir}/applet/">
+  	  	    <patternset>
+  	  	        <include name="**/*.class"/>
+  	  	        <exclude name="**/*.mf"/>
+  	  	    </patternset>
+  	</unzip>  	
+  	<copy todir="${web.dir}/occviz/">
+  		<fileset dir="${jlib.dir}" includes="ferko-occviz.jar" />
+  	</copy>
+  	<copy todir="${web.dir}/sscoretree/">
+  		<fileset dir="${jlib.dir}" includes="ferko-sscoretree.jar" />
+  	</copy>
+  </target>
+
+  <target name="war" depends="war2" />
+
+  <target name="deleteProdDir" unless="build.type.correct">
+     <echo>Deleting old configured files...</echo>
+     <delete quiet="true" includeEmptyDirs="true" failonerror="false">
+      <fileset dir="${prod.dir}"/>
+    </delete>
+    <mkdir dir="${prod.dir}"/>
+  </target>
+  
+  <target name="shouldFilter" depends="deleteProdDir" unless="shouldFilter.notRequired">
+    <echo>Pozvan shouldFilter</echo>
+    <copy todir="${prod.dir}" preservelastmodified="true">
+      <fileset dir="configs" excludes="WEB-INF/web.xml" />
+    </copy>
+    <copy file="${build.configuration.file.path}" tofile="${prod.dir}/${build.configuration.file}" preservelastmodified="true" />
+    <copy file="configs/WEB-INF/web.xml" tofile="${prod.dir}/web.xml" preservelastmodified="true" />
+	<replace dir="${prod.dir}" propertyFile="${build.configuration.file.path}" excludes="${build.configuration.file}">
+	  <include name="**/*.properties" />
+	  <include name="**/*.txt" />
+	  <include name="**/*.xml" />
+	  <replacefilter token="@@persistence.jcmsdb.hibernate.cache.provider_class@@" property="persistence.jcmsdb.hibernate.cache.provider_class" />
+	  <replacefilter token="@@persistence.jcmsdb.hibernate.hbm2ddl.auto@@" property="persistence.jcmsdb.hibernate.hbm2ddl.auto" />
+	  <replacefilter token="@@persistence.jcmsdb.hibernate.dialect@@" property="persistence.jcmsdb.hibernate.dialect" />
+	  <replacefilter token="@@persistence.jcmsdb.hibernate.connection.driver_class@@" property="persistence.jcmsdb.hibernate.connection.driver_class" />
+	  <replacefilter token="@@persistence.jcmsdb.hibernate.connection.url@@" property="persistence.jcmsdb.hibernate.connection.url" />
+	  <replacefilter token="@@persistence.jcmsdb.hibernate.connection.username@@" property="persistence.jcmsdb.hibernate.connection.username" />
+	  <replacefilter token="@@persistence.jcmsdb.hibernate.connection.password@@" property="persistence.jcmsdb.hibernate.connection.password" />
+	  <replacefilter token="@@jcms.debugMode@@" property="jcms.debugMode" />
+	  <replacefilter token="@@jcms.rootDir@@" property="jcms.rootDir" />
+	  <replacefilter token="@@jcms.studtest2.dataURLService@@" property="jcms.studtest2.dataURLService" />
+	  <replacefilter token="@@reservations.module.ferweb.username@@" property="reservations.module.ferweb.username" />
+	  <replacefilter token="@@reservations.module.ferweb.password@@" property="reservations.module.ferweb.password" />
+	  <replacefilter token="@@reservations.module.file.dummy.fileName@@" property="reservations.module.file.dummy.fileName" />
+	  <replacefilter token="@@struts.enable.DynamicMethodInvocation@@" property="struts.enable.DynamicMethodInvocation" />
+	  <replacefilter token="@@struts.devMode@@" property="struts.devMode" />
+	  <replacefilter token="@@struts.locale@@" property="struts.locale" />
+	  <replacefilter token="@@struts.i18n.encoding@@" property="struts.i18n.encoding" />
+	  <replacefilter token="@@struts.url.includeParams@@" property="struts.url.includeParams" />
+	  <replacefilter token="@@struts.multipart.maxSize@@" property="struts.multipart.maxSize" />
+	  <replacefilter token="@@studtest2-conn.mainServer.host@@" property="studtest2-conn.mainServer.host" />
+	  <replacefilter token="@@studtest2-conn.mainServer.port@@" property="studtest2-conn.mainServer.port" />
+	  <replacefilter token="@@studtest2-conn.mainServer.authMethod@@" property="studtest2-conn.mainServer.authMethod" />
+	  <replacefilter token="@@studtest2-conn.mainServer.username@@" property="studtest2-conn.mainServer.username" />
+	  <replacefilter token="@@studtest2-conn.mainServer.password@@" property="studtest2-conn.mainServer.password" />
+	  <replacefilter token="@@studtest2-conn.mainServer.maxConnections@@" property="studtest2-conn.mainServer.maxConnections" />
+	  <replacefilter token="@@studtest2-conn.mainServer.normalPoolSize@@" property="studtest2-conn.mainServer.normalPoolSize" />
+	  <replacefilter token="@@studtest2-conn.testOnHandOut@@" property="studtest2-conn.testOnHandOut" />
+	  <replacefilter token="@@sso.ferweb.key@@" property="sso.ferweb.key" />
+	  <replacefilter token="@@sso.labosi.key@@" property="sso.labosi.key" />
+	  <replacefilter token="@@jcms.external.labosi.enabled@@" property="jcms.external.labosi.enabled" />
+	  <replacefilter token="@@jcms.external.labosi.url@@" property="jcms.external.labosi.url" />
+	  <replacefilter token="@@jcms.smtp.enabled@@" property="jcms.smtp.enabled" />
+	  <replacefilter token="@@jcms.smtp.server@@" property="jcms.smtp.server" />
+	  <replacefilter token="@@jcms.smtp.ferko-email.nr@@" property="jcms.smtp.ferko-email.nr" />
+	  <replacefilter token="@@jcms.questionBrowser.enabled@@" property="jcms.questionBrowser.enabled" />
+	</replace>
+  </target>
+
+  <target name="local" depends="init">
+    <property name="prod.dir" value="${basedir}/read-only-local"/>
+    <available property="build.type.correct" file="${prod.dir}/${build.configuration.file}" />
+    <uptodate property="configfiles.uptodate">
+      <srcfiles dir="configs" excludes="WEB-INF/web.xml"/>
+      <mapper type="glob" from="*" to="${prod.dir}/*"/>
+    </uptodate>
+    <echo>$${configfiles.uptodate} = ${configfiles.uptodate}</echo>
+    <uptodate property="configfiles2.uptodate" srcfile="configs/WEB-INF/web.xml" targetfile="${prod.dir}/web.xml" />
+    <echo>$${configfiles2.uptodate} = ${configfiles2.uptodate}</echo>
+    <uptodate property="configuration.uptodate" srcfile="${build.configuration.file.path}" targetfile="${prod.dir}/${build.configuration.file}" />
+    <echo>$${configuration.uptodate} = ${configuration.uptodate}</echo>
+    <condition property="shouldFilter.notRequired">
+      <and>
+        <isset property="configfiles.uptodate" />
+        <isset property="configfiles2.uptodate" />
+        <isset property="configuration.uptodate" />
+      </and>
+    </condition>
+    <antcall target="shouldFilter" />
+  </target>
+  
+  <target name="war2" depends="package">
+    <property name="prod.dir" value="${basedir}/${build.dir}/prod"/>
+    <available property="build.type.correct" file="${prod.dir}/${build.configuration.file}" />
+    <uptodate property="configfiles.uptodate">
+      <srcfiles dir="configs" excludes="WEB-INF/web.xml"/>
+      <mapper type="glob" from="*" to="${prod.dir}/*"/>
+    </uptodate>
+    <echo>$${configfiles.uptodate} = ${configfiles.uptodate}</echo>
+    <uptodate property="configfiles2.uptodate" srcfile="configs/WEB-INF/web.xml" targetfile="${prod.dir}/web.xml" />
+    <echo>$${configfiles2.uptodate} = ${configfiles2.uptodate}</echo>
+    <uptodate property="configuration.uptodate" srcfile="${build.configuration.file.path}" targetfile="${prod.dir}/${build.configuration.file}" />
+    <echo>$${configuration.uptodate} = ${configuration.uptodate}</echo>
+    <condition property="shouldFilter.notRequired">
+      <and>
+        <isset property="configfiles.uptodate" />
+        <isset property="configfiles2.uptodate" />
+        <isset property="configuration.uptodate" />
+      </and>
+    </condition>
+    <antcall target="shouldFilter" />
+    <war destfile="${build.dir}/${app.name}.war"
+    	webxml="${prod.dir}/web.xml">
+      <fileset dir="${web.dir}" excludes="WEB-INF/**" />
+      <lib dir="${jlib.dir}"/>
+      <lib dir="${lib.dir}"/>
+      <classes dir="${prod.dir}/classes"/>
+      <webinf dir="${web.dir}/WEB-INF"/>
+      <webinf dir="${prod.dir}/WEB-INF"/>
+    </war>
+  </target>
+  
+	<target name="shutdownTomcat">
+		<fail unless="tomcat.dir">
+			Tomcat directory is not set!
+		</fail>
+		<echo>Pokrecem postupak zaustavljanja Tomcata...</echo>
+		<exec dir="${tomcat.dir}/bin" executable="cmd.exe">
+		  <arg line="/c shutdown.bat"/>
+		</exec>
+	</target>
+
+	<target name="startupTomcat">
+		<fail unless="tomcat.dir">
+			Tomcat directory is not set!
+		</fail>
+		<echo>Pokrecem postupak startanja Tomcata...</echo>
+		<exec dir="${tomcat.dir}/bin" executable="cmd.exe" spawn="true">
+		  <arg line="/c startup.bat"/>
+		</exec>
+	</target>
+
+	<target name="copyToTomcat" depends="war2">
+		<fail unless="tomcat.dir">
+			Tomcat directory is not set!
+		</fail>
+		<delete includeEmptyDirs="true" failonerror="false">
+			<fileset dir="${tomcat.dir}/webapps/${app.name}"/>
+		</delete>
+		<copy file="${build.dir}/${app.name}.war" todir="${tomcat.dir}/webapps"/>
+	</target>
+	
+  <target name="test1" depends="package">
+  	<java classname="hr.fer.zemris.tests.AssessmentCalcTest" classpathref="tests.run.class.path"></java>
+  </target>
+
+</project>

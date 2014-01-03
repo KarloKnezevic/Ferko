@@ -1,0 +1,84 @@
+#Grupa 1
+#================================
+2008-06-16	09:00	2	Interaktivna računalna grafika	34287
+2008-06-16	09:00	2	Prijenos i razdjela električne energije	34302
+2008-06-16	09:00	2	Audiotehnika	34309
+2008-06-16	09:00	2	Računalno upravljanje sustavima	34297
+#Grupa 2
+#================================
+2008-06-17	09:00	2	Praktikum upravljanja električnim strojevima	34342
+2008-06-17	09:00	2	Umjetna inteligencija	34285
+2008-06-17	09:00	2	Prijelazne pojave i elektromagnetska kompatibilnost	34348
+2008-06-17	09:00	2	Javna pokretna mreža	34330
+2008-06-17	09:00	2	Konstrukcija elektroničkih uređaja	34308
+#Grupa 3
+#================================
+2008-06-18	09:00	2	Ugradbeni računalni sustavi	34319
+2008-06-18	09:00	2	Mobilne komunikacije	34312
+2008-06-18	09:00	2	Praktikum učinske elektronike	34347
+2008-06-18	09:00	2	Oblikovni obrasci u programiranju	34338
+2008-06-18	09:00	2	Mjerenje i analiza potrošnje energije	34333
+2008-06-18	09:00	2	Višemedijske usluge	34289
+2008-06-18	09:00	2	Telekomunikacijski sustavi i mreže	34290
+#Grupa 4
+#================================
+2008-06-19	09:00	2	Tehnička normizacija i legislativa	34355
+2008-06-19	09:00	2	Praktikum robotike	34346
+2008-06-19	09:00	2	Matematičko modeliranje pomoću Wolframove Mathematice	34336
+2008-06-19	09:00	2	Prijenos zvuka	34349
+2008-06-19	09:00	2	Otvoreno računarstvo	34286
+#Grupa 5
+#================================
+2008-06-23	09:00	2	Digitalni video	34322
+2008-06-23	09:00	2	Ergonomija u računarstvu	34327
+2008-06-23	09:00	2	Procesna mjerenja i dijagnostika u energetici	35244
+2008-06-23	09:00	2	Praktikum automatizacije	34344
+2008-06-23	09:00	2	Integracija računala i telefonije	34328
+#Grupa 6
+#================================
+2008-06-20	09:00	2	Skriptni jezici	34354
+2008-06-20	09:00	2	Vođenje elektroenergetske mreže	34359
+2008-06-20	09:00	2	Zvuk i računala	34361
+2008-06-20	09:00	2	Osnove inteligentnog upravljanja	34341
+2008-06-20	09:00	2	Lokalne mreže	34332
+2008-06-20	09:00	2	Mjerne metode	34334
+#Grupa 7
+#================================
+2008-06-24	09:00	2	Informacija, logika i jezici	34288
+2008-06-24	09:00	2	Osnove mehatronike	34343
+2008-06-24	09:00	2	Osnove elektroničkih mjerenja i instrumentacije	34307
+2008-06-24	09:00	2	Razvoj primijenjene programske potpore	34283
+2008-06-24	09:00	2	Projektiranje električnih postrojenja	34350
+2008-06-24	09:00	2	Zvuk i okoliš	34360
+#Grupa 8
+#================================
+2008-06-23	15:00	2	Multimedijske tehnologije	34279
+2008-06-26	15:00	2	Programske paradigme i jezici	34282
+#Grupa 9
+#================================
+2008-06-27	09:00	2	Obradba informacija	34278
+2008-06-27	09:00	2	Mrežno programiranje	34335
+2008-06-27	09:00	2	Niskonaponske mreže i instalacije	35245
+2008-06-27	09:00	2	Tehnologija optičkih komunikacija	34356
+#Grupa 10
+#================================
+2008-06-26	09:00	2	Uvod u raspoznavanje uzoraka	34358
+2008-06-26	09:00	2	Računalom podržano projektiranje elektroničkih uređaja	34352
+2008-06-26	09:00	2	Osnove virtualnih okruženja	34345
+2008-06-26	09:00	2	Moderne metode fizike u elektrotehnici i informacijskoj tehnologiji	34340
+2008-06-26	09:00	2	Elektromotorni pogoni	36676
+#Grupa fiksno
+#================================
+2008-06-23	12:00	2	Algoritmi i strukture podataka (FER 2)	21008
+2008-06-26	12:00	2	Arhitektura računala 1	21010
+2008-06-27	12:00	2	Baze podataka	31503
+2008-06-27	12:00	2	Elektromagnetska polja	31496
+2008-06-17	12:00	2	Energijske tehnologije	31495
+2008-06-18	12:00	2	Fizika 1	21006
+2008-06-19	12:00	2	Inženjerska ekonomika	41251
+2008-06-20	12:00	2	Matematika 2	21004
+2008-06-16	12:00	2	Menadžment u inženjerstvu	21012
+2008-06-24	12:00	2	Signali i sustavi 2	31494
+2008-06-16	15:00	2	Trgovačko pravo	34294
+2008-06-17	12:00	2	Uvod u teoriju računarstva	31502
+2008-06-20	15:00	2	Vjerojatnost i statistika	31493

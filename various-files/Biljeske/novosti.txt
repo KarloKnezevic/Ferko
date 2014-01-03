@@ -1,0 +1,61 @@
+
+/newsChannel.action
+
+Postoje različiti kanali obavijesti koje mogu pregledavati svi u ulozi "djelatnik" (i drugi, treba razraditi). Primjer: "Organizacija rasporeda laboratorijskih vježbi", "Ferko novosti". Na svaki kanal bi se korisnik mogao pretplatiti, i time dati odobrenje da promjene/novosti dobiva u obliku aktivitija/e-maila/rss-a i sl.
+
+Uporaba kanala "Organizacija rasporeda laboratorijskih vježbi":
+ - tamo se šalju obavijesti tipa: 
+   -- organizira se sastanak na početku semestra
+   -- svaki puta kada se objavi raspored za pojedini tjedan (upload rasporeda na sustav bi trebao generirati activity-je glavnom asistentu na kolegiju)
+ - taj bi kanal bio službeno "glasilo" na koje bi se asistenti mogli pretplatiti (u semestru kada im je to zanimljivo) odnosno suspendirati pretplatu (kada im to nije više zanimljivo jer ništa taj semestar ne organiziraju).
+ 
+Uporaba kanala "Ferko novosti":
+ - objava noviteta vezanih uz Ferko, tipa:
+   -- nadograđeno je to i to
+   -- dodana je mogućnost xyz
+   -- riješen je problem qwe
+
+Tko vidi pojedini kanal? Verzija 1: to je definirano popisom dozvoljenih uloga (student, n_osoblje, asistent, lecturer). Treba vidjeti u kojim bi sve kontekstima željeli koristiti kanal za obavijesti - da li još samo uz kolegije, ili nešto općenitije), te kako regulirati tko vidi što? Želimo/trebamo li kanale koji su za uže skupine korisnika (grupacije studenata nevezane za kolegije)? Ima li smisla da NewsItem može imati povezane događaje koji bi pripadali ovom kanalu, a korisnici bi mogli definirati da u svoj kalendar žele uključiti i događaje definirane na ovom kanalu? Ako je kanal vezan uz kolegij, kako je to napravljeno, te tko na tom kolegiju vidi taj kanal (svi, samo studenti, samo djelatnici), te tko može raditi što na tom kanalu?
+
+Rješenje 1: Kanal može imati pridruženi context. Ako je context="global", vide ga svi; ako je context="student" vide ga samo studenti; ako je context="n_osoblje", vide ga samo djelatnici; ako je context="ciid:xyz", vide ga samo osobe (djelatnici, studenti) koji imaju nekakve veze s primjerkom kolegija xyz.
+
+Često koristeni upiti:
+1) dohvati listu svih kanala koje korisnik ima pravo vidjeti:
+   a) ako je admin, vrati sve
+   b) ako je djelatnik, vrati sve context=global ili context=n_osoblje ili context in (ciid: x id_ovi kolegija djelatnika).
+   c) ako je student, vrati sve context=global ili context=student ili context in (ciid: x id_ovi kolegija studenta).
+
+Kako sortirati dohvaćeni popis? Najprije po nazivu a potom po context-u.
+
+Kanal može biti arhiviran. Arhivirani kanali se ne prikazuju u popisima osim ako nisu eksplicitno traženi.
+
+Browser "kanala" čovjeku najprije prikazuje sve kanale na koje je pretplaćen, te nudi opciju "svi dostupni" (a tamo jos i "svi arhivirani"). Ovime će se korisnik potaknuti da se pretplati na kanale koji ga interesiraju.
+
+Na kanalu se objavljuju NewsItem-i koji imaju naslov, sažetak te (opcionalno) tijelo obavijesti. Uređivanje može ići nekim dostupnim editorom koji se integrira u web stranice (http://ckeditor.com/?about, http://tinymce.moxiecode.com/documentation.php ili nešto slično; pogledati koji nudi što, ima li lokalizaciju i sl).
+
+Model dozvola bi dodatno trebao definirati tko na kanalu može: (1) stvarati, (2) uređivati, (3) administrirati obavijesti. Može li netko uređivati tuđu obavijest?
+Za kanale tipa context=ciid:xyz dozvole se mogu preuzeti s kolegija - asistent organizator, nastavnik, nositelj.
+Za kanale tipa context=global ili student ili n_osoblje dozvole treba eksplicitno definirati.
+
+
+Implementacijski detalji
+------------------------
+
+Pretplata se može pamtiti objektom tipa (NewsChannel,User,SaljiObavijesti,UgradiDogadajeUKalendar).
+
+Activity-ji se šalju samo korisnicima koji su pretplaćeni, pa se ovo može procesirati izuzetno brzo (dohvat, obrada).
+
+NewsItem je gradbeni element NewsChannel-a. Sastoji se od:
+  - title
+  - summary
+  - body
+  - publisher
+  - publishedOn
+  - expiresAt
+  - modifiedOn (nullable)
+  - status (HIDDEN, ARCHIVED, VISIBLE, UNDER_REVIEW)
+  - prioritet (kao Java dretve: MIN:1-MAX:10, NORM:5)
+
+Postoji pozadinski posao koji periodički (po noći) gleda postoje li NewsItem-i koji su istekli, i njima status automatski mijenja u ARCHIVED.
+
+Po defaultu, korisniku se prikazuju samo NewsItem-i koji su u statusu VISIBLE, sortirani najprije po prioritetu (veći prije) a potom po publishedOn. Pregledom arhive korisnik može doći do svih obavijesti koje su još dodatno u statusu ARCHIVED. Netko (?) može vidjeti sve te raditi odobravanje NewsItem-a.

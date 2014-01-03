@@ -1,0 +1,25 @@
+# Prijava nadoknade labosa jedne od prve četiri vježbe
+# ----------------------------------------------------
+
+message("m0", "Na ovom mjestu možete se prijaviti za nadoknadu 4. laboratorijske vježbe. Moguće je nadoknaditi samo jednu laboratorijsku vježbu.");
+text("razlog", "Unesite razlog prijave.");
+chooseOne(
+  "vjezba", "Odaberite vježbu koju nadoknađujete.",
+  option("lab1","Prva laboratorijska vježba"),
+  option("lab2","Druga laboratorijska vježba"),
+  option("lab3","Treća laboratorijska vježba"),
+  option("lab4","Četvrta laboratorijska vježba"),
+  other("drugo","Unesite što točno želite nadoknaditi i zašto?")
+);
+
+@@@filter("vjezba")
+
+optionEnabled("lab1",!present("LAB1"));
+optionEnabled("lab2",!present("LAB2"));
+optionEnabled("lab3",!present("LAB3"));
+optionEnabled("lab4",!present("LAB4"));
+optionEnabled("drugo",true);
+
+@@@filter
+
+applicationEnabled(!present("LAB1")||!present("LAB2")||!present("LAB3")||!present("LAB4"));

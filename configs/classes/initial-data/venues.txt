@@ -1,0 +1,3 @@
+#Opis datoteke
+#shortName	name	address	locator
+FER	Fakultet elektrotehnike i računarstva	Unska 3, 10000 Zagreb	geo:45.800917;15.971278

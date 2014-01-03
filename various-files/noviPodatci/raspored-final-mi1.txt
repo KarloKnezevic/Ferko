@@ -1,0 +1,126 @@
+2009-10-12	09:00	2	Satelitske komunikacijske tehnologije	34471
+2009-10-12	09:00	2	Napredne metode digitalne obrade signala	34412
+2009-10-12	09:00	2	Memorijski sustavi	34520
+2009-10-12	09:00	2	Elementi sustava automatizacije	34296
+2009-10-12	09:00	2	Kvaliteta opskrbe električnom energijom	34511
+2009-10-12	09:00	2	Elektromehaničke i električne pretvorbe	34318
+2009-10-12	09:00	2	Dijagnostika i monitoring strojeva i pogona	34400
+2009-10-12	09:00	2	Procesna automatizacija	34373
+2009-10-12	09:00	2	Analogna i mješovita obrada signala	34559
+2009-10-12	12:00	2	Energijske pretvorbe	34435
+2009-10-12	12:00	2	Arhitektura računala 2	34277
+2009-10-12	12:00	2	Projektiranje i automatizacija industrijskih postrojenja	34398
+2009-10-12	12:00	2	Mobilni Internet	34453
+2009-10-12	12:00	2	VLSI tehnologija	34573
+2009-10-12	12:00	2	Objektno oblikovanje	34454
+2009-10-12	15:00	2	Strojno učenje	57394
+2009-10-12	15:00	2	Procjene rizika	35217
+2009-10-12	15:00	2	Prevođenje programskih jezika	34280
+2009-10-12	15:00	2	Komunikacijski protokoli	34396
+2009-10-12	15:00	2	Umrežavanje sadržaja	34446
+2009-10-12	15:00	2	Primijenjeni elektromagnetizam	34301
+2009-10-12	15:00	2	Osnove robotike	34364
+2009-10-12	15:00	2	Biomedicinska instrumentacija	34542
+2009-10-12	18:00	2	Upravljanje kakvoćom	31490
+2009-10-13	09:00	2	Energetika, okoliš i održivi razvoj	34426
+2009-10-13	09:00	2	Obrada prirodnog jezika	34477
+2009-10-13	09:00	2	Fotoničke telekomunikacijske mreže	34458
+2009-10-13	12:00	2	Elektroakustika	34303
+2009-10-13	12:00	2	Industrijski mjerni i komunikacijski sustavi	34533
+2009-10-13	15:00	2	Napredni modeli i baze podataka	34539
+2009-10-13	15:00	2	Ugradbeni računalni sustavi	34319
+2009-10-13	15:00	2	Digitalna obradba signala	34397
+2009-10-14	09:00	2	Računalni vid	34416
+2009-10-14	09:00	2	Inteligentni sustavi upravljanja	34381
+2009-10-14	09:00	2	Prijenos podataka	34474
+2009-10-14	09:00	2	Računala i procesi	34418
+2009-10-14	09:00	2	Automatsko upravljanje	34313
+2009-10-14	09:00	2	Ozvučenje	35218
+2009-10-14	09:00	2	Raspodijeljeni sustavi	34456
+2009-10-14	09:00	2	Sinteza linearnih sustava upravljanja	34365
+2009-10-14	12:00	2	Oblikovanje programske potpore	34269
+2009-10-14	12:00	2	Poslovna inteligencija	34414
+2009-10-14	12:00	2	Analiza elektroenergetskog sustava	34438
+2009-10-14	12:00	2	Biomedicinski signali i sustavi	34528
+2009-10-14	12:00	2	Operacijski sustavi	31501
+2009-10-14	12:00	2	Inteligentni multiagentski sustavi	34545
+2009-10-14	15:00	2	Programiranje i programsko inženjerstvo	19676
+2009-10-14	15:00	2	Teorija električnih strojeva i transformatora	34390
+2009-10-14	15:00	2	Računalna grafika	34444
+2009-10-14	15:00	2	Električna rasvjeta	34325
+2009-10-14	15:00	2	Mikrovalna elektronika	34550
+2009-10-15	09:00	2	Računarstvo zasnovano na uslugama	34527
+2009-10-15	09:00	2	Mobilna robotika	34372
+2009-10-15	09:00	2	Električni krugovi	31489
+2009-10-15	12:00	2	Zaštita i sigurnost informacijskih sustava	34430
+2009-10-15	12:00	2	Planiranje mobilnih sustava	34468
+2009-10-15	12:00	2	Raspodijeljeni razvoj programske potpore	63295
+2009-10-15	12:00	2	Djelovanje i zaštita od zračenja	35216
+2009-10-15	15:00	2	Operacijska istraživanja	34384
+2009-10-15	15:00	2	Slučajni procesi u sustavima	34406
+2009-10-16	09:00	2	Elektromehanički sustavi	34316
+2009-10-16	09:00	2	Matematika 1	19670
+2009-10-16	09:00	2	Alati za razvoj digitalnih sustava	34531
+2009-10-16	12:00	2	Raspoznavanje uzoraka	34404
+2009-10-16	12:00	2	Modeliranje i simuliranje sustava	34376
+2009-10-16	12:00	2	Energetsko ekonomski modeli izgradnje EES-a	34449
+2009-10-16	12:00	2	Dinamika i regulacija elektroenergetskog sustava	34437
+2009-10-16	12:00	2	Elektronika 2	34299
+2009-10-16	12:00	2	Sigurnost u Internetu	34450
+2009-10-16	15:00	2	Multimedijske arhitekture i sustavi	34427
+2009-10-16	15:00	2	Optički komunikacijski sustavi	34480
+2009-10-16	15:00	2	Elektroenergetske mreže	34443
+2009-10-16	15:00	2	Učinska elektronika	34575
+2009-10-16	15:00	2	Električna postrojenja	34300
+2009-10-16	15:00	2	Elektronička mjerenja i komponente	34532
+2009-10-16	15:00	2	Komunikacijske mreže	34272
+2009-10-16	15:00	2	Ekspertni sustavi	34371
+2009-10-16	15:00	2	Fotoničke komunikacijske tehnologije	34478
+2009-10-19	09:00	2	Osnove elektrotehnike	19672
+2009-10-19	12:00	2	Komunikacijski sustavi	34314
+2009-10-19	15:00	2	Elektronika 1	31488
+2009-10-20	18:00	2	Dizajniranje organizacije	46421
+2009-10-19	18:00	2	Društveni aspekti računalom posredovane komunikacije	46417
+2009-10-19	18:00	2	Organizacijska psihologija	46419
+2009-10-19	18:00	2	Pravo društava kapitala Europske unije	57260
+2009-10-20	12:00	2	Virtualna okruženja	34473
+2009-10-20	18:00	2	Produkcija medijskih i multimedijskih projekata	46422
+2009-10-20	18:00	2	Okoliš i održivi razvoj	34275
+2009-10-20	18:00	2	Poduzetništvo i izvoz u visokim tehnologijama	46420
+2009-10-21	09:00	2	Neuronske mreže	34429
+2009-10-21	09:00	2	Matematika 3E	31486
+2009-10-21	09:00	2	Matematika 3R	31500
+2009-10-21	09:00	2	Predviđanje i marketing telekomunikacijskih usluga	34464
+2009-10-21	09:00	2	Prenaponska zaštita	34491
+2009-10-21	09:00	2	Nuklearno inženjerstvo	34451
+2009-10-21	09:00	2	Upravljanje elektromotornim pogonima	34362
+2009-10-21	09:00	2	Analogni i analogno-digitalni integrirani sklopovi	34558
+2009-10-21	12:00	2	Zaštita elektroenergetskog sustava	34499
+2009-10-20	09:00	2	Napredni algoritmi i strukture podataka	34395
+2009-10-21	12:00	2	Biomedicinska informatika	34378
+2009-10-21	12:00	2	Senzorske tehnologije	34537
+2009-10-21	15:00	2	Automatizacija električnih postrojenja	35209
+2009-10-21	15:00	2	Upravljanje robotskim sustavima	34386
+2009-10-21	15:00	2	Informacijske mreže	34457
+2009-10-21	15:00	2	Videokomunikacijske tehnologije	34410
+2009-10-21	15:00	2	Audiosustavi	34548
+2009-10-21	18:00	2	Vještine komuniciranja	19678
+2009-10-22	09:00	2	Izvori napajanja elektroničkih uređaja	34534
+2009-10-22	12:00	2	Analiza i projektiranje računalom	34515
+2009-10-22	12:00	2	Digitalna obrada govora	34421
+2009-10-22	15:00	2	Upravljanje projektima	34431
+2009-10-22	15:00	2	Mehatronički sustavi	34383
+2009-10-22	15:00	2	Teorija informacije	34315
+2009-10-23	09:00	2	Digitalna logika	19674
+2009-10-23	09:00	2	Upravljanje rizikom	34387
+2009-10-23	09:00	2	Stohastički procesi	34567
+2009-10-23	12:00	2	Projektiranje i razvoj interaktivnih simulacijskih sustava	34422
+2009-10-23	12:00	2	Tehnička mehanika	34388
+2009-10-23	12:00	2	Uvod u matematičku teoriju kaosa za inženjere	34561
+2009-10-23	12:00	2	Diskretna matematika	34556
+2009-10-23	12:00	2	Osnove nuklearne fizike	34509
+2009-10-23	15:00	2	Fizika 2	31487
+2009-10-23	15:00	2	Kompleksna analiza	34552
+2009-10-23	15:00	2	Vođenje i upravljanje plovilima	34380
+2009-10-23	15:00	2	Održavanje elektroenergetskog sustava	34339
+2009-10-23	15:00	2	Matematička logika i  izračunljivost	61648

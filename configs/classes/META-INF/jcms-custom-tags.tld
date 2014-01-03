@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+  <tlib-version>2.2.3</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>jcms</short-name>
+  <uri>/jcms-custom-tags</uri>
+  <display-name>"JCMS Custom Tags"</display-name>
+  <description><![CDATA["JCMS Custom Tags."]]></description>
+  <tag>
+    <name>hierarchyIterator</name>
+    <tag-class>hr.fer.zemris.jcms.tags.views.jsp.HierarchyIteratorTag</tag-class>
+    <body-content>JSP</body-content>
+    <description><![CDATA[Iterates hierarchical data.]]></description>
+    <attribute>
+      <name>status</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[ Status object]]></description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[Value to be displayed]]></description>
+    </attribute>
+    <attribute>
+      <name>itemsFirst</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[Set true to display items before children.]]></description>
+    </attribute>
+    <attribute>
+      <name>childGetter</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[Name of property representing a collection of children.]]></description>
+    </attribute>
+    <attribute>
+      <name>itemGetter</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[Name of property representing a collection of items.]]></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>monoHierarchyIterator</name>
+    <tag-class>hr.fer.zemris.jcms.tags.views.jsp.MonoHierarchyIteratorTag</tag-class>
+    <body-content>JSP</body-content>
+    <description><![CDATA[Iterates hierarchical data.]]></description>
+    <attribute>
+      <name>status</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[ Status object]]></description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[Value to be displayed]]></description>
+    </attribute>
+    <attribute>
+      <name>childGetter</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[Name of property representing a collection of children.]]></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>navParams</name>
+    <tag-class>hr.fer.zemris.jcms.tags.views.jsp.NavParamsTag</tag-class>
+    <body-content>empty</body-content>
+    <description><![CDATA[Parametrize other tags]]></description>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+    </attribute>
+    <attribute>
+      <name>item</name>
+      <required>true</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description><![CDATA[NavigationObject that provides properties]]></description>
+    </attribute>
+  </tag>  
+</taglib>

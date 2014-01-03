@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <constant name="struts.enable.DynamicMethodInvocation" value="true" />
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.locale" value="hr_HR" />
+    <constant name="struts.i18n.encoding" value="UTF-8" />
+    <!-- Ovo sam izbacio jer uz ovo .css datoteke pokusava protumaciti kao akcije
+         i sve crkne... 
+    <constant name="struts.action.extension" value=""></constant>
+     -->
+    <constant name="struts.url.includeParams" value="none" />
+    <constant name="struts.multipart.maxSize" value="104857600" />
+    
+    <!-- Provjeriti hoce li mi ovo pomoci ili ne i kako utjece na ostalo -->
+    <!--  <constant name="struts.multipart.saveDir" value="/repository/courses" />-->
+    
+    
+    <include file="jcms.xml"/>
+    
+    <include file="forum.xml" />
+
+    <include file="poll_struts_package.xml" />
+
+    <!-- Add packages here -->
+
+</struts>

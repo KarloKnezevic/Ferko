@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+	
+<struts>
+	<package name="forum" namespace="/" extends="struts-default">		
+		<result-types>
+			<result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
+		</result-types>
+		
+		<interceptors>
+			<interceptor name="currentUser" class="hr.fer.zemris.jcms.web.interceptors.CurrectUserInterceptor" />
+			<interceptor name="error" class="hr.fer.zemris.jcms.web.interceptors.ForumErrorInterceptor" />
+	
+			<interceptor-stack name="forumStack">
+				<interceptor-ref name="error" />
+				<interceptor-ref name="currentUser" />
+				<interceptor-ref name="params" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="checkbox" />				
+				<interceptor-ref name="params">
+					<param name="excludeMethods">list, execute</param>
+				</interceptor-ref>
+				<interceptor-ref name="conversionError" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">list, execute, input</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">list, execute, input</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="forumStack" />
+
+		<global-results>
+			<result name="nopermission" type="redirect-action">NoPermission</result>
+			<result name="notLoggedIn" type="redirect-action">Login</result>
+			<result name="showFatalMessage" type="tiles">main.showFatalMessage</result>
+		</global-results>
+		
+		<action name="UpdateForum" class="hr.fer.zemris.jcms.web.actions.forum.UpdateForum">
+			<result name="success" type="redirect-action">
+				<param name="actionName">Main</param>
+				<param name="dmsgid">${dmsgid}</param>
+			</result>
+		</action>
+		
+		<action name="ForumIndex" class="hr.fer.zemris.jcms.web.actions.forum.ForumIndexAction">
+			<result name="success" type="tiles">forum.showForumIndex</result>
+			<result name="input" type="tiles">forum.editForumIndex</result>
+			<result name="update" type="redirect-action">ForumIndex</result>
+		</action>
+		
+		<action name="Delete" class="hr.fer.zemris.jcms.web.actions.forum.DeleteAction">
+			<result name="update-category" type="redirect-action">Main</result>
+			<result name="update-subforum" type="redirect-action">Category?mid=${id}${courseInstanceIDParam}</result>
+			<result name="update-topic" type="redirect-action">Subforum?mid=${id}${courseInstanceIDParam}</result>
+			<result name="update-post" type="redirect-action">Topic?mid=${id}${courseInstanceIDParam}</result>			
+		</action>
+
+		<action name="CourseCategory" class="hr.fer.zemris.jcms.web.actions.forum.CourseCategoryAction">
+			<result name="success" type="redirect-action">Category?mid=${category.id}${courseInstanceIDParam}</result>
+			<result name="input" type="tiles">forum.createCourseCategory</result>
+		</action>
+
+		<action name="Category" class="hr.fer.zemris.jcms.web.actions.forum.CategoryAction">
+			<result name="success" type="tiles">forum.showCategory</result>
+			<result name="input" type="tiles">forum.editCategory</result>
+			<result name="update" type="redirect-action">Category?mid=${model.id}${courseInstanceIDParam}</result>
+		</action>
+		
+		<action name="Subforum" class="hr.fer.zemris.jcms.web.actions.forum.SubforumAction">
+			<result name="success" type="tiles">forum.showSubforum</result>
+			<result name="input" type="tiles">forum.editSubforum</result>
+			<result name="update" type="redirect-action">Subforum?mid=${model.id}${courseInstanceIDParam}</result>
+		</action>
+		
+		<action name="Topic" class="hr.fer.zemris.jcms.web.actions.forum.TopicAction">
+			<result name="success" type="tiles">forum.showTopic</result>
+			<result name="input" type="tiles">forum.editTopic</result>
+			<result name="update" type="redirect-action">Topic?mid=${model.id}${courseInstanceIDParam}</result>
+		</action>
+		
+		<action name="MoveTopic" class="hr.fer.zemris.jcms.web.actions.forum.MoveTopicAction">
+			<result name="input" type="tiles">forum.moveTopic</result>
+			<result name="update" type="redirect-action">Subforum?mid=${destination}</result>
+		</action>
+		
+		<action name="MergeTopic" class="hr.fer.zemris.jcms.web.actions.forum.MergeTopicAction">
+			<result name="input" type="tiles">forum.mergeTopic</result>
+			<result name="update" type="chain">
+				<param name="actionName">Delete</param>
+				<param name="method">topic</param>
+			</result>
+		</action>
+		
+		<action name="Post" class="hr.fer.zemris.jcms.web.actions.forum.PostAction">
+			<result name="input" type="tiles">forum.editPost</result>
+			<result name="update" type="redirect-action">Topic?mid=${topic.id}&amp;ordinal=${ordinal}${courseInstanceIDParam}&#35;post_${ordinal}</result>
+		</action>
+
+	</package>
+</struts>

@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!--  
+	Hibernate ovaj file iz nekog razloga ne zeli citati kada se boota
+	kroz JPA. Stoga sam ga maknuo iz metadata/properties i prebacio
+	ovdje tako da se na jednom mjestu vidi kako su pojedini cacheovi
+	konfigurirani. Paralelno, cache-ovi su za te iste razrede podeseni
+	kroz anotacije.
+ -->
+<hibernate-configuration>
+	<session-factory>
+		<class-cache class="hr.fer.zemris.jcms.model.CourseInstanceIsvuData" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.CourseInstance" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.Course" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.YearSemester" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.Room" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.Venue" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.User" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.UserDescriptor" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.Role" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.Permission" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AuthType" usage="nonstrict-read-write"/>
+
+		<class-cache class="hr.fer.zemris.jcms.model.AbstractEvent" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.ApplicationDefinition" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.Assessment" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AssessmentFile" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AssessmentFlag" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AssessmentFlagTag" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AssessmentFlagValue" usage="read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AssessmentRoom" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AssessmentScore" usage="read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.AssessmentTag" usage="nonstrict-read-write"/>
+		
+		<class-cache class="hr.fer.zemris.jcms.model.Group" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.GroupOwner" usage="read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.KeyValue" usage="nonstrict-read-write"/>
+		<class-cache class="hr.fer.zemris.jcms.model.MarketPlace" usage="nonstrict-read-write"/>
+	</session-factory>
+</hibernate-configuration>

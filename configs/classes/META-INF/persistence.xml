@@ -1,0 +1,308 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+        version="1.0">
+        <persistence-unit name="jcmsdb" transaction-type="RESOURCE_LOCAL">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+                <class>hr.fer.zemris.jcms.model.planning.PlanDescriptor</class>
+                <class>hr.fer.zemris.jcms.model.planning.ScheduleDescriptor</class>
+                <class>hr.fer.zemris.jcms.model.planning.PlanningStorage</class>
+
+                <class>hr.fer.zemris.jcms.model.AuthType</class>
+                <class>hr.fer.zemris.jcms.model.User</class>
+                <class>hr.fer.zemris.jcms.model.UserDescriptor</class>
+                <class>hr.fer.zemris.jcms.model.Role</class>
+                <class>hr.fer.zemris.jcms.model.Course</class>
+                <class>hr.fer.zemris.jcms.model.CourseInstance</class>
+                <class>hr.fer.zemris.jcms.model.CourseInstanceIsvuData</class>
+                <class>hr.fer.zemris.jcms.model.Group</class>
+                <class>hr.fer.zemris.jcms.model.GroupOwner</class>
+                <class>hr.fer.zemris.jcms.model.MarketPlace</class>
+                <class>hr.fer.zemris.jcms.model.MPOffer</class>
+                <class>hr.fer.zemris.jcms.model.YearSemester</class>
+                <class>hr.fer.zemris.jcms.model.AbstractEvent</class>
+                <class>hr.fer.zemris.jcms.model.GlobalEvent</class>
+                <class>hr.fer.zemris.jcms.model.CourseWideEvent</class>
+                <class>hr.fer.zemris.jcms.model.GroupWideEvent</class>
+                <class>hr.fer.zemris.jcms.model.UserSpecificEvent</class>
+                <class>hr.fer.zemris.jcms.model.KeyValue</class>
+
+                <class>hr.fer.zemris.jcms.model.Room</class>
+                <class>hr.fer.zemris.jcms.model.Venue</class>
+                <class>hr.fer.zemris.jcms.model.Assessment</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentAssistantSchedule</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfiguration</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfPreload</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfProblems</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfProblemsData</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfChoice</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfChoiceAnswers</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfExternal</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFlag</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFlagTag</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFlagValue</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentRoom</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentScore</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentTag</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFile</class>
+                <class>hr.fer.zemris.jcms.model.UserGroup</class>
+                
+				<class>hr.fer.zemris.jcms.model.AbstractCourseComponentDef</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentADef</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentFDef</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentItemAssessment</class>
+				<class>hr.fer.zemris.jcms.model.CCIAAssignment</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponent</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentDescriptor</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentItem</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentTask</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentTaskAssignment</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentTaskUpload</class>
+				<class>hr.fer.zemris.jcms.model.ItemDescriptionFile</class>
+				<class>hr.fer.zemris.jcms.model.TaskDescriptionFile</class>
+				<class>hr.fer.zemris.jcms.model.USE2Element</class>
+				<class>hr.fer.zemris.jcms.model.UserSpecificEvent2</class>
+				<class>hr.fer.zemris.jcms.model.AssessmentConfEnum</class>
+				<class>hr.fer.zemris.jcms.model.AssessmentConfRange</class>
+				
+				<class>hr.fer.zemris.jcms.model.appeals.AssessmentAppealInstance</class>
+
+                <class>hr.fer.zemris.jcms.model.Issue</class>
+                <class>hr.fer.zemris.jcms.model.IssueAnswer</class>
+                <class>hr.fer.zemris.jcms.model.IssueTopic</class>
+                <class>hr.fer.zemris.jcms.model.IssueAssistantVersion</class>
+
+                <class>hr.fer.zemris.jcms.model.poll.Poll</class>
+                <class>hr.fer.zemris.jcms.model.poll.Question</class>
+                <class>hr.fer.zemris.jcms.model.poll.TextQuestion</class>
+                <class>hr.fer.zemris.jcms.model.poll.SingleChoiceQuestion</class>
+                <class>hr.fer.zemris.jcms.model.poll.MultiChoiceQuestion</class>
+				<class>hr.fer.zemris.jcms.model.poll.Option</class>
+				<class>hr.fer.zemris.jcms.model.poll.Answer</class>
+				<class>hr.fer.zemris.jcms.model.poll.OptionAnswer</class>
+				<class>hr.fer.zemris.jcms.model.poll.TextAnswer</class>
+				<class>hr.fer.zemris.jcms.model.poll.PollUser</class>
+				<class>hr.fer.zemris.jcms.model.poll.AnsweredPoll</class>
+				<class>hr.fer.zemris.jcms.model.poll.PollTag</class>
+
+				<class>hr.fer.zemris.jcms.model.Permission</class>
+				
+				<class>hr.fer.zemris.jcms.model.ToDoTask</class>
+
+				<class>hr.fer.zemris.jcms.model.ApplicationDefinition</class>
+				<class>hr.fer.zemris.jcms.model.StudentApplication</class>
+				
+				<class>hr.fer.zemris.jcms.model.RepositoryCourse</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryFile</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryCategory</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryFilePage</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryFilePageComment</class>
+				
+				<class>hr.fer.zemris.jcms.model.forum.Subscription</class>
+				<class>hr.fer.zemris.jcms.model.forum.Category</class>
+				<class>hr.fer.zemris.jcms.model.forum.Subforum</class>
+				<class>hr.fer.zemris.jcms.model.forum.Topic</class>
+				<class>hr.fer.zemris.jcms.model.forum.Post</class>
+				
+				<class>hr.fer.zemris.jcms.model.questions.QuestionGroup</class>
+				<class>hr.fer.zemris.jcms.model.questions.QuestionVariant</class>
+				<class>hr.fer.zemris.jcms.model.questions.OpenEndedQuestion</class>
+				<class>hr.fer.zemris.jcms.model.questions.AbcQuestion</class>
+				<class>hr.fer.zemris.jcms.model.questions.AbcQuestionOption</class>
+				<class>hr.fer.zemris.jcms.model.questions.QuestionTag</class>
+				<class>hr.fer.zemris.jcms.model.questions.QuestionGraphics</class>
+
+                <class>hr.fer.zemris.jcms.model.SeminarRoot</class>
+                <class>hr.fer.zemris.jcms.model.SeminarInfo</class>
+                <class>hr.fer.zemris.jcms.model.GradingPolicy</class>
+                <class>hr.fer.zemris.jcms.model.Grade</class>
+				
+                <class>hr.fer.zemris.jcms.model.Activity</class>
+                <class>hr.fer.zemris.jcms.model.UserActivityPrefs</class>
+                
+                <class>hr.fer.zemris.jcms.model.CourseInstanceKeyValue</class>
+
+                <class>hr.fer.zemris.jcms.model.WikiPage</class>
+                
+                <properties>
+                        <property name="hibernate.bytecode.use_reflection_optimizer" value="true"/>
+                        <property name="hibernate.default_batch_fetch_size" value="100"/>
+                        <property name="hibernate.cache.use_second_level_cache" value="true"/>
+                        <property name="hibernate.cache.use_query_cache" value="true"/>
+                        <property name="hibernate.cache.provider_class" value="@@persistence.jcmsdb.hibernate.cache.provider_class@@"/>
+
+                        <property name="hibernate.archive.autodetection" value="class, hbm"/>
+                        <property name="hibernate.show_sql" value="false"/>
+                        <property name="hibernate.format_sql" value="false"/>
+                        <property name="hibernate.hbm2ddl.auto" value="@@persistence.jcmsdb.hibernate.hbm2ddl.auto@@"/>  <!-- kasnije stavi na update; mogucnosti su create, create-drop, update -->
+                        <property name="hibernate.transaction.flush_before_completion" value="true"/>
+                        <property name="hibernate.dialect" value="@@persistence.jcmsdb.hibernate.dialect@@"/>
+                        <!--  Set isolation level to repeatable_read (read_commited je 2) -->
+                        <property name="hibernate.connection.isolation" value="4"/>
+                        <property name="hibernate.connection.release_mode" value="after_transaction"/>
+
+                        <property name="hibernate.connection.driver_class" value="@@persistence.jcmsdb.hibernate.connection.driver_class@@"/>
+                        <property name="hibernate.connection.url" value="@@persistence.jcmsdb.hibernate.connection.url@@"/>
+                        <property name="hibernate.connection.username" value="@@persistence.jcmsdb.hibernate.connection.username@@"/>
+                        <property name="hibernate.connection.password" value="@@persistence.jcmsdb.hibernate.connection.password@@"/>
+                        <property name="hibernate.c3p0.min_size" value="5"/>
+                        <property name="hibernate.c3p0.max_size" value="50"/>
+                        <property name="hibernate.c3p0.timeout" value="300"/>
+                        <property name="hibernate.c3p0.max_statements" value="150"/>
+                        <property name="hibernate.c3p0.idle_test_period" value="600"/>
+                        <!-- Ovo preporucaju izostaviti jer usporava, ali ipak... -->
+                        <property name="hibernate.c3p0.validate" value="true"/>
+                </properties>
+        </persistence-unit>
+
+        <persistence-unit name="jcmstestdb" transaction-type="RESOURCE_LOCAL">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+                <class>hr.fer.zemris.jcms.model.AuthType</class>
+                <class>hr.fer.zemris.jcms.model.User</class>
+                <class>hr.fer.zemris.jcms.model.UserDescriptor</class>
+                <class>hr.fer.zemris.jcms.model.Role</class>
+                <class>hr.fer.zemris.jcms.model.Course</class>
+                <class>hr.fer.zemris.jcms.model.CourseInstance</class>
+                <class>hr.fer.zemris.jcms.model.CourseInstanceIsvuData</class>
+                <class>hr.fer.zemris.jcms.model.Group</class>
+                <class>hr.fer.zemris.jcms.model.GroupOwner</class>
+                <class>hr.fer.zemris.jcms.model.MarketPlace</class>
+                <class>hr.fer.zemris.jcms.model.MPOffer</class>
+                <class>hr.fer.zemris.jcms.model.YearSemester</class>
+                <class>hr.fer.zemris.jcms.model.AbstractEvent</class>
+                <class>hr.fer.zemris.jcms.model.GlobalEvent</class>
+                <class>hr.fer.zemris.jcms.model.CourseWideEvent</class>
+                <class>hr.fer.zemris.jcms.model.GroupWideEvent</class>
+                <class>hr.fer.zemris.jcms.model.UserSpecificEvent</class>
+                <class>hr.fer.zemris.jcms.model.KeyValue</class>
+
+                <class>hr.fer.zemris.jcms.model.Room</class>
+                <class>hr.fer.zemris.jcms.model.Venue</class>
+                <class>hr.fer.zemris.jcms.model.Assessment</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentAssistantSchedule</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfiguration</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfPreload</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfProblems</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfProblemsData</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfChoice</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfChoiceAnswers</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentConfExternal</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFlag</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFlagTag</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFlagValue</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentRoom</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentScore</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentTag</class>
+                <class>hr.fer.zemris.jcms.model.AssessmentFile</class>
+                <class>hr.fer.zemris.jcms.model.UserGroup</class>
+                
+				<class>hr.fer.zemris.jcms.model.AbstractCourseComponentDef</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentADef</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentFDef</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentItemAssessment</class>
+				<class>hr.fer.zemris.jcms.model.CCIAAssignment</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponent</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentDescriptor</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentItem</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentTask</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentTaskAssignment</class>
+				<class>hr.fer.zemris.jcms.model.CourseComponentTaskUpload</class>
+				<class>hr.fer.zemris.jcms.model.ItemDescriptionFile</class>
+				<class>hr.fer.zemris.jcms.model.TaskDescriptionFile</class>
+				<class>hr.fer.zemris.jcms.model.USE2Element</class>
+				<class>hr.fer.zemris.jcms.model.UserSpecificEvent2</class>
+				<class>hr.fer.zemris.jcms.model.AssessmentConfEnum</class>
+				<class>hr.fer.zemris.jcms.model.AssessmentConfRange</class>
+				
+				<class>hr.fer.zemris.jcms.model.appeals.AssessmentAppealInstance</class>
+				
+                <class>hr.fer.zemris.jcms.model.Issue</class>
+                <class>hr.fer.zemris.jcms.model.IssueAnswer</class>
+                <class>hr.fer.zemris.jcms.model.IssueTopic</class>
+                <class>hr.fer.zemris.jcms.model.IssueAssistantVersion</class>
+
+                <class>hr.fer.zemris.jcms.model.poll.Poll</class>
+                <class>hr.fer.zemris.jcms.model.poll.Question</class>
+                <class>hr.fer.zemris.jcms.model.poll.TextQuestion</class>
+                <class>hr.fer.zemris.jcms.model.poll.SingleChoiceQuestion</class>
+                <class>hr.fer.zemris.jcms.model.poll.MultiChoiceQuestion</class>
+				<class>hr.fer.zemris.jcms.model.poll.Option</class>
+				<class>hr.fer.zemris.jcms.model.poll.Answer</class>
+				<class>hr.fer.zemris.jcms.model.poll.OptionAnswer</class>
+				<class>hr.fer.zemris.jcms.model.poll.TextAnswer</class>
+				<class>hr.fer.zemris.jcms.model.poll.PollUser</class>
+				<class>hr.fer.zemris.jcms.model.poll.AnsweredPoll</class>
+				<class>hr.fer.zemris.jcms.model.poll.PollTag</class>
+
+				<class>hr.fer.zemris.jcms.model.Permission</class>
+				
+				<class>hr.fer.zemris.jcms.model.ToDoTask</class>
+
+				<class>hr.fer.zemris.jcms.model.ApplicationDefinition</class>
+				<class>hr.fer.zemris.jcms.model.StudentApplication</class>
+				
+				<class>hr.fer.zemris.jcms.model.RepositoryCourse</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryFile</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryCategory</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryFilePage</class>
+				<class>hr.fer.zemris.jcms.model.RepositoryFilePageComment</class>
+
+				<class>hr.fer.zemris.jcms.model.forum.Subscription</class>
+				<class>hr.fer.zemris.jcms.model.forum.Category</class>
+				<class>hr.fer.zemris.jcms.model.forum.Subforum</class>
+				<class>hr.fer.zemris.jcms.model.forum.Topic</class>
+				<class>hr.fer.zemris.jcms.model.forum.Post</class>
+				
+				<class>hr.fer.zemris.jcms.model.questions.QuestionGroup</class>
+				<class>hr.fer.zemris.jcms.model.questions.QuestionVariant</class>
+				<class>hr.fer.zemris.jcms.model.questions.OpenEndedQuestion</class>
+				<class>hr.fer.zemris.jcms.model.questions.AbcQuestion</class>
+				<class>hr.fer.zemris.jcms.model.questions.AbcQuestionOption</class>
+				<class>hr.fer.zemris.jcms.model.questions.QuestionTag</class>
+				<class>hr.fer.zemris.jcms.model.questions.QuestionGraphics</class>
+
+                <class>hr.fer.zemris.jcms.model.SeminarRoot</class>
+                <class>hr.fer.zemris.jcms.model.SeminarInfo</class>
+                <class>hr.fer.zemris.jcms.model.GradingPolicy</class>
+                <class>hr.fer.zemris.jcms.model.Grade</class>
+				
+                <class>hr.fer.zemris.jcms.model.Activity</class>
+                <class>hr.fer.zemris.jcms.model.UserActivityPrefs</class>
+
+                <class>hr.fer.zemris.jcms.model.WikiPage</class>
+                
+                <properties>
+                        <property name="hibernate.bytecode.use_reflection_optimizer" value="true"/>
+                        <property name="hibernate.default_batch_fetch_size" value="100"/>
+                        <property name="hibernate.cache.use_second_level_cache" value="true"/>
+                        <property name="hibernate.cache.use_query_cache" value="true"/>
+                        <property name="hibernate.cache.provider_class" value="net.sf.ehcache.hibernate.EhCacheProvider"/>
+
+                        <property name="hibernate.archive.autodetection" value="class, hbm"/>
+                        <property name="hibernate.show_sql" value="true"/>
+                        <property name="hibernate.format_sql" value="true"/>
+                        <property name="hibernate.hbm2ddl.auto" value="create"/>  <!-- kasnije stavi na update -->
+                        <property name="hibernate.transaction.flush_before_completion" value="true"/>
+                        <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+                        <!--property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDBDialect"/-->
+                        <!--  Set isolation level to repeatable_read (read_commited je 2) -->
+                        <property name="hibernate.connection.isolation" value="4"/>
+                        <property name="hibernate.connection.release_mode" value="after_transaction"/>
+
+                        <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+                        <!--property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/-->
+                        <property name="hibernate.connection.url" value="jdbc:h2:mem:testbaza?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8"/>
+                        <property name="hibernate.connection.username" value="h2"/>
+                        <property name="hibernate.connection.password" value=""/>
+                        <property name="hibernate.c3p0.min_size" value="5"/>
+                        <property name="hibernate.c3p0.max_size" value="50"/>
+                        <property name="hibernate.c3p0.timeout" value="300"/>
+                        <property name="hibernate.c3p0.max_statements" value="150"/>
+                        <property name="hibernate.c3p0.idle_test_period" value="600"/>
+                        <!-- Ovo preporucaju izostaviti jer usporava, ali ipak... -->
+                        <property name="hibernate.c3p0.validate" value="true"/>
+                </properties>
+        </persistence-unit>
+</persistence>

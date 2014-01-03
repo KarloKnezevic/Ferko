@@ -1,0 +1,396 @@
+@charset "utf-8";
+
+/* reset - http://blueprintcss.googlecode.com */
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin:0;padding:0;border:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;}
+body {line-height:1.5;}
+table {border-collapse:separate;border-spacing:0;}
+caption, th, td {text-align:left;font-weight:normal;}
+table, td, th {vertical-align:middle;}
+td.tdLabel {vertical-align:top;}
+blockquote:before, blockquote:after, q:before, q:after {content:"";}
+blockquote, q {quotes:"" "";}
+a img {border:none;}
+
+html, body {height:100%;}
+
+/* typo - http://blueprintcss.googlecode.com */
+body {font-size:75%;color:#222;background:#fff;font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;}
+h1, h2, h3, h4, h5, h6 {font-weight:normal;color:#111;}
+h1 {font-size:2.1em;line-height:1;margin-bottom:0.5em;}
+h2 {font-size:1.6em;margin-bottom:0.75em;}
+h3 {font-size:1.25em;line-height:1;margin-bottom:1em;}
+h4 {font-size:1.2em;line-height:1.25;margin-bottom:1.25em;height:1.25em;}
+h5 {font-size:1em;font-weight:bold;margin-bottom:1.5em;}
+h6 {font-size:1em;font-weight:bold;}
+h1 img, h2 img, h3 img, h4 img, h5 img, h6 img {margin:0;}
+p {margin:0 0 1.5em;}
+p img {float:left;margin:1.5em 1.5em 1.5em 0;padding:0;}
+p img.right {float:right;margin:1.5em 0 1.5em 1.5em;}
+a:focus, a:hover {color:#000;}
+a {color:#009;text-decoration:underline;}
+blockquote {margin:1.5em;color:#666;font-style:italic;}
+strong {font-weight:bold;}
+em, dfn {font-style:italic;}
+dfn {font-weight:bold;}
+sup, sub {line-height:0;}
+abbr, acronym {border-bottom:1px dotted #666;}
+address {margin:0 0 1.5em;font-style:italic;}
+del {color:#666;}
+pre, code {margin:1.5em 0;white-space:pre;}
+pre, code, tt {font:1em 'andale mono', 'lucida console', monospace;line-height:1.5;}
+li ul, li ol {margin:0 1.5em;}
+ul, ol {margin:0 1.5em 1.5em 1.5em;}
+ul {list-style-type:disc;}
+ol {list-style-type:decimal;}
+dl {margin:0 0 1.5em 0;}
+dl dt {font-weight:bold;}
+dd {margin-left:1.5em;}
+table {margin-bottom:1.4em;width:100%;}
+th {font-weight:bold;background:#C3D9FF;}
+th, td {padding:4px 10px 4px 5px;}
+tr.even td {background:#E5ECF9;}
+tfoot {font-style:italic;}
+caption {background:#eee;}
+.hide {display:none;}
+.highlight {background:#ff0;}
+
+hr {background:#ddd;color:#ddd;clear:both;float:none;width:100%;height:.1em;margin:1em 0;border:none;}
+hr.hidden {background:none;visibility:hidden;}
+
+.mainWrapper {min-height: 100%; height: auto !important; height: 100%; margin: 0 auto -4em auto;} /* ie6 min-height hack */
+.push{height: 4em;clear:both;}
+div#footer {height: 4em; clear:both; background:rgb(240,240,240)}
+div#footer p {padding-top:0.6em;}
+div#footer a:link, div#footer a:visited {color:#00477F;}
+div#footer a:hover {color:black;}
+
+.container {margin:0 auto; padding:0 40px; display:block;} /* treba postavit neki max-width? */
+/* .container:after {content:".";display:block;height:0;clear:both;visibility:hidden;}  ??? */
+
+div#body {font-size:1.2em; padding-top:30px; clear:both;}
+
+div#header {display:block; background-color:#00477F; position:relative; color:white; font-size:1.1em; min-height:50px; height:auto !important; height:50px;} /* ne resizea se s obzirom na elemente?? ako se ukljuci ono kod containera onda da?! */
+
+ul.mainNav {display:block; position:relative; float:left; margin:0; padding:13px 0 0 0; height:37px;}
+ul.mainNav li {display:inline; padding:0 0.5em; font-size:1.3em; text-transform:lowercase;}
+ul.mainNav a:link, ul.mainNav a:visited {text-decoration:none; color:white;}
+ul.mainNav a:hover {text-decoration:none; color:#ccc;}
+
+ul.subNav {clear:both; background-color:#f0f0f0; padding:8px 0 6px 40px; margin:0;}
+ul.subNav li {display:inline; padding:0 0.5em; font-size:1.2em; font-variant:small-caps; text-transform:lowercase; color:black;}
+ul.subNav a {padding:5px 0; clear:both;}
+ul.subNav a:link, ul.subNav a:visited {text-decoration:none; color:black;}
+ul.subNav a:hover {text-decoration:none; color:black; border-bottom:2px solid black;}
+
+ul.subsubNav {clear:both; background-color:#fafafa; padding:8px 0 6px 40px; margin:0; border-top: 1px dotted #cccccc;}
+ul.subsubNav li {display:inline; padding:0 0.5em; font-size:1em; font-variant:small-caps; text-transform:lowercase; color: #a0a0a0;}
+ul.subsubNav a {padding:5px 0; clear:both; color:black;}
+ul.subsubNav a:link, ul.subsubNav a:visited {text-decoration:none; color:black;}
+ul.subsubNav a:hover {text-decoration:none; color:black; border-bottom:2px solid black;}
+
+div.courseBody h1 {width:60%;}
+
+div.logo {width:125px; height:50px; float:left;  font-size:2.2em; text-indent:-9999px; background:url(/ferko/img/fer.png) no-repeat 0px 2px; position:relative;}
+
+div#infoBox {float:right; position:relative; padding-top:14px; height:36px; min-width:200px;}
+div#infoBox span {font-size:1.2em; border-left:1px solid #a6a6a6; padding-left:7px; padding-right:20px;}
+div#infoBox a {text-transform:lowercase; color:white;}
+div#infoBox a:link, div#infoBox a:visited {text-decoration:none;}
+div#infoBox a:hover {text-decoration:underline;}
+
+div#searchBox {display:none; background-color:#a6a6a6; padding:2px; border:2px solid #928b85; width:auto; position:absolute; top:50px; left:0; clear:both;}
+div#searchBox input {margin:0; width:170px; padding:3px 0; border:2px solid #928b85; padding-left:18px; background:url(/ferko/img/search.png) no-repeat 2px 50% white;}
+div#searchBox input:focus {background-image:url(/ferko/img/search_black.png);}
+
+div.mainContentWrapper {float: left; width: 60%;}
+div.mainContent {padding-right: 20px;}
+
+div.sideContentWrapper {float: right; width: 40%;}
+div.sideContent {border-left: 1px solid rgb(249, 234, 252); padding: 0pt 20px;}
+
+div.courseShortInfo p {margin:0; margin-bottom:3px; }
+div.courseShortInfo p strong {padding-left:6px;}
+
+.strongLink { display:block; background:url(/ferko/img/button-left.png) no-repeat; width:15em; text-align:center; margin:5px auto;}
+.strongLink a { height:18px; color:black; font-variant:small-caps; text-transform:lowercase; text-decoration:none; display:block; white-space:nowrap; background:url(/ferko/img/button-right.png) top right no-repeat; padding:4px 12px 8px 12px; }
+.strongLink a:hover{color:white;}
+
+.strongLink2 { display:block; background:url(/ferko/img/button-left2.png) no-repeat; width:15em; text-align:center; margin:5px auto;}
+.strongLink2 a { height:18px; color:black; font-variant:small-caps; text-transform:lowercase; text-decoration:none; display:block; white-space:nowrap; background:url(/ferko/img/button-right2.png) top right no-repeat; padding:4px 12px 8px 12px; }
+.strongLink2 a:hover{color:white;}
+
+ul.listLink {padding:0;margin:0;font-size:0.9em;}
+ul.listLink li {display:block; margin:0; padding:2px 0; font-size:1em; color:black; }
+ul.listLink a {padding:0; clear:both; text-decoration:none; display:block; background-color:#f0f0f0;}
+ul.listLink a:link, ul.listLink a:visited {text-decoration:none; padding-left:8px;}
+ul.listLink a:hover {text-decoration:none; padding-left:6px; border-left:2px solid black;}
+
+.eventsList {padding:0;margin:0;}
+.eventsList li {position:relative; clear:both; list-style: none; margin:0; padding:0 0 2.2em 0;}
+.eventsList .summary {display:block; font-weight:bold; clear:both;}
+.eventsList .summary_sem {display:block; font-weight:bold; clear:both; color: #777777;}
+.eventsList .summary_a {display:block; font-weight:bold; clear:both; color: red;}
+.eventsList .summary_l {display:block; font-weight:bold; clear:both;}
+.eventsList .summary_c_LAB {display:block; font-weight:bold; clear:both; color: #008080;}
+.eventsList .summary_c_ZAD {display:block; font-weight:bold; clear:both; color: #008080;}
+.eventsList .summary_c_SEM {display:block; font-weight:bold; clear:both; color: #008080;}
+.eventsList .dtend {position:absolute; top:0; right:0; font-style:italic;}
+.eventsList .dtstart {float:left;}
+.eventsList .location {float:right;}
+
+.emptyMsg {font-style:italic;}
+.mpSection {width:50%; float:left;}
+.mpMainSection {width:100%; clear:both;}
+
+ul.msgList {margin:0;padding:0;}
+ul.msgList li {list-style:none; display:block; padding:0.5em; margin:0.6em 0; background:rgb(250,250,250); border:1px solid rgb(100,100,100);}
+ul.msgList li.msgType_INFO, ul.msgList li.infoMsg {background-color:#d9f1f1; border:1px solid #009;}
+ul.msgList li.errorMsg {background:#ff5566; border:1px solid #cc0022;}
+
+ul.courseList {margin-top:-10px;}
+ul.courseList li {padding:0.1em; margin:0em 0;}
+ul.courseList span.courseGroup {font-style:italic;}
+
+table.bigTable td {font-size:0.9em;padding:0.1em 0 0.1em 0.3em; text-align:center;}
+table.bigTable th {text-align:center;}
+table.bigTable .firstCol {text-align:left;}
+table.bigTable .courseTitle {font-size:1.1em; font-weight:bold; background-color:rgb(240,240,240);}
+td.mpClosed {background:#ff5566;}
+span.booltrue {display:block; text-indent:-9999px; background:url(/ferko/img/icons/famtick.png) no-repeat 50% 50%; padding:0; margin:0;}
+span.boolfalse {display:block; text-indent:-9999px; background:url(/ferko/img/icons/famcross.png) no-repeat 50% 50%; padding:0; margin:0;}
+span.valuena {display:block; font-size:0.9em; text-align:center;}
+span.statPASSED {display:inline; width:16px; height:16px; text-indent:-9999px; background:url(/ferko/img/icons/famtick.png) no-repeat 50% 50%; padding:0; margin:0;}
+span.statFAILED {display:inline; width:16px; height:16px; text-indent:-9999px; background:url(/ferko/img/icons/famcross.png) no-repeat 50% 50%; padding:0; margin:0;}
+span.statEmpty {display:inline-block; visibility:hidden; width:16px; height:16px; padding:0; margin:0;}
+span.stattrue {display:inline; text-indent:-9999px; background:url(/ferko/img/icons/famtick.png) no-repeat 50% 50%; padding:0; margin:0;}
+span.statfalse {display:inline; text-indent:-9999px; background:url(/ferko/img/icons/famcross.png) no-repeat 50% 50%; padding:0; margin:0;}
+
+table.verticalTable th { width:30%; font-size:1.0em; font-weight:bold; background-color:rgb(240,240,240); }
+
+/* http://www.alistapart.com/articles/prettyaccessibleforms */
+form.cmxform li {
+  clear:both;
+}
+form.cmxform fieldset {
+  margin-bottom: 10px;
+}
+form.cmxform legend {
+  padding: 0 2px;
+  font-weight: bold;
+}
+form.cmxform label {
+  display: -moz-inline-block;
+  display: inline-block;
+  float:left;
+  line-height: 1.8;
+  vertical-align: top;
+  text-align:right;
+  padding-right:20px;
+  min-width: 160px;
+  width: auto !important;
+  width: 160px;
+}
+form.cmxform fieldset ol {
+  margin: 0;
+  padding: 0;
+}
+form.cmxform fieldset li {
+  list-style: none;
+  padding: 5px;
+  margin: 0;
+}
+form.cmxform fieldset fieldset {
+  border: none;
+  margin: 3px 0 0;
+}
+form.cmxform fieldset fieldset legend {
+  padding: 0 0 5px;
+  font-weight: normal;
+}
+form.cmxform fieldset fieldset label {
+  display: block;
+  float:none;
+  text-align:left;
+  padding:0;margin:0;
+  width: auto;
+}
+form.cmxform fieldset fieldset label {
+  margin-left: 180px; /* Width plus 3 (html space) */
+}
+form.cmxform li.formFieldError {padding-left:190px; margin-top:-4px; font-size:0.9em; font-style:italic;}
+form.cmxform li.fieldComment {padding-left:190px; font-size:0.9em; margin-top:-5px;}
+form.cmxform li.formHidden {display:none;}
+form.cmxform li.formSubmit {padding-left:190px;}
+
+
+table.weekCalendar {font-size:0.7em;}
+table.weekCalendar th {text-align:left;}
+table.weekCalendar td, table.weekCalendar dd, table.weekCalendar dt {padding:0;margin:0;}
+table.weekCalendar tr {margin:2px 0;padding:2px 0;}
+table.weekCalendar th {margin:0; padding:4px 8px; text-indent:-1.2em; font-size:1.2em; background:none;}
+table.weekCalendar td {position:relative;}
+table.weekCalendar td.event {background:url(/ferko/img/eventbg.png) repeat-x 0 100% #aef;}
+table.weekCalendar dl {padding:5px; display:block;}
+table.weekCalendar dd.duration {float:left; font-style:italic;}
+table.weekCalendar dd.venue {float:right;}
+table.weekCalendar dd.dayName {background:none; font-size:1.2em;}
+table.weekCalendar th.dayName {visibility:hidden;}
+
+ol.postList {list-style:none; padding:0; margin:0;}
+ol.postList li.post {position:relative; display:block; border-top:1px solid #5a5247; padding-top:10px;}
+ol.postList div.postInfo {display:block; position:absolute; top:0; left:0; width:200px; border-top:2px solid #5a5247; padding-top:10px;}
+ol.postList p.changeInfo {font-style:italic; font-size:0.9em;}
+ol.postList span.time {font-size:0.9em;display:block;}
+ol.postList h4 {padding:0;margin:0;padding-left:220px;}
+ol.postList a.permalink {display:none; position:absolute; text-indent:-9999; right:0; top:0; font-size:0.7em;}
+ol.postList div.postMessage {padding:15px 0 20px 220px;}
+ul.postActions {list-style:none; display:block; position:absolute; right:10px; bottom:10px; padding:0; margin:0;}
+ul.postActions li {display:inline; padding:0 2px;}
+ul.postActions li a {font-size:1em; font-variant:small-caps; text-transform:lowercase; background-color:#f0f0f0; padding:0px 3px 1px 12px; text-decoration:none; font-weight:bold; color:black;}
+ul.postActions li.postReply a {background-color:#ffdd00;}
+ul.postActions li a:hover {background:none;}
+ul.postActions li.editPost a {}
+
+ul.depthNav {margin:-15px 0 0 0;padding:0 0 10px 0; list-style:none;}
+ul.depthNav li {display:inline; padding:0 5px 0 10px; background:url(/ferko/img/depthnavarrow.png) repeat 1px 1px;font-size:0.9em;}
+ul.depthNav a {text-decoration:none;}
+ul.depthNav a:link, ul.depthNav a:visited {color:#777;}
+ul.depthNav a:hover {color:black;}
+
+p.MPMyGroup {font-size:1.2em; background:#f0f0f0; padding-left:0.3em; border-left:30px #ffdd00 solid; margin-left:-30px;}
+
+a.acceptLink:hover, a.acceptLink:visited, a.acceptLink:link {margin-left:5px; padding-left:18px; text-transform:lowercase; background:url(/ferko/img/accept.png) no-repeat 0px 1px;}
+
+a.action {margin-left:5px; padding-left:21px; text-transform:lowercase; background:url(/ferko/img/icons/arrow3_e.gif) no-repeat 3px 1px #ffdd00;}
+a.action span {background:#f0f0f0; padding:0 6px 0 4px;}
+a.action:hover {background-color:#5a5247;}
+
+a.lock {background-image:url(/ferko/img/icons/lock.gif);}
+a.delete {background-image:url(/ferko/img/icons/trash.gif);}
+a.add {background-image:url(/ferko/img/icons/add.gif);}
+a.edit {background-image:url(/ferko/img/icons/edit.gif);}
+a.people {background-image:url(/ferko/img/icons/manman.gif);}
+
+dl.pairvalue dt {float:left; font-weight:normal; margin-right:1em;}
+dl.pairvalue dd {clear:right; font-weight:bold;}
+
+.bottomNavMenu {border-top: 1px dotted gray; margin-top: 20px; margin-bottom: 10px; padding-top: 2px; padding-bottom: 2px;}
+
+/* Podrska za tabview komponente */
+div.tabview { width: 100%; }
+div.tabpages { width: 100%;	border: 1px solid black; padding: 5px; }
+div.tabtitle { clear: both;	font-weight: bold; margin-top: 10px; margin-bottom: 5px; }
+div.tabtitles { clear: both; }
+div.tabtitles a { float: left; display: block; font-weight: 900; border: 1px solid black; border-bottom-width: 0; padding-left: 5px; padding-right: 5px; padding-top: 3px; text-decoration: none; }
+div.tabpages { clear: both; }
+div.tabtitles a.activeTabTitle { background-color: #CCCCCC; }
+
+/* autocomplete.json - start */
+input.autocomplete-loading
+{
+	background-image:url(autocomplete.gif);
+	background-position: center right;
+	background-repeat:no-repeat;
+}
+ul.autocomplete 
+{
+    position: absolute;
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid ButtonShadow;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    color: #000;
+	display:none;
+	z-index:1000;
+}
+ul.autocomplete li 
+{
+  display: block; 
+  padding: 0.3em; 
+  overflow: hidden;
+  width: 100%;
+  cursor:pointer;
+}
+
+ul.autocomplete li.selected 
+{
+  background-color: Highlight ; 
+  color: #fff;
+}
+/* autocomplete.json - end */
+
+/* Datepicker
+----------------------------------*/
+/* Datepicker
+----------------------------------*/
+.ui-datepicker table {background:white; padding:0px; font-size:1.2em; margin:0;}
+.ui-datepicker table td {background:white; padding:0px; font-size:1.2em; margin:0;}
+.ui-datepicker { width: 17em; padding: 5px; background:white; border:1px solid #C3D9FF;}
+.ui-datepicker-header { position:relative; padding:.2em 0; }
+.ui-datepicker-prev, .ui-datepicker-next { position:absolute; top: 2px; width: 1.8em; height: 1.8em; }
+.ui-datepicker-prev:hover, .ui-datepicker-next:hover { top: 1px;}
+.ui-datepicker-prev { left:2px; }
+.ui-datepicker-next { right:2px; }
+.ui-datepicker-prev:hover { left:1px; }
+.ui-datepicker-next:hover { right:1px; }
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span { display: block; position: absolute; left: 50%; margin-left: -8px; top: 50%; margin-top: -8px;  }
+.ui-datepicker-title { margin: 0 2.3em; line-height: 1.8em; text-align: center; }
+.ui-datepicker-title select { float:left; font-size:1em; margin:1px 0; }
+.ui-datepicker select.ui-datepicker-month-year {width: 100%;}
+.ui-datepicker select.ui-datepicker-month, 
+.ui-datepicker select.ui-datepicker-year { width: 49%;}
+.ui-datepicker-title select.ui-datepicker-year { float: right; }
+.ui-datepicker table {width: 100%; font-size: .9em; border-collapse: collapse; margin:0 0 .4em; }
+.ui-datepicker th { padding: .7em .3em; text-align: center; font-weight: bold;  }
+.ui-datepicker td span, .ui-datepicker td a { display: block; padding: .2em; text-align: right; text-decoration: none; }
+.ui-datepicker-buttonpane { background-image: none; margin: .7em 0 0 0; padding:0 .2em; border-left: 0; border-right: 0; border-bottom: 0; }
+.ui-datepicker-buttonpane button { float: right; margin: .5em .2em .4em; cursor: pointer; padding: .2em .6em .3em .6em; width:auto; overflow:visible; }
+.ui-datepicker-buttonpane button.ui-datepicker-current { float:left; }
+
+/* with multiple calendars */
+.ui-datepicker.ui-datepicker-multi { width:auto; }
+.ui-datepicker-multi .ui-datepicker-group { float:left; }
+.ui-datepicker-multi .ui-datepicker-group table { width:95%; margin:0 auto .4em; }
+.ui-datepicker-multi-2 .ui-datepicker-group { width:50%; }
+.ui-datepicker-multi-3 .ui-datepicker-group { width:33.3%; }
+.ui-datepicker-multi-4 .ui-datepicker-group { width:25%; }
+.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header { border-left-width:0; }
+.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header { border-left-width:0; }
+.ui-datepicker-multi .ui-datepicker-buttonpane { clear:left; }
+
+/* RTL support */
+.ui-datepicker-rtl { direction: rtl; }
+.ui-datepicker-rtl .ui-datepicker-prev { right: 2px; left: auto; }
+.ui-datepicker-rtl .ui-datepicker-next { left: 2px; right: auto; }
+.ui-datepicker-rtl .ui-datepicker-prev:hover { right: 1px; left: auto; }
+.ui-datepicker-rtl .ui-datepicker-next:hover { left: 1px; right: auto; }
+.ui-datepicker-rtl .ui-datepicker-buttonpane { clear:right; }
+.ui-datepicker-rtl .ui-datepicker-buttonpane button { float: left; }
+.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current { float:right; }
+.ui-datepicker-rtl .ui-datepicker-group { float:right; }
+.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+
+/* IE6 IFRAME FIX (taken from datepicker 1.5.3 */
+.ui-datepicker-cover {
+    display: none; /*sorry for IE5*/
+    display/**/: block; /*sorry for IE5*/
+    position: absolute; /*must have*/
+    z-index: -1; /*must have*/
+    filter: mask(); /*must have*/
+    top: -4px; /*must have*/
+    left: -4px; /*must have*/
+    width: 200px; /*must have*/
+    height: 200px; /*must have*/
+}
+
+tr.oddrow  {background-color: #ffffff;}
+tr.evenrow {background-color: #e4e4ff;}
+
+.helpTitle1 {font-size: 1.2em; font-weight: bold; margin-bottom: 10px; }
+.helpPageContent p {text-align: justify; }
+
+span.activity_viewed_false {font-weight: bold;}
+span.activity_viewed_true {}

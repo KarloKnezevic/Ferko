@@ -1,0 +1,6 @@
+# mapiranje dvorana satnice u naše dvorane; format je
+# dvorana_satnice TAB prva_dvorana TAB druga_dvorana TAB ...
+A109+A110	A109	A110
+C X	CX
+C XII	CXII
+C VI	CVI

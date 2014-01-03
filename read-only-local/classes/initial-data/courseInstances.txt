@@ -1,0 +1,65 @@
+#isvuSifra	naziv
+21010	Arhitektura računala 1
+34309	Audiotehnika
+34294	Trgovačko pravo
+31493	Vjerojatnost i statistika
+34279	Multimedijske tehnologije
+31494	Signali i sustavi 2
+34343	Osnove mehatronike
+34347	Praktikum učinske elektronike
+34346	Praktikum robotike
+21004	Matematika 2
+21008	Algoritmi i strukture podataka
+31495	Energijske tehnologije
+21012	Menadžment u inženjerstvu
+34342	Praktikum upravljanja električnim strojevima
+34344	Praktikum automatizacije
+31502	Uvod u teoriju računarstva
+31503	Baze podataka
+34332	Lokalne mreže
+34319	Ugradbeni računalni sustavi
+34354	Skriptni jezici
+34283	Razvoj primijenjene programske potpore
+34282	Programske paradigme i jezici
+34335	Mrežno programiranje
+31496	Elektromagnetska polja
+34308	Konstrukcija elektroničkih uređaja
+41251	Inženjerska ekonomika
+34302	Prijenos i razdjela električne energije
+34349	Prijenos zvuka
+34327	Ergonomija u računarstvu
+34289	Višemedijske usluge
+34352	Računalom podržano projektiranje elektroničkih uređaja
+34278	Obradba informacija
+34355	Tehnička normizacija i legislativa
+21006	Fizika 1
+34360	Zvuk i okoliš
+34361	Zvuk i računala
+34341	Osnove inteligentnog upravljanja
+34334	Mjerne metode
+34340	Moderne metode fizike u elektrotehnici i informacijskoj tehnologiji
+35244	Procesna mjerenja i dijagnostika u energetici
+34358	Uvod u raspoznavanje uzoraka
+36676	Elektromotorni pogoni
+35245	Niskonaponske mreže i instalacije
+34307	Osnove elektroničkih mjerenja i instrumentacije
+34357	Uvod u mjeriteljstvo
+34350	Projektiranje električnih postrojenja
+34312	Mobilne komunikacije
+34333	Mjerenje i analiza potrošnje energije
+34359	Vođenje elektroenergetske mreže
+34288	Informacija, logika i jezici
+34286	Otvoreno računarstvo
+34338	Oblikovni obrasci u programiranju
+34290	Telekomunikacijski sustavi i mreže
+34322	Digitalni video
+34356	Tehnologija optičkih komunikacija
+34330	Javna pokretna mreža
+34297	Računalno upravljanje sustavima
+34348	Prijelazne pojave i elektromagnetska kompatibilnost
+34285	Umjetna inteligencija
+34336	Matematičko modeliranje pomoću Wolframove Mathematice
+34287	Interaktivna računalna grafika
+34345	Osnove virtualnih okruženja
+34328	Integracija računala i telefonije
+34326	Električni aktuatori

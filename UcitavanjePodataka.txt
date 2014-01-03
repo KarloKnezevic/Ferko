@@ -1,0 +1,35 @@
+Instalacija
+-----------
+
+Prouèiti dokument HOW-TO-INSTALL.txt. Slijediti korake 1, 3, 4 i prva reèenica u 5.
+
+Podešavanje aplikacije
+----------------------
+
+Nakon pokretanja i pristupa preko web-preglednika potrebno je napraviti sljedeæe korake.
+
+1) Stvoriti akademsku godinu i semestar. To se radi tako da se odabere "Stvaranje novog semestra".
+   Primjer popunjenog obrasca prikazan je u nastavku.
+
+   Id: 2008L
+   Akademska godina: 2008/2009
+   Semestar: ljetni
+   Poèetak: 2009-02-23 00:00:00
+   Kraj: 2009-08-31 23:59:59
+
+2) Uèitati datoteku sa studentima i kolegijima na stvoreni semestar. To se radi tako da se odabere
+   "Sinkronizacija studenata na kolegijima", te se istoèi (engl. paste) sadržaj datoteke sa svim
+   upisanim studentima i kolegijima. Primjer datoteke nalazi se u various-files/noviPodatci/isvuUTF8.txt.
+   Prvi stupac su JMBAG-ovi studenata (10-znamenkasti jedinstveni numerièki identifikator). Ovime æe
+   se u bazi automatski stvoriti i korisnièki raèuni za studente. Zaporke kao i korisnièko ime moguæe
+   je ažurirati kroz administracijsko suèelje.
+
+3) Uèitati datoteku o satnici. To se radi tako da se odabere "Sinkroniziraj satnicu". Primjer datoteke
+   sa satnicom je various-files/noviPodatci/satnica.txt.
+
+4) Uèitati ispitne rokove. To se radi tako da se odabere "Unos rasporeda ispita". Primjer datoteke
+   s rasporedom je various-files/noviPodatci/raspored-final-mi1.txt.
+
+5) Uèitati raspored lab. vježbi. To se radi tako da se odabere "Sinkroniziraj raspored labosa". Primjer 
+   datoteke s rasporedom je various-files/noviPodatci/rasporedC03_tl.txt.
+

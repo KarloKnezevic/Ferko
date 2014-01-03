@@ -1,0 +1,40 @@
+# Prijava ponovljene provjere
+# ---------------------------
+
+@@@global
+
+int brojPalih;
+
+@@@def
+
+message("m0", "Na ovom mjestu možete se prijaviti za ponovljenu provjeru. Pažnja: prijavom gubite sve bodove na originalnoj provjeri!");
+chooseOne(
+  "provjera", "Odaberite provjeru koju ponavljate.",
+  option("mi1","Prvi međuispit"),
+  option("mi2","Drugi međuispit"),
+  option("zi","Završni ispit")
+);
+
+@@@filter
+
+// Ako je pao više od jedne provjere, više nema šanse pa nema prijava.
+// Samo ako nije pao ništa, ili je pao jednu prijavu, studentu prikazujemo prijavu
+
+int brojPalih = (passed("MI1")?0:1)+(passed("MI2")?0:1)+(passed("ZI")?0:1);
+
+applicationEnabled(brojPalih<2);
+
+@@@filter("provjera")
+
+// Ako nije prošao završni, tada ga mora ponavljati; inače može ponavljati onaj koji je pao
+if(!passed("ZI")) {
+  optionEnabled("mi1",false);
+  optionEnabled("mi2",false);
+  optionEnabled("zi",true);
+} else {
+// E ovo je komplicirano; mi1 i mi2 može ponavljati samo ako ih je pao
+// međutim, ako je prošao zi, onda ga može ponavljati ako i samo ako je sve prošao
+  optionEnabled("mi1", !passed("MI1"));
+  optionEnabled("mi2", !passed("MI2"));
+  optionEnabled("zi", brojPalih==0);
+}

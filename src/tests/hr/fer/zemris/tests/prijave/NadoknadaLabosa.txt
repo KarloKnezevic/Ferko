@@ -1,0 +1,7 @@
+# prijava nadoknade labosa
+
+@@@def
+
+message("m0", "Na ovom mjestu možete se prijaviti za nadoknadu 4. laboratorijske vježbe. Moguće je nadoknaditi samo jednu laboratorijsku vježbu.");
+text("razlog", "Unesite razlog prijave.");
+

@@ -1,0 +1,1307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+       
+<tiles-definitions>
+
+	<definition name="global.defaultLayout" template="/WEB-INF/pages/layouts/DefaultLayout.jsp">
+		<put-attribute name="header" value="/WEB-INF/pages/global/Header.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/pages/global/Footer.jsp" />
+		<put-attribute name="customhead" value="" type="string" /> 
+	</definition>
+
+	<definition name="main.main" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/Main.jsp" />
+	</definition>
+
+	<definition name="MainLayout" template="/WEB-INF/pages/v2/base.jsp">
+		<put-attribute name="header" value="/WEB-INF/pages/global/Header.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/pages/global/Footer.jsp" />
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="customhead" value="" type="string" /> 
+	</definition>
+
+	<definition name="main2" extends="MainLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/v2/main.jsp" />
+	</definition>
+
+	<definition name="PopupLayout1" template="/WEB-INF/pages/v2/popupBase1.jsp">
+		<put-attribute name="header" value="/WEB-INF/pages/global/popupHeader1.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/pages/global/popupFooter1.jsp" />
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="customhead" value="" type="string" />
+	</definition>
+
+<!--  PLANNING BEGIN -->
+
+	<definition name="course.planning" template="/WEB-INF/pages/main/planning/PlanningBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/planning/Planning.jsp" />
+	</definition>
+	
+	<definition name="main.course.planning" extends="global.defaultLayout">
+		<put-attribute name="title" value="Izrada rasporeda" />
+		<put-attribute name="body" value="course.planning" />
+	</definition>
+	
+	<definition name="course.newplan" template="/WEB-INF/pages/main/planning/PlanningBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/planning/NewPlan.jsp" />
+	</definition>
+	
+	<definition name="main.course.newplan" extends="global.defaultLayout">
+		<put-attribute name="title" value="Izrada rasporeda" />
+		<put-attribute name="body" value="course.newplan" />
+	</definition>
+
+	<definition name="course.schedulePublication" template="/WEB-INF/pages/main/planning/PlanningBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/planning/SchedulePublication.jsp" />
+	</definition>
+	
+	<definition name="main.course.schedulePublication" extends="global.defaultLayout">
+		<put-attribute name="title" value="Objava rasporeda" />
+		<put-attribute name="body" value="course.schedulePublication" />
+	</definition>
+	
+	<definition name="course.schedulePublicationCheck" template="/WEB-INF/pages/main/planning/PlanningBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/planning/SchedulePublicationCheck.jsp" />
+	</definition>
+	
+	<definition name="main.course.schedulePublicationCheck" extends="global.defaultLayout">
+		<put-attribute name="title" value="Objava rasporeda" />
+		<put-attribute name="body" value="course.schedulePublicationCheck" />
+	</definition>	
+	
+	
+	
+<!--  PLANNING END -->	
+
+<!-- ISSUES V2 BEGIN -->
+
+	<definition name="v2.course.issues.issueList" extends="v2.course">
+		<put-attribute name="cbody" value="course.issues.issueList" cascade="true" />
+	</definition>
+	
+	<definition name="course.issues.issueList" template="/WEB-INF/pages/v2/course/issues/IssueBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/issues/Issues.jsp" />
+	</definition>	
+	
+	<definition name="v2.course.issues.topics" extends="v2.course">
+		<put-attribute name="cbody" value="course.issues.topics" cascade="true" />
+	</definition>
+	
+	<definition name="course.issues.topics" template="/WEB-INF/pages/v2/course/issues/IssueBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/issues/IssueTopics.jsp" />
+	</definition>	
+	
+	<definition name="v2.course.issues.newissue" extends="v2.course">
+		<put-attribute name="cbody" value="course.issues.newissue" cascade="true" />
+	</definition>
+	
+	<definition name="course.issues.newissue" template="/WEB-INF/pages/v2/course/issues/IssueBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/issues/NewIssue.jsp" />
+	</definition>	
+	
+	<definition name="v2.course.issues.viewissue" extends="v2.course">
+		<put-attribute name="cbody" value="course.issues.viewissue" cascade="true" />
+	</definition>
+	
+	<definition name="course.issues.viewissue" template="/WEB-INF/pages/v2/course/issues/IssueBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/issues/ViewIssue.jsp" />
+	</definition>	
+	
+	<definition name="v2.course.issues.newanswer" extends="v2.course">
+		<put-attribute name="cbody" value="course.issues.newanswer" cascade="true" />
+	</definition>
+	
+	<definition name="course.issues.newanswer" template="/WEB-INF/pages/v2/course/issues/IssueBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/issues/NewAnswer.jsp" />
+	</definition>
+	
+<!-- ISSUES V2 END -->
+
+	
+<!--  TODO BEGIN -->
+	<definition name="main.todo" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/todo/ToDo.jsp" />
+	</definition>
+	
+	<definition name="main.todonewtask" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/todo/ToDoCreateForm.jsp" />
+		<put-attribute name="customhead" value="/WEB-INF/pages/todo/ToDoCreateFormH.jsp" /> 
+	</definition>
+	
+	<definition name="main.subtasks" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/todo/ToDoSubTaskForm.jsp" />
+	</definition>
+<!--  TODO END -->
+
+	<definition name="main.yearSemesterEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/YearSemesterEdit.jsp" />
+	</definition>
+	
+	<definition name="main.yearSemesterEdit.list" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/YearSemesterEditList.jsp" />
+	</definition>
+	
+	<definition name="main.userSearchForm" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/UserSearchForm.jsp" />
+	</definition>
+	
+	<definition name="main.studentScheduleAnalyzerInput.showApplet" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/StudentScheduleAnalyzerApplet.jsp" />
+	</definition>
+	
+	<definition name="main.studentScheduleAnalyzerInput" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/StudentScheduleAnalyzerInput.jsp" />
+	</definition>
+	
+	<definition name="main.studentScheduleAnalyzerInputUsers" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/StudentScheduleAnalyzerInputUsers.jsp" />
+	</definition>
+	
+	<definition name="main.synchronizeRooms" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/SynchronizeRooms.jsp" />
+	</definition>
+	
+	<definition name="main.importCourseMPConstraints" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/ImportCourseMPConstraints.jsp" />
+	</definition>
+	
+	<definition name="main.help" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/Help.jsp" />
+	</definition>
+	
+	<definition name="main.groupMembershipExport" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/GroupMembershipExport.jsp" />
+	</definition>
+	
+	<definition name="main.groupCoarseStatInput" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/GroupCoarseStatInput.jsp" />
+	</definition>
+	
+	<definition name="main.groupCoarseStat" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/GroupCoarseStat.jsp" />
+	</definition>
+	<definition name="main.jmbagUsernameImport" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/JmbagUsernameImport.jsp" />
+	</definition>
+	
+	<definition name="main.userImport" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/UserImport.jsp" />
+	</definition>
+	
+	<definition name="main.groupOwnership" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/GroupOwnership.jsp" />
+	</definition>
+	
+	<definition name="main.userEditForm" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/UserEditForm.jsp" />
+	</definition>
+
+	<definition name="main.seminarRootEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/SeminarRootEdit.jsp" />
+	</definition>
+
+	<definition name="main.seminarRootEdit.list" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/SeminarRootEditList.jsp" />
+	</definition>
+
+	<definition name="main.showFatalMessage" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/ShowFatalMessage.jsp" />
+	</definition>
+
+	<definition name="main.assessmentCreateAppeal" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/appeals/AppealCreated.jsp" />
+	</definition>
+	
+	<definition name="main.adminListAppeals" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/appeals/AdminListAppeals.jsp" />
+	</definition>
+	
+	<definition name="main.adminAssessmentAppeal" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/appeals/AdminAssessmentAppeal.jsp" />
+	</definition>
+	
+	<definition name="main.assessmentPreloadInsight" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/appeals/AppealsInsightPreload.jsp" />
+	</definition>
+	
+	<definition name="main.assessmentProblemsInsight" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/appeals/AppealsInsightProblems.jsp" />
+	</definition>
+	
+	<definition name="main.assessmentChoiceInsight" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/appeals/AppealsInsightChoice.jsp" />
+	</definition>
+
+	<definition name="main.confPreloadScoreEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/PreloadConfScoreEdit.jsp" />
+	</definition>
+	
+	<definition name="main.confProblemsScoreEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/ProblemsConfScoreEdit.jsp" />
+	</definition>
+	
+	<definition name="course.adminAssessmentConfSelect" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentConfSelect.jsp" />
+	</definition>
+	
+	<definition name="main.course.adminAssessmentConfSelect" extends="global.defaultLayout">
+		<put-attribute name="title" value="Promjena konfiguracije provjere" />
+		<put-attribute name="body" value="course.adminAssessmentConfSelect" />
+	</definition>	
+	
+	<definition name="main.answerPoll" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AnswerPoll.jsp" />
+	</definition>
+
+	<definition name="main.viewPoll" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/ViewPoll.jsp" />
+	</definition>
+
+	<definition name="main.login" extends="global.defaultLayout">
+		<put-attribute name="title" value="Navigation.login" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/Login.jsp" />
+	</definition>
+	
+	<definition name="main.adminAssessmentsImport" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentsImport.jsp" />
+	</definition>
+	
+<!-- REPOSITORY BEGIN -->
+	
+	<definition name="course.repositoryShowFilePage" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryFilePage.jsp" />
+	</definition>
+	<definition name="main.course.repositoryShowFilePage" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repositoryShowFilePage" />
+	</definition>
+	
+	<definition name="course.repositoryAddFilePageCommentPrep" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryAddFilePageComment.jsp" />
+	</definition>
+	<definition name="main.course.repositoryAddFilePageCommentPrep" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repositoryAddFilePageCommentPrep" />
+	</definition>
+	
+	
+<!-- REPOSITORY END -->
+
+	<definition name="main.synchronizeCourseLectureSchedule" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/SynchronizeCourseLectureSchedule.jsp" /> 
+	</definition>
+	 
+	<definition name="main.updateCourseInstanceRoles" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/UpdateCourseInstanceRoles.jsp" /> 
+	</definition>
+
+	<!-- course components -->
+        
+	<definition name="main.courseComponentItemEdit" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/CourseComponentItemEdit.jsp" /> 
+	</definition>
+	
+	<definition name="main.courseComponentDefEdit" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ComponentItemDefEdit.jsp" /> 
+	</definition>
+	
+	<definition name="main.courseComponentTaskEdit" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/CourseComponentTaskEdit.jsp" /> 
+	</definition>
+	
+	<definition name="main.courseComponentItemAssessmentEdit" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ComponentItemAssessmentEdit.jsp" /> 
+	</definition>
+	
+	<definition name="main.courseComponentItemScoresView" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ViewItemScores.jsp" /> 
+	</definition>
+	
+	<definition name="main.itemSingleScores" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ItemSingleScores.jsp" /> 
+	</definition>
+	
+	<definition name="main.componentTaskAssignImport" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/TaskAssignImport.jsp" /> 
+	</definition>
+	
+	<definition name="main.componentTaskReviewers" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ComponentTaskReviewers.jsp" /> 
+	</definition>
+	
+	<definition name="main.componentTaskUsers" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ComponentTaskUsers.jsp" /> 
+	</definition>
+	
+	<definition name="main.componentViewAssignment" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ComponentViewAssignment.jsp" /> 
+	</definition>
+	
+	<definition name="main.componentTaskInfoView" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ViewTaskInfo.jsp" /> 
+	</definition>
+	
+	<definition name="main.viewGroupOwners" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ViewGroupOwners.jsp" /> 
+	</definition>
+	
+	<!-- course template definitions -->	
+
+	<definition name="course.home" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/Course.jsp" />
+	</definition>
+	<definition name="main.course.home" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.home" />
+	</definition>
+
+	<definition name="course.externalGoToLabosiSSO" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ExternalGoToLabosiSSO.jsp" />
+	</definition>
+	<definition name="main.course.externalGoToLabosiSSO" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.externalGoToLabosiSSO" />
+	</definition>
+
+	<definition name="course.CCIAManagerShowMatrix" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/CCIAManagerShowMatrix.jsp" />
+	</definition>
+	<definition name="main.course.CCIAManagerShowMatrix" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.CCIAManagerShowMatrix" />
+	</definition>
+
+	<definition name="course.CCTAManagerShowMatrix" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/CCTAManagerShowMatrix.jsp" />
+	</definition>
+	<definition name="main.course.CCTAManagerShowMatrix" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.CCTAManagerShowMatrix" />
+	</definition>
+
+	<definition name="course.barcodeStickers" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/BarcodeStickers.jsp" />
+	</definition>
+	<definition name="main.course.barcodeStickers" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.barcodeStickers" />
+	</definition>
+
+	<definition name="course.editCoursePermissions" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/EditCoursePermissions2.jsp" />
+	</definition>
+	<definition name="main.course.editCoursePermissions" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.editCoursePermissions" />
+	</definition>
+
+	<definition name="course.assessmentStat" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentStat.jsp" />
+	</definition>
+	<definition name="main.course.assessmentStat" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.assessmentStat" />
+	</definition>
+
+	<!-- Components definitions -->
+
+	<definition name="course.courseComponentTaskView" template="/WEB-INF/pages/global/CourseBody.jsp"> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ComponentTaskView.jsp" /> 
+	</definition>
+	<definition name="main.courseComponentTaskView" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Laboratorijski zadatak" /> 
+		<put-attribute name="body" value="course.courseComponentTaskView" /> 
+	</definition>
+
+	 <definition name="course.courseComponentList" template="/WEB-INF/pages/global/CourseBody.jsp"> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/CourseComponentList.jsp" /> 
+	 </definition> 
+	 <definition name="main.courseComponentList" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Komponente" /> 
+		<put-attribute name="body" value="course.courseComponentList" /> 
+	 </definition>
+
+	<definition name="course.courseComponentItemView" template="/WEB-INF/pages/global/CourseBody.jsp"> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/ComponentItemView.jsp" /> 
+	</definition>
+	<definition name="main.courseComponentItemView" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Komponenta" /> 
+		<put-attribute name="body" value="course.courseComponentItemView" /> 
+	</definition>
+
+	<!-- END -->
+
+	
+	<definition name="forum.default" extends="global.defaultLayout">
+		<put-attribute name="header" value="/WEB-INF/pages/global/ForumHeader.jsp" />
+		<put-attribute name="title" value="Forum" />
+	</definition>
+	
+	<definition name="forum.showForumIndex" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/ForumIndex/show.jsp" />
+	</definition>
+	
+	<definition name="forum.editForumIndex" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/ForumIndex/edit.jsp" />
+	</definition>
+	
+	<definition name="forum.createCourseCategory" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Category/create.jsp" />
+	</definition>	
+
+	<definition name="forum.showCategory" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Category/show.jsp" />
+	</definition>
+	
+	<definition name="forum.editCategory" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Category/edit.jsp" />
+	</definition>
+	
+	<definition name="forum.showSubforum" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Subforum/show.jsp" />
+	</definition>
+	
+	<definition name="forum.editSubforum" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Subforum/edit.jsp" />
+	</definition>
+	
+	<definition name="forum.showTopic" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Topic/show.jsp" />
+	</definition>
+	
+	<definition name="forum.editTopic" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Topic/edit.jsp" />
+	</definition>
+	
+	<definition name="forum.moveTopic" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Topic/move.jsp" />
+	</definition>
+	
+	<definition name="forum.mergeTopic" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Topic/merge.jsp" />
+	</definition>
+	
+	<definition name="forum.editPost" extends="forum.default">
+		<put-attribute name="body" value="/WEB-INF/pages/forum/Post/edit.jsp" />
+	</definition>
+
+
+
+
+
+	<definition name="v2" template="/WEB-INF/pages/layouts/V2DefaultLayout.jsp">
+		<put-attribute name="header" value="/WEB-INF/pages/global/V2Header.jsp" cascade="true" />
+		<put-attribute name="footer" value="/WEB-INF/pages/global/V2Footer.jsp" cascade="true" />
+		<put-attribute name="header2" value="/WEB-INF/pages/global/V2Empty.jsp" cascade="true" />
+		<put-attribute name="footer2" value="/WEB-INF/pages/global/V2Empty.jsp" cascade="true" />
+		<put-attribute name="customhead" value="" type="string" /> 
+		<put-attribute name="title" value="" type="string" />
+	</definition>
+
+	<definition name="v2.main" extends="v2">
+		<put-attribute name="header2" value="/WEB-INF/pages/global/V2HeaderMain.jsp" cascade="true" />
+		<put-attribute name="footer2" value="/WEB-INF/pages/global/V2FooterMain.jsp" cascade="true" />
+		<put-attribute name="body" value="v2.main_body" cascade="true"/>
+	</definition>
+	
+	<definition name="v2.course" extends="v2">
+		<put-attribute name="header2" value="/WEB-INF/pages/global/V2HeaderCourse.jsp" cascade="true" />
+		<put-attribute name="footer2" value="/WEB-INF/pages/global/V2FooterCourse.jsp" cascade="true" />
+		<put-attribute name="body" value="v2.course_body" cascade="true"/>
+	</definition>
+
+	<definition name="v2.main_body" template="/WEB-INF/pages/global/V2MainBody.jsp">
+	</definition>
+	
+	<definition name="v2.course_body" template="/WEB-INF/pages/global/V2CourseBody.jsp">
+	</definition>
+
+	<definition name="v2.main.showActivities" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/Activities.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.main.main" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/Main2.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.main.simpleCalendar" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/SimpleCalendar.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.about" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/main/About.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.loginProblems" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/main/LoginProblems.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.tutorials" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/main/Tutorials.jsp" cascade="true" />
+	</definition>
+
+
+
+<!--  V2 SYSADMIN BEGIN -->	
+	
+	<definition name="v2.sysadmin.assessmentsReserveRooms" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/AssessmentsRoomsReserve.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.sysadmin.openCourseInstances" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/OpenCourseInstances.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.sysadmin.syncEnrollment" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/SyncEnrollment.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.sysadmin.syncCourseDataZIPIsvu" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/SyncCourseDataISVUZip.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.sysadmin.syncComponentSchedule" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/SyncComponentSchedule.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.sysadmin.editRepository" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/SystemEditRepository.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.sysadmin.mp.groupSettings.input" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/MPGroupSettingsViewInput.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.sysadmin.mp.groupSettings.view" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/sysadmin/MPGroupSettingsView.jsp" cascade="true" />
+	</definition>
+
+<!--  V2 SYSADMIN END -->	
+
+<!--  V2 COURSE BEGIN -->
+
+	<definition name="v2.course.home" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/Home.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.events" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/Events.jsp" cascade="true" />
+	</definition>
+
+	<!-- Ova akcija je ovdje umjetno stavljena. Radi se o prikazu podataka o prezentaciji seminara koja
+		 konceptualno spada pod kolegij, ali nije stvarno stavljena u kontekst kolegija. Zato i ne nasljeđuje
+		 format stranice kolegija, već samo v2.main.
+	 -->
+	<definition name="v2.course.viewSeminarInfo" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/course/ViewSeminarInfo.jsp" cascade="true" />
+	</definition>
+
+<!--  V2 COURSE END -->	
+
+<!--  V2 COURSE.WIKI BEGIN -->
+
+	<definition name="v2.course.wiki.home" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/wiki/Home.jsp" cascade="true" />
+	</definition>
+
+<!--  V2 COURSE.WIKI END -->	
+
+<!--  V2 COURSE.ASSESSMENTS BEGIN -->
+
+	<definition name="v2.course.assessments.adminList" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminList.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.adminAssessmentView" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminAssessmentView.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.adminAssessmentEdit" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminAssessmentEdit.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.adminAssessmentFlagEdit" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminAssessmentFlagEdit.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.adminAssessmentFlagData" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminAssessmentFlagData.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.adminAssessmentFlagData_ResetConfirm" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminAssessmentFlagData_ResetConfirm.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.adminAssessmentSummaryView" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminAssessmentSummaryView.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.adminAssessmentFlagImport" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AdminAssessmentFlagImport.jsp" cascade="true" />
+	</definition>
+		
+	<definition name="v2.course.assessments.assessmentStat" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/AssessmentStat.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.studentAssessmentStat" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/StudentAssessmentStat.jsp" cascade="true" />
+	</definition>
+		
+	<definition name="v2.course.assessments.studentSummaryView" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/StudentSummaryView.jsp" cascade="true" />
+	</definition>
+		
+	<definition name="v2.course.assessments.studentAssessmentView" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/StudentAssessmentView.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.staffAssessmentView" extends="v2.main">
+		<put-attribute name="mbody" value="/WEB-INF/pages/v2/course/assessments/StaffAssessmentView.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.studentScoreBrowserSelection" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/StudentScoreBrowserSelection.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.studentScoreBrowserSettingsApplet" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/StudentScoreBrowserSettingsApplet.jsp" cascade="true" />
+	</definition>
+	
+<!--  V2 COURSE.ASSESSMENTS END -->	
+
+<!--  V2 COURSE.ASSESSMENTS.POPUP BEGIN -->
+	
+	<definition name="v2.course.assessments.popup.studentScore" extends="PopupLayout1">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/assessments/StudentSummaryView.jsp" />
+	</definition>
+	<definition name="v2.course.assessments.popup.studentAssessmentView" extends="PopupLayout1">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/assessments/StudentAssessmentView.jsp" />
+	</definition>
+	<definition name="v2.course.assessments.popup.studentAssessmentStat" extends="PopupLayout1">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/v2/course/assessments/StudentAssessmentStat.jsp" />
+	</definition>
+	
+<!--  V2 COURSE.ASSESSMENTS.POPUP END -->	
+
+<!--  V2 COURSE.ASSESSMENTS.TYPES.CHOICE BEGIN -->
+
+	<definition name="v2.course.assessments.types.choice.edit" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/types/choice/Edit.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.types.choice.resultsUpload" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/types/choice/ResultsUpload.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.types.choice.resultsEdit" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/types/choice/ResultsEdit.jsp" cascade="true" />
+	</definition>
+	
+<!--  V2 COURSE.ASSESSMENTS.TYPES.CHOICE END -->	
+
+<!--  V2 COURSE.ASSESSMENTS.SCHEDULE BEGIN -->
+
+	<definition name="v2.course.assessments.schedule.home" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/Home.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.roomInfo" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/RoomInfo.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.confirmMakeStudentSchedule" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/ConfirmMakeStudentSchedule.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.confirmSynchronizeStudents" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/ConfirmSynchronizeStudents.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.confirmImportSchedule" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/ConfirmImportSchedule.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.import" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/ScheduleImport.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.as_import" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/AssistantsImport.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.as_edit" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/AssistantsEdit.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.assessments.schedule.as_sch_edit" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/AssistantsScheduleEdit.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.schedule.rooms" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/RoomSchedule.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.schedule.confirmAutoChooseRooms" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/ConfirmAutoChooseRooms.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.assessments.schedule.confirmRoomsUpdate" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/assessments/schedule/ConfirmRoomsUpdate.jsp" cascade="true" />
+	</definition>
+		
+<!--  V2 COURSE.ASSESSMENTS.SCHEDULE END -->	
+
+<!--  V2 COURSE.GROUPS BEGIN -->	
+
+	<definition name="v2.course.groups.tree" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/Tree.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.groups.add" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/Add.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.groups.edit" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/Edit.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.groups.confirmDeleteGroup" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/ConfirmDelete.jsp" cascade="true" />
+	</definition>
+		
+	<definition name="v2.course.groups.groupUsers" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/GroupUsers.jsp" cascade="true" />
+	</definition>
+		
+	<definition name="v2.course.groups.changeUsersGroup" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/ChangeUsersGroup.jsp" cascade="true" />
+	</definition>
+		
+	<definition name="v2.course.groups.listGroupsEvents" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/ListEvents.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.groups.editGroupsEvents" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/EditEvent.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.groups.subgroupOwners" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/groups/SubgroupOwners.jsp" cascade="true" />
+	</definition>
+		
+<!--  V2 COURSE.GROUPS END -->	
+
+<!--  V2 COURSE.GRADES BEGIN -->	
+	
+	<definition name="v2.course.grades.home" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/grades/Home.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.grades.allGrades" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/grades/AllGrades.jsp" cascade="true" />
+	</definition>
+
+<!--  V2 COURSE.GRADES END -->	
+
+<!--  V2 COURSE.MARKET BEGIN -->	
+	
+	<definition name="v2.course.market.home" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/market/Home.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.market.view" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/market/StudentView.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.market.adminView" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/market/AdminView.jsp" cascade="true" />
+	</definition>
+
+<!--  V2 COURSE.MARKET END -->	
+
+<!--  V2 COURSE.APPLICATIONS BEGIN -->	
+	
+	<definition name="v2.course.applications.home" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/applications/Home.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.applications.editDef" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/applications/EditDef.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.applications.studentFill" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/applications/StudentFill.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.applications.studentViewAppl" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/applications/StudentViewAppl.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.applications.aprovalView" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/applications/AprovalView.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.applications.studentList" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/applications/StudentList.jsp" cascade="true" />
+	</definition>
+	<definition name="v2.course.applications.matrixView" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/applications/MatrixView.jsp" cascade="true" />
+	</definition>
+
+<!--  V2 COURSE.APPLICATIONS END -->	
+
+<!--  V2 COURSE.QUESTIONS.BROWSER BEGIN -->	
+	
+	<definition name="v2.course.questions.browser.editQuestionGroup" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/questions/browser/QuestionGroupEdit.jsp" cascade="true" />
+	</definition>
+	
+<!--  V2 COURSE.QUESTIONS.BROWSER END -->	
+
+<!--  V2 COURSE.REPOSITORIES BEGIN -->	
+	
+	<definition name="v2.course.repositories.home" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/repositories/Home.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.repositories.newCategory" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/repositories/NewCategory.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.repositories.uploadFile" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/repositories/UploadFile.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.repositories.uploadVersion" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/repositories/UploadVersion.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.repositories.viewFileInfo" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/repositories/ViewFileInfo.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.repositories.viewAllVersions" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/repositories/ViewAllVersions.jsp" cascade="true" />
+	</definition>
+
+<!--  V2 COURSE.REPOSITORIES END -->
+
+<!--  V2 COURSE.PARAMETERS BEGIN -->
+
+	<definition name="v2.course.parameters.adminList" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/parameters/AdminList.jsp" cascade="true" />
+	</definition>
+
+	<definition name="v2.course.parameters.param1" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/parameters/Param1.jsp" cascade="true" />
+	</definition>
+	
+	<definition name="v2.course.parameters.param2" extends="v2.course">
+		<put-attribute name="cbody" value="/WEB-INF/pages/v2/course/parameters/Param2.jsp" cascade="true" />
+	</definition>
+	
+<!--  V2 COURSE.PARAMETERS END -->
+
+<!--  Obsolete
+
+	<definition name="course.repositoryViewFileInfo" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryViewFileInfo.jsp" />
+	</definition>
+	<definition name="main.course.repositoryViewFileInfo" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repositoryViewFileInfo" />
+	</definition>	
+	
+	<definition name="course.repositoryViewAllVersions" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryViewAllVersions.jsp" />
+	</definition>
+	<definition name="main.course.repositoryViewAllVersions" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repositoryViewAllVersions" />
+	</definition>
+	
+	<definition name="course.repositoryUploadVersion" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryUploadVersion.jsp" />
+	</definition>
+	<definition name="main.course.repositoryUploadVersion" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repositoryUploadVersion" />
+	</definition>	
+	
+	<definition name="course.repositoryUploadFile" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryUploadFile.jsp" />
+	</definition>
+	<definition name="main.course.repositoryUploadFile" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repositoryUploadFile" />
+	</definition>
+
+	<definition name="course.repositoryNewCategory" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryNewCategory.jsp" />
+	</definition>
+	<definition name="main.course.repositoryNewCategory" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repositoryNewCategory" />
+	</definition>
+
+	<definition name="course.repository" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/RepositoryMain.jsp" />
+	</definition>
+	<definition name="main.course.repository" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.repository" />
+	</definition>
+
+	<definition name="course.applicationAdminTable" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ApplicationAdminTable.jsp" />
+	</definition>
+	<definition name="main.course.applicationAdminTable" extends="global.defaultLayout">
+		<put-attribute name="title" value="Prijave" />
+		<put-attribute name="body" value="course.applicationAdminTable" />
+	</definition>
+	
+	<definition name="course.applicationListStudents" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ApplicationListStudents.jsp" />
+	</definition>
+	<definition name="main.course.applicationListStudents" extends="global.defaultLayout">
+		<put-attribute name="title" value="Prijave" />
+		<put-attribute name="body" value="course.applicationListStudents" />
+	</definition>
+	
+	<definition name="course.applicationAdminAprove" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ApplicationAdminAprove.jsp" />
+	</definition>
+	<definition name="main.course.applicationAdminAprove" extends="global.defaultLayout">
+		<put-attribute name="title" value="Prijave" />
+		<put-attribute name="body" value="course.applicationAdminAprove" />
+	</definition>
+	
+	<definition name="course.applicationStudentView" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ApplicationStudentView.jsp" />
+	</definition>
+	<definition name="main.course.applicationStudentView" extends="global.defaultLayout">
+		<put-attribute name="title" value="Prijave" />
+		<put-attribute name="body" value="course.applicationStudentView" />
+	</definition>
+	
+	<definition name="course.applicationStudentSubmit" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ApplicationStudentSubmit.jsp" />
+	</definition>
+	<definition name="main.course.applicationStudentSubmit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Prijave" />
+		<put-attribute name="body" value="course.applicationStudentSubmit" />
+	</definition>
+	
+	<definition name="course.applicationAdminEdit" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ApplicationAdminEdit.jsp" />
+	</definition>
+	<definition name="main.course.applicationAdminEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Prijave" />
+		<put-attribute name="body" value="course.applicationAdminEdit" />
+	</definition>
+
+	<definition name="course.applicationMain" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ApplicationMain.jsp" />
+	</definition>
+	<definition name="main.course.applicationMain" extends="global.defaultLayout">
+		<put-attribute name="title" value="Prijave" />
+		<put-attribute name="body" value="course.applicationMain" />
+	</definition>
+
+	<definition name="main.synchronizeCourseStudents" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/SynchronizeCourseStudents.jsp" />
+	</definition>
+
+	<definition name="main.synchronizeCourseIsvu" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/SynchronizeCourseIsvu.jsp" />
+	</definition>
+
+	<definition name="main.synchronizeLabSchedule" extends="global.defaultLayout"> 
+		<put-attribute name="title" value="Main.title" /> 
+		<put-attribute name="body" value="/WEB-INF/pages/main/SynchronizeLabSchedule.jsp" /> 
+	</definition>
+
+
+	<definition name="course.courseEvents" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ShowCourseEvents.jsp" />
+	</definition>
+	<definition name="main.course.courseEvents" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.courseEvents" />
+	</definition>
+
+	<definition name="main.assessmentView" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentView.jsp" />
+	</definition>
+
+	<definition name="main.mpGroupSettingsViewInput" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/MPGroupSettingsViewInput.jsp" />
+	</definition>
+	
+	<definition name="main.mpGroupSettingsView" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/MPGroupSettingsView.jsp" />
+	</definition>
+	
+	<definition name="course.editGroupEvent" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/EditGroupEvent.jsp" />
+	</definition>
+	<definition name="main.editGroupEvent" extends="global.defaultLayout">
+		<put-attribute name="title" value="Grupni događaj" />
+		<put-attribute name="body" value="course.editGroupEvent" />
+	</definition>
+	
+	<definition name="course.listGroupEvents" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ListGroupEvents.jsp" />
+	</definition>
+	<definition name="main.listGroupEvents" extends="global.defaultLayout">
+		<put-attribute name="title" value="Grupni događaji" />
+		<put-attribute name="body" value="course.listGroupEvents" />
+	</definition>
+
+	<definition name="main.changeUsersGroup" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/ChangeUsersGroup.jsp" />
+	</definition>
+
+	<definition name="course.groupUsers" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/GroupUsers.jsp" />
+	</definition>
+	<definition name="main.groupUsers" extends="global.defaultLayout">
+		<put-attribute name="title" value="Popis studenata na kolegiju" />
+		<put-attribute name="body" value="course.groupUsers" />
+	</definition>
+
+	<definition name="course.groupEdit" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/GroupEdit.jsp" />
+	</definition>
+	<definition name="main.course.groupEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.groupEdit" />
+	</definition>
+
+	<definition name="course.showGroupTree" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/ShowGroupTree.jsp" />
+	</definition>
+	<definition name="main.showGroupTree" extends="global.defaultLayout">
+		<put-attribute name="title" value="Grupe" />
+		<put-attribute name="body" value="course.showGroupTree" />
+	</definition>
+
+	<definition name="main.assessmentRoomSchedule" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentRoomSchedule.jsp" />
+	</definition>
+	
+	<definition name="main.confirmAutoChooseRooms" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/ConfirmAutoChooseRooms.jsp" />
+	</definition>
+	
+	<definition name="main.confirmUpdate" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/ConfirmUpdate.jsp" />
+	</definition>
+
+
+	<definition name="main.assessmentAssistantImport" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentAssistantImport.jsp" />
+	</definition>
+	
+	<definition name="main.assessmentAssistantEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentAssistantEdit.jsp" />
+	</definition>
+	
+	<definition name="main.assessmentAssistantScheduleEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentAssistantScheduleEdit.jsp" />
+	</definition>
+
+	<definition name="main.assessmentScheduleImport" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentScheduleImport.jsp" />
+	</definition>
+
+	<definition name="main.confirmMakeStudentSchedule" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/ConfirmMakeStudentSchedule.jsp" />
+	</definition>
+	
+	<definition name="main.confirmSynchronizeStudents" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/ConfirmSynchronizeStudents.jsp" />
+	</definition>
+	
+	<definition name="main.confirmImportSchedule" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/ConfirmImportSchedule.jsp" />
+	</definition>
+
+
+	<definition name="main.assessmentRoomInfo" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentRoomInfo.jsp" />
+	</definition>
+	
+	<definition name="main.assessmentSchedule" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentSchedule.jsp" />
+	</definition>
+	
+	<definition name="main.confChoiceScoreEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/ChoiceConfScoreEdit.jsp" />
+	</definition>
+	
+	<definition name="main.adminUploadChoiceConf" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/adminUploadChoiceConf.jsp" />
+	</definition>
+	
+	<definition name="main.adminSetDetailedChoiceConf" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/assessments/adminSetDetailedChoiceConf.jsp" />
+	</definition>
+
+	<definition name="course.assessmentStat" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentStat.jsp" />
+	</definition>
+	<definition name="main.course.assessmentStat" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.assessmentStat" />
+	</definition>
+
+	<definition name="course.adminAssessmentFlagImport" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentFlagImport.jsp" />
+	</definition>
+	<definition name="main.course.adminAssessmentFlagImport" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.adminAssessmentFlagImport" />
+	</definition>
+
+	<definition name="course.adminAssessmentSummaryView" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentSummaryView.jsp" />
+	</definition>
+	<definition name="main.course.adminAssessmentSummaryView" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.adminAssessmentSummaryView" />
+	</definition>
+
+	<definition name="course.adminAssessmentFlagEdit" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentFlagEdit.jsp" />
+	</definition>
+	<definition name="main.course.adminAssessmentFlagEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.adminAssessmentFlagEdit" />
+	</definition>
+
+	<definition name="course.adminAssessmentEdit" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentEdit.jsp" />
+	</definition>
+	<definition name="main.course.adminAssessmentEdit" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.adminAssessmentEdit" />
+	</definition>
+
+	<definition name="course.adminAssessmentView" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentView.jsp" />
+	</definition>
+	<definition name="main.course.adminAssessmentView" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.adminAssessmentView" />
+	</definition>
+
+	<definition name="course.adminAssessmentList" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AdminAssessmentList.jsp" />
+	</definition>
+	<definition name="main.course.adminAssessmentList" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.adminAssessmentList" />
+	</definition>
+	
+	<definition name="course.assessmentSummaryView" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/AssessmentSummaryView.jsp" />
+	</definition>
+	<definition name="main.course.assessmentSummaryView" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="course.assessmentSummaryView" />
+	</definition>
+
+	<definition name="course.mpGroupsList" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/MPGroupsList.jsp" />
+	</definition>
+	<definition name="main.course.mpGroupsList" extends="global.defaultLayout">
+		<put-attribute name="title" value="Burza grupa" />
+		<put-attribute name="body" value="course.mpGroupsList" />
+	</definition>
+
+	<definition name="course.mpView" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/MPView.jsp" />
+	</definition>
+	<definition name="main.course.mpView" extends="global.defaultLayout">
+		<put-attribute name="title" value="Burza grupa" />
+		<put-attribute name="body" value="course.mpView" />
+	</definition>
+
+	<definition name="course.mpGroupsAdmin" template="/WEB-INF/pages/global/CourseBody.jsp">
+		<put-attribute name="body" value="/WEB-INF/pages/main/MPGroupsAdmin.jsp" />
+	</definition>
+	<definition name="main.course.mpGroupsAdmin" extends="global.defaultLayout">
+		<put-attribute name="title" value="Administracija burze grupa" />
+		<put-attribute name="body" value="course.mpGroupsAdmin" />
+	</definition>
+
+	<definition name="main.viewSeminarInfo" extends="global.defaultLayout">
+		<put-attribute name="title" value="Main.title" />
+		<put-attribute name="body" value="/WEB-INF/pages/main/ViewSeminarInfo.jsp" />
+	</definition>
+	
+	
+ -->
+
+
+</tiles-definitions>

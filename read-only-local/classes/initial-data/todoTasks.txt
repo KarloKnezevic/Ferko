@@ -1,0 +1,5 @@
+#vitrualTaskID	owner	realizer	parent	status	deadline	title	desc	gc	priority
+T1	admin	pperic	null	OPEN	2011-10-23 11:12	Task1	Task1Description	F	TRIVIAL
+T2	admin	admin	null	OPEN	2010-06-11 12:13	Task2	Task2Description	F	MEDIUM
+T3	pperic	pperic	null	OPEN	2008-12-11 01:45	Task3	Task3Description	F	CRITICAL
+T4	pperic	pperic	null	OPEN	2008-12-11 22:19	Task4	Task4Description	F	MEDIUM

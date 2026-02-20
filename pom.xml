@@ -25,7 +25,7 @@
         <springdoc.version>2.6.0</springdoc.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
-        <spotless.maven.plugin.version>2.43.0</spotless.maven.plugin.version>
+        <spotless.maven.plugin.version>3.2.1</spotless.maven.plugin.version>
         <google.java.format.version>1.23.0</google.java.format.version>
         <maven.checkstyle.plugin.version>3.4.0</maven.checkstyle.plugin.version>
         <checkstyle.version>10.17.0</checkstyle.version>

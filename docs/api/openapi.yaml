@@ -1,0 +1,275 @@
+openapi: 3.0.1
+info:
+  title: Ferko API
+  description: Modernized Ferko API surface for extracted feature slices.
+  contact:
+    name: Ferko modernization team
+  version: v1
+servers:
+- url: http://localhost
+  description: Generated server url
+tags:
+- name: ToDo
+  description: "Create, list, and close ToDo tasks."
+paths:
+  /api/v1/todo/tasks:
+    post:
+      tags:
+      - ToDo
+      summary: Create ToDo task
+      description: Creates a new task where caller becomes owner and requested assignee
+        is assigned.
+      operationId: createTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateToDoTaskRequest"
+        required: true
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Caller lacks todo.write authority.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Invalid request payload.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Missing or invalid bearer token.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "201":
+          description: Task created.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ToDoTaskResponse"
+      security:
+      - bearerAuth: []
+  /api/v1/todo/tasks/{taskId}/close:
+    post:
+      tags:
+      - ToDo
+      summary: Close task
+      description: Closes a task when caller is owner or assignee.
+      operationId: closeTask
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "404":
+          description: Task not found.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Caller lacks permission to close this task.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Missing or invalid bearer token.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: Task closed.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ToDoTaskResponse"
+      security:
+      - bearerAuth: []
+  /api/v1/todo/my:
+    get:
+      tags:
+      - ToDo
+      summary: List my open tasks
+      description: Lists open tasks where caller is assignee.
+      operationId: listMyOpenTasks
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Caller lacks todo.read authority.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: List of open tasks.
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ToDoTaskResponse"
+        "401":
+          description: Missing or invalid bearer token.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+      - bearerAuth: []
+  /api/v1/todo/assigned:
+    get:
+      tags:
+      - ToDo
+      summary: List tasks assigned by me
+      description: Lists open tasks where caller is owner and task is assigned to
+        others.
+      operationId: listAssignedOpenTasks
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Caller lacks todo.read authority.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: List of open tasks.
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ToDoTaskResponse"
+        "401":
+          description: Missing or invalid bearer token.
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+      - bearerAuth: []
+  /api/v1/ping:
+    get:
+      tags:
+      - ping-controller
+      operationId: ping
+      responses:
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    CreateToDoTaskRequest:
+      type: object
+      properties:
+        assigneeId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        deadline:
+          type: string
+          format: date-time
+        priority:
+          type: string
+    ToDoTaskResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        ownerId:
+          type: integer
+          format: int64
+        assigneeId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        deadline:
+          type: string
+          format: date-time
+        priority:
+          type: string
+        status:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

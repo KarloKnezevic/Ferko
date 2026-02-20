@@ -1,8 +1,0 @@
-#JMBAG-opcionalan#slika#descriptor#description-opcionalan
-	uputa.pdf	A1	Uputa za pisanje provjere znanja
-5509587054	slika1.png	O1	
-5509587054	slika2.png	O2	
-5583351973	slika3.png	O1	
-5583351973	slika4.png	O2	
-2799158078	slika5.png	O1	
-2799158078	slika6.png	O2	

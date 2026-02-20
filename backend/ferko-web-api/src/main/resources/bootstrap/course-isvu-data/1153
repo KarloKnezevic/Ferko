@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=T. Mitchell\: Machine Learning, McGraw-Hill, 1987.\nR. S. Michalski, M. Kubat, I. Bratko, A. Bratko\: Machine Learning and Data Mining\: Methods and Applications, J. Wiley, 1998.\nW. Patterson\: Introduction to Artificial Inteligence and Expert Systems, Prentice-Hall, 1990.
+opterecenja=2\n1\n0\n0\n3.0
+opis=Oblikovanje programskog sustava koji automatski uči kroz iskustvo. Koraci u izgradnji sustava za učenje. Izbor primjera za stjecanje iskustva. Izbor i predstavljanje ciljne funkcije. Učenje kao pretraživanje i algoritmi za pretraživanje prostora potencijalnih hipoteza. Učenje stablom odlučivanja. Neuronske mreže. Evaluacija hipoteza i Bayesovo učenje. Metode učenja na temelju primjera\: k-najbližih susjeda, LW regresija, zaključivanje na temelju slučaja.
+izvodaci=
+nositelji=Prof. dr. sc. Bojana Dalbelo-Bašić

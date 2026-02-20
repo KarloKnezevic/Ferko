@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:58 CEST 2008
+liter=Discrete-Time Processing of Speech Signals Deller, J.R., Proakis, J.G., Hansen, J.H.L. Prentice Hall 1993\nDigitalna obrada govora, Zavodska skripta Petrinović, D. FER, ZESOI 2002\nLaboratorijske vježbe iz digitalne obrade govora, Zavodska skripta Petrinović, D. FER, ZESOI 2003
+opterecenja=2\n0\n0\n0\n4.0
+opis=Predmet opisuje osnovne principe digitalne obrade govora i njene primjene u telekomunikacijma i multimediji. Postupci modeliranja govornog signala, parametarski modeli. Analiza govora, estimacija parametara modela vokalnog trakta i modela pobude. Pregled najznačajnijih modela i njihovih specifičnosti. Kodiranje govora i primjene. Automatsko prepoznavanje govora, govornika i jezika. Vektori značajki, kepstralna analiza. Statistički modeli za prepoznavanje, skriveni Markovljevi modeli, modeli s Gaussovim mješavinama; postupci treniranja parametara modela. Akustički i leksički modeli. Sinteza govora, difonska, trifonska. Normalizacija i modifikacija govora. Primjeri komercijalnih sustava za kodiranje, prepoznavanje i sintezu.
+izvodaci=
+nositelji=

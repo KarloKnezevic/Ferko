@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=
+opterecenja=3\n0\n0\n0\n5.0
+opis=Dinamički modeli asinkronog i sinkronog motora. Skalarno i vektorsko upravljanje asinkronim motorom. Estimacija varijabli. Vektorsko upravljanje asinkronim motorom bez mehaničkih mjernih članova. Upravljanje sinkronim motorom s permanentnim magnetima, elektronički komutiranim motorom, reluktantnim i koračnim motorom. Noviji pristupi upravljanju izmjeničnim elektromotornim pogonima. Posebne primjene reguliranih elektromotornih pogona. Elektromotorni pogoni sa složenim radnim ranim mehnaizmom - izraženi učinci torzije, trenja, zračnosti i promjenjivosti momenta tromosti. Ilustrativni primjeri. Modeliranje elastičnosti, trenja i zračnosti. Sinteza regulatora gibanja zasnovana na optimumu dvostrukog odnosa i na modulnom optimumu. Poboljšanje slijeđenja primjenom pretkompenzatora. Algoritmi za kompenzaciju utjecaja trenja i zračnosti. Pozicioniranje\: točka-točka pozicioniranje
+izvodaci=
+nositelji=Prof. dr. sc. Nedjeljko Perić\nProf. dr. sc. Fetah Kolonić

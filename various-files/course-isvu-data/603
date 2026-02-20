@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:58 CEST 2008
+liter=A. S. Tanenbaum\: Computer Networks, Prentice-Hall, 1994.\nD. Comer\: Internetworking with TCP/IP, Prentice-Hall.\nC. Malamud\: Stacks, Prentice-Hall.
+opterecenja=2\n0\n1\n0\n4.0
+opis=Kratak pregled povijesti komunikacija. OSI model. Fizički mediji. Komunikacijski standardi. Modemi. Kompresije. LAN. WAN. ISDN i B-ISDN, ATM. Virtualne veze i datagrami. Poslužitelji i posljedice njihove primjene na stanje u mrežama. Prijenos izokronih i kontinuiranih signala. Osiguranje širine pojasa i kakvoće usluge. Kompresije s gubitkom i bez. Zaštita od smetnji, neovlaštenog pristupa i prisluškivanja. Informacijski servisi i druge usluge. Koncept multimedijalnosti i povezivanja podataka u distribuiranim sustavima-hipertekst.
+izvodaci=
+nositelji=Prof. dr. sc. Branko Jeren

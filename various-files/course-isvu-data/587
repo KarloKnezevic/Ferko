@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=R. Hecht-Nielsen\: Neurocomputing, Addison-Wesley, 1990.\nJ. Hertz, A. Krogh, R. G. Palmer\: Introduction to the Theory of Neural Computation, Addison-Wesley, 1991.\nC. M. Bishop\: Neural Networks for Pattern Recognition, Clarendon Press, 1995.
+opterecenja=2\n0\n1\n0\n4.0
+opis=Biološke neuronske mreže. Umjetne neuronske mreže. Definicija. Modeli neurona. Aktivacijska funkcija. Topologije mreža. Perceptron. Zakoni učenja. Asocijativne mreže. Linearni asocijator. Rekurzivne asocijativne mreže. Hopfieldova mreža. Energetska funkcija. Višeslojne mreže. Delta pravilo za povratnu propagaciju pogreške. Kohonenova samoorganizirajuća mreža. Algoritam s K srednjih vrijednosti. Boltzmannov stroj. Simulirano hlađenje. Genetički algoritmi. Primjene u analizi signala i slike. Programski paketi za simulaciju.
+izvodaci=
+nositelji=Prof. dr. sc. Sven Lončarić

@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=W. L. Stutzman, G. A. Thiele\: Antenna Theory and Design, J. Wiley, 1998.\nC. A. Balanis\: Advanced Engineering Electromagnetics, J. Wiley, 1989.\nZ. Haznadar, Ž. Štih\: Elektromagnetizam, I i II, Školska knjiga, Zagreb, 1997.
+opterecenja=2\n0\n1\n0\n3.0
+opis=Formulacija problema u području antena, mikrovalnih i optičkih prijenosnih struktura, te u području elektromagnetske kompatibilnosti. Aproksimativne metode rješavanja. Opis problema pomoću diferencijalnih i integralnih jednadžbi. Metoda rješavanja pomoću razvoja u red. Metoda konačnih diferencija (FD, FDTD). Metoda momenata (MoM). Metoda konačnih elemenata (FEM). Spektralne metode. Brza Fourierova transformacija (FFT). Uzroci pogrešaka pri modeliranju elektromagnetskih problema i uzorci pogrešaka pojedinih numeričkih metoda.
+izvodaci=
+nositelji=Prof. dr. sc. Zvonimir Šipuš

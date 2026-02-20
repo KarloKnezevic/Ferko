@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  <!--
+    Ferko modernization suppressions policy:
+    - Add suppressions only for confirmed false positives.
+    - Every suppression must include notes and an expiration date.
+    - Never suppress by CVE globally unless fully justified and approved.
+
+    Template:
+    <suppress until="2026-12-31Z">
+      <notes><![CDATA[
+        Why suppressed:
+        Evidence:
+        Owner:
+        Ticket:
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/group/artifact@.*$</packageUrl>
+      <cve>CVE-0000-0000</cve>
+    </suppress>
+  -->
+</suppressions>

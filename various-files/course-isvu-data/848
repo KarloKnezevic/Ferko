@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=C. P. Pfleger\: Security in Computing, Prentice Hall, 1997.\nB. Schneier\: Applied Cryptography, 2/e, J. Wiley, 1996.\nS. Castano, M. G. Fugini, G. Martella, P. Samarati\: Database Security, ACM Press, 1995.
+opterecenja=2\n1\n1\n0\n4.0
+opis=Definicija sigurnosti, problemi, ciljevi, načela i politika sigurnosti. Tajnost, integritet i raspoloživost. Analiza rizika. Matematički modeli sigurnosti. Adaptivni modeli. Osnove kriptografije i kriptoanalize. Arhitektura sigurnosnog sustava, te mehanizmi za realizaciju. Modeli sigurnosnog upravljanja i nadzora tokova procesa informacijskog sustava, te analiza modela uporabom Petrijevih mreža. Zaštita i sigurnost programa i baza podataka. Povjerljivi sustavi. Višerazinske sigurnosne baze podataka. Sigurnost u distribuiranim sustavima. Višerazinske mreže, sigurnosne brane i zastupnički poslužitelji. Standardi i kriteriji vrednovanja sigurnosti i povjerljivosti sustava. Ocjena, projektiranje i izgradnja sigurnosnog sustava. Upravljanje i nadzor sigurnosti. Zakonski i etički aspekti sigurnosti.
+izvodaci=Lidia Rovan|Auditorne vježbe
+nositelji=Prof. dr. sc. Krešimir Fertalj\nProf. dr. sc. Nikola Hadjina

@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=P. K. Kovacs\: Transient Phenomena in Electrical Machines, Elsevier, 1984.\nV. Ostović\: Computer Aided Analysis of Electric Machine, Prentice Hall, 1994.\nM. Jadrić, B. Frančić\: Dinamika električnih strojeva, Graphis, Zagreb, 1997.
+opterecenja=2\n1\n0\n0\n4.0
+opis=Modeliranje izmjeničnih strojeva. Matematički modeli za brze i vrlo brze prijelazne pojave. Linearizirani modeli dinamičkih sustava. Samouzbudne i prisilne oscilacije u agregatima s izmjeničnim strojevima. Dinamika rotacijskog gibanja elektroagregata s više stupnjeva slobode, međudjelovanje s pojavama u EES-u. Torzijska podsinkrona rezonancija. Nesimetrični vanjski i unutrašnji kratki spojevi. Asinkroni rad sinkronih generatora. Automatsko ponovno uključenje. Uporaba programskih paketa (Matrix, Mathematica, Etap, MicroTran).
+izvodaci=
+nositelji=Prof. dr. sc. Zlatko Maljković

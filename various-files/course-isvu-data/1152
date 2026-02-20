@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=N. Nissanke\: Realtime Systems, Prentice Hall, 1997.\nC. M. Krishna, K. G. Shin\: Real-time Systems, McGraw-Hill, 1997.\nA. Burns, A. Wellings\: Real-Time Systems and Programming Languages, Addison-Wesley, 1996.
+opterecenja=2\n1\n1\n0\n4.0
+opis=Računalni sustavi s nametnutim vremenskim ograničenjima\: primjena, definicijske značajke i klasifikacija sustava. Sustavi sa strogim i ublaženim ograničenjima. Modeliranje sustava vremenski zavisnim Petrijevim mrežama. Strukturiranje programa, oblikovanje i pridjeljivanje programskih zadataka. Programski sustavi ugrađenih računala. Klasifikacija postupaka raspoređivanja zadataka. Jedno i višeprocesorsko statičko raspoređivanje. Višeprocesorsko dinamičko raspoređivanje. Optimalnost raspoređivanja. Sigurnost, pouzdanost i neosjetljivost sustava na pogreške. Postupci oporavka od pogrešaka. Programska, sklopovska i vremenska zalihost sustava. Postupci sinkronizacije takta u povezanim sustavima. Kriteriji ispravnosti i pragmatika sinkronizma.
+izvodaci=
+nositelji=Prof. dr. sc. Joško Radej

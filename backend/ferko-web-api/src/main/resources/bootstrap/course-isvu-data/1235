@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=P. van Roy, S. Haridi\: Concepts, Techniques, and Models of Computer Programing, MIT Press, Cambridge, Ma., 2004.\nW. Gropp, E. Lusk\: T. Sterling, Beowulf Cluster Computing with Linux, Second Edition, MIT Press, Cambridge, Ma., 2003.\nW. Group, E. Lusk\: A. Skjellum, Using MPI, Portable Parallel Programming with Message-Passing Interface, MIT Press, Cambridge, Ma., 1999.
+opterecenja=2\n0\n1\n0\n3.0
+opis=Opći modeli izračunavanja. Osnovne tehnike višedretvenog programiranja. Podatkovno potican i događajima poticani modeli izračunavanja. Programiranje s uvažavanjem blagih vremenskih ograničenja. Model izračunavanja zasnovan na razmjeni poruka. Jednostavni protokoli razmjene poruka. Model izračunavanja s dijeljenim prostorom stanja\: zapreke, monitori, transakcije. Podrška operacijskog sustava međuprocesnoj i međudretvenoj komunikaciji. Sučelje za potporu razmjene poruka u računalnom grozdu. Ostvarenja sučelja za razmjenu poruka. Raspodijeljeni algoritmi. Adaptivno programiranje i programiranje s zaobilaženjem grešaka u raspodijeljenim sustavima.
+izvodaci=Doc. dr. sc. Domagoj Jakobović|Laboratorijske vježbe
+nositelji=Doc. dr. sc. Domagoj Jakobović\nDoc. dr. sc. Marin Golub

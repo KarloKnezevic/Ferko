@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:58 CEST 2008
+liter=Wavelets and Filter Banks Strang G. and Nguyen T Wellesley-Cambridge Press 1996\nNapredne metode digitalne obrade signala Seršić FER 2005
+opterecenja=2\n0\n0\n0\n4.0
+opis=Predmet omogućuje studentima upoznavanje s vremensko-frekvencijskim transformacijama signala i filtarskim slogovima korištenim u modernim sustavima za kompresiju, potiskivanju šuma i komunikacijama te osnovama obrade signala prikupljenih iz prostorno distribuiranih senzora. Fourierova transformacija na vremenskom otvoru (STFT). Wavelet transformacija, kontinuirana i diskretna (CWT, DWT). Razlučivost u vremensko-frekvencijskoj ravnini. Teorija okvira. Filtarski slogovi\: pojasno razlaganje signala. Višetaktni sustavi, decimacija i interpolacija. Uvjeti potpune rekonstrukcije. Polifazna reprezentacija filtarskih slogova. Rešetkasta i ljestvičasta realizacija. Postizanje željenih svojstava razlaganja strukturom filtarskog sloga. Wavelet filtarski slogovi. Granična funkcija skale i wavelet funkcija. Wavelet paketi. Optimalna stabla. Primjene u detekciji značajki signala, komunikacijama, kompresiji signala i potiskivanju šuma. Efikasne realizacije na računalu. Polja distribuiranih senzora, prostorni filtri.
+izvodaci=
+nositelji=Prof. dr. sc. Damir Seršić

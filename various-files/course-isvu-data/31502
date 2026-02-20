@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=JEZIČNI PROCESORI 1\: Uvod u teoriju formalnih jezika, automata i gramatika S. Srbljić Element,Zagreb 2003
+opterecenja=4\n0\n1\n0\n6.0
+opis=Predmet uvodi formalne modele konačnih automata i formalnih gramatika za potrebe opisa, definiranja, programskog i sklopovskog ostvarivanja, te provjere ispravnosti rada raznorodnih i raznovrsnih računalnih i komunikacijskih procesa, protokola i sustava. Objašnjavanju se osnovna svojstva računarskih procesa i sustava kao što su determinizam, odlučivost, izračunljivost, složenost i učinkovitost. Daje se osnova teorije automata, formalnih gramatika i jezika. Proučava se Chomskyeva hijerarhija jezika\: regularni, kontekstno neovisni, kontekstno ovisni, rekurzivni i rekurzivno prebrojivi jezici. Definiraju se razredi složenosti i hijerarhija razreda složenosti\: potpuni i teški problemi, razredi P i NP, te postupak svođenja.
+izvodaci=dr. sc. Andro Milanović|Predavanja\nProf. dr. sc. Joško Radej|Predavanja\nmr. sc. Ivan Gavran|Laboratorijske vježbe\nDanko Ivošević dipl. ing.|Laboratorijske vježbe\nmr. sc. Miroslav Popović|Laboratorijske vježbe\nmr. sc. Daniel Skrobo|Laboratorijske vježbe\nmr. sc. Dejan Škvorc|Laboratorijske vježbe\nIvan Žužak dipl. ing.|Laboratorijske vježbe
+nositelji=Prof. dr. sc. Siniša Srbljić\nProf. dr. sc. Vlado Sruk\nProf. dr. sc. Zoran Kalafatić

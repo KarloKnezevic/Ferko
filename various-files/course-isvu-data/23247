@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=D. Comer\: Operating System Design\: The XINU Approach, Prentice Hall.\nA. S. Tanenbaum\: Operating Systems, Prentice Hall.\nB. Furk et al.\: Real-Time UNIX, Kluwer.
+opterecenja=2\n0\n1\n0\n4.0
+opis=Tipovi računalnog sklopovlja koje se koristi u mjernim i procesnim sustavima. Vrste programske podrške. Koncept modularnosti, dogradljivosti, univerzalnog ulaza i izlaza. Paralelni rad više procesa. Slojevitost. Komunikacijska podrška i protokoli. Prijenos kontinuiranog signala računalnim mrežama. Posebni zahtjevi sustava za rad u stvarnom vremenu. Granularnost vremena. Jedno i višeprocesorska rješenja. Sigurnost i zaštita pri prijenosu naredbi za vođenje procesa. Zaštita i nadzor pristupa podacima i procesima.
+izvodaci=
+nositelji=Prof. dr. sc. Branko Jeren

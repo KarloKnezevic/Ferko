@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:06 CEST 2008
+liter=S. M. Sait, H. Youssef\: VLSI Phisical Design Automation - Theory and Practice, 1995.\nN. Sherwani\: Algorithms for VLSI Phisical Design Automation, 1995.\nJ. P. Uyemura\: Physical Design of CMOS Integrated Circuit Using L-EDIT, 1995.
+opterecenja=2\n0\n2\n0\n4.0
+opis=Uloga fizičkog projektiranja u ukupnom procesu projektiranja integriranih sklopova visokog stupnja integracije. Automatizirano fizičko projektiranje. Definiranje pojedinih koraka pri fizičkom projektiranju. Utjecaj vremenskih, električkih i geometrijskih ograničenja projekta na fizička rješenja. Podjela sklopa na manje funkcionalne cjeline - blokove. Odabir najboljeg razmještaja pojedinih blokova na površini pločice. Električko povezivanje pojedinih blokova u odgovarajuću funkcionalnu cjelinu. Kontrola dobivene izvedbe, traženje mogućnosti za eventualno poboljšanje procesa projektiranja, te otkrivanje i uklanjanje pogrešaka. Pregled osnovnih algoritama i struktura podataka za svaki od navedenih postupaka.
+izvodaci=
+nositelji=Prof. dr. sc. Julijana Divković Pukšec

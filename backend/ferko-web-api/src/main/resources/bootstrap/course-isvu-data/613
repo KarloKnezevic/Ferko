@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=H. Butler\: Model Reference Adaptive Control, Prentice-Hall, 1992.\nM. Kristić, I. Kanellakopoulos, P. Kokotović\: Nonlinear and Adaptive Control Design, J. Wiley, 1995.\nI. D. Landau, R. Lozano, M. M'Saad\: Adaptive Control, Springer, 1998.
+opterecenja=2\n0\n1\n0\n3.0
+opis=Adaptivno upravljanje sustavima primjenom referentnog modela. Osnovni i modificirani kontinuirani i digitalni algoritmi parametarske i signalne adaptacije. Realizacija algoritama adaptacije neizrazitom logikom i neuronskom mrežom. Primjena Matlaba i programskog paketa za optimiranje parametara sustava u stvarnom vremenu za određivanje koeficijenata algoritama adaptacije. Primjena adaptivnih regulatora za kompenzaciju promjene parametara, neliearnosti i djelovanja poremećajne veličine slijednih sustava i industrijskih procesa.
+izvodaci=
+nositelji=Prof. dr. sc. Željko Ban\nProf. dr. sc. Stjepan Bogdan

@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:58 CEST 2008
+liter=L. R. Rabiner, R. W. Schafer\: Digital Processing of Speech Signals, Prentice-Hall, 1978.\nA. M. Kondoz\: Digital Speech, Coding for Low Bit Rate Communication Systems, J. Wiley, 1994.\nL. R. Rabiner, B. H. Juang\: Fundamentals of Speech Recognition, Prentice-Hall, 1993.
+opterecenja=2\n0\n1\n0\n4.0
+opis=Proces nastajanja govora. Klasifikacije glasova u hrvatskom jeziku, valni oblici i spektrogrami pojedinih glasova. Akustička teorija nastajanja govora, širenje zvuka u vokalnom traktu. Modeli sa spojenim cijevima bez gubitaka, vremenski diskretni modeli. Postupci linearne predikcije, metode autokorelacije i kovarijance. Učinkoviti postupci određivanja prediktora. Vremenski kratkotrajna analiza i sinteza govornog signala. Osnove kodiranja govora, VOCODER. Kepstralna analiza govora i primjena u određivanju zvučnosti i osnovne frekvencije titranja glasnica. Automatsko prepoznavanja govora i govornika.
+izvodaci=Prof. dr. sc. Mladen Vučić|Predavanja
+nositelji=Prof. dr. sc. Davor Petrinović

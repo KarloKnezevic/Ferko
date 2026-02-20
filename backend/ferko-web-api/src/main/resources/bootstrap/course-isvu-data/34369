@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=Introduction to Discrete Event Systems C.G. Cassandras, S. Lafortune Kluwer 1999\nManufacturing Systems Control Design S. Bogdan, F.L. Lewis, Z. Kovacic, J. Mireles Springer-Verlag 2005
+opterecenja=2\n0\n0\n0\n4.0
+opis=Pojam događaja i pojam sustava s diskretnim događajima, te njihova veza s kontinuiranim sustavima. Stanja sustava s diskretnim događajima. Osnove teorije grafova i metode određivanja optimalnog puta. Pojam automata i osnove jezika. Markovljevi procesi. Jednadžba i dijagram promjene stanja sustava. Modeliranje i simuliranje sustava s diskretnim događajima. Statičke, dinamičke i obojene Petrijeve mreže. Osnove max-plus algebre. String algebra i matrični opis sustava s diskretnim događajima. Analiza sustava s diskretnim događajima (osmotrivost, stabilnost, konflikt i zaglavljenje). Sinteza sustava s diskretnim događajima i pojam povratne veze. Upravljivost, metode upravljanja i projektiranje nadglednika (supervizora). Primjeri sustava s diskretnim događajima (prometni sustavi, skladištni prostori, automatizirane proizvodne linije, komunikacijski sustavi, računarske mreže).
+izvodaci=
+nositelji=Prof. dr. sc. Stjepan Bogdan

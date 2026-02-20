@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=Osnovne arhitekture mreža A. Bažant, G. Gledec, Ž. Ilić, G. Ježić, M. Kos, M. Kunštić, I. Lovrek, M. Matijašević, B. Mikac, V. Sinković Element 2004\nOptical Networks ? A Practical Perspective R. Ramaswami, K. N. Sivarajan Morgan Kaufmann Publishers 2002\nUvod u komutacijske sustave J. Župan Školska knjiga 1978
+opterecenja=3\n0\n1\n0\n4.0
+opis=Obrađuje se organizacija telekomunikacijske mreže te arhitektura i funkcionalnost sustava u mreži. Jezgrena i pristupna mreža, komutacija kanala i komutacija paketa. Transmisijski mediji, digitalni modulacijski postupci i linijski kodovi. Sinkronizacija mreže, sinkrona digitalna hijerarhija (SDH). Optički transmisijski sustavi i mreže. Dimenzioniranje optičkog linka, multipleksiranje s valnom podjelom, zaštita i obnavljanje u mreži. Pristupne i gradske mreže, širokopojasni pristup. Usmjeravanje i komutiranje. Referentni model i programska struktura komutacijskog sustava. Poziv i usluge, korisnička i mrežna signalizacija. Upravljanje mrežom.
+izvodaci=Doc. dr. sc. Nina Skorin-Kapov|Predavanja
+nositelji=Prof. dr. sc. Branko Mikac\nProf. dr. sc. Dragan Jevtić

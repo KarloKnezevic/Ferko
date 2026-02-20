@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=Strang G. and Nguyen T.\: Wavelets and Filter Banks, Wellesley-Cambridge Press 1996.\nVetterly M. and Kovačević J.\: Wavelets and Subband Coding, Prentice Hall, 1995.\nVaidyanathan P.P.\: Multirate Systems and Filter Banks, Prentice Hall, 1993.
+opterecenja=2\n0\n2\n0\n4.0
+opis=Fourierova transformacija na vremenskom otvoru (STFT). Wavelet transformacija, kontinuirana i diskretna (CWT, DWT). Razlučivost u vremensko-frekvencijskoj ravnini. Teorija okvira. Filtarski slogovi\: pojasno razlaganje signala. Višetaktni sustavi, decimacija i interpolacija. Uvjeti potpune rekonstrukcije. Polifazna reprezentacija filtarskih slogova. Rešetkasta i ljestvičasta realizacija. Postizanje željenih svojstava razlaganja strukturom filtarskog sloga. Wavelet filtarski slogovi. Granična funkcija skale i wavelet funkcija. Wavelet paketi. Optimalna stabla. Primjene u detekciji značajki signala, komunikacijama, kompresiji signala i potiskivanju šuma. Efikasne realizacije na računalu.
+izvodaci=
+nositelji=Prof. dr. sc. Damir Seršić

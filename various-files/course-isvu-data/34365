@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=Analog & Digital Control System Design\: Transfer Function, State-space & Algebraic Methods C. T. Chen Saunders College Publishing 1993\nControl System Design\: An introduction to State Space Methods B. Friedland McGraw Hill 1986\nAutomatsko upravljanje ? analiza linearnih sustava Z. Vukić, Lj. Kuljača Kigen d.o.o 2004
+opterecenja=3\n0\n0\n0\n5.0
+opis=Uvod u projektiranje linearnih sustava automatskog upravljanja. Pokazatelji kvalitete u vremenskom i frekvencijskom području. Ulazno/izlazni i modeli po varijablama stanja. Strukturalna svojstva\: stabilnost, upravljivost, osmotrivost, kanoničke forme i minimalna realizacija. Modeliranje neizvjesnosti; osjetljivost i robusnost sustava. Frekvencijski postupci sinteze serijskih korekcijskih sklopova (Bode; Nichols). Regulator projektiran po simetričnom i po tehničkom optimumu. Sinteza primjenom krivulje mjesta korjena. Linearni algebarski postupak sinteze (LAM), Diofantska jednadžba. Regulator po varijablama stanja i sinteza postavljanjem svojstvenih vrijednosti (SISO sustav). Otklanjanje utjecaja poremećaja. Estimatori stanja (punog reda i reduciranog reda). Totalni regulator. Sinteza regulatora po varijablama stanja za MIMO sustave. Rasprezanje MIMO sustava. Optimalni (LQR) regulator.
+izvodaci=
+nositelji=Prof. dr. sc. Zoran Vukić

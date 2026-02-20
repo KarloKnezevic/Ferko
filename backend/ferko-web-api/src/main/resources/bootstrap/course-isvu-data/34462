@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=Database Systems\: The Complete Book H. Garcia-Molina, J. D. Ullman, J. D. Widom Prentice Hall 2002\nConcurrency control and recovery in database systems P. Bernstein, V. Hadzilacos, N. Goodman Addison-Wesley Publishing Company 1987\nPrinciples of distributed database systems, 2nd ed. M. &Ouml;zsu, P. Valduriez Prentice-Hall 1999
+opterecenja=3\n0\n0\n0\n5.0
+opis=Uvod u fizičku organizaciju baza podataka. Organizacija prostora za pohranu u modernim sustavima za upravljanje bazama podataka. Koncept transakcije. Teorija serijalizabilnosti. Postupci upravljanja istodobnim izvršavanjem transakcija. Obnova baze podataka. Principi optimizacije upita. Distribuirane baze podataka, globalne transakcije, nedjeljivo potvrđivanje, serijalizabilnost, distribuirani potpuni zastoj, optimizacija upita. Replikacija podataka, protokoli replikacije, serijalizabilnost, dostupnost i konzistentnost podataka u repliciranim bazama podataka. Problemi osiguravanja dostupnosti, konzistentnosti i obnove podataka u mobilnim bazama podataka. Administracija sustava za upravljanje bazama podataka. Nadgledanje performanci i podešavanje sustava.
+izvodaci=
+nositelji=Prof. dr. sc. Mirta Baranović

@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=Distributed Systems\: Principles and A. S. Tanenbaum, M. van Steen Prentice Hall 2002
+opterecenja=3\n0\n0\n0\n5.0
+opis=Definicija i osnovna svojstva raspodijeljenih sustava. Modeli raspodijeljenog procesiranja\: klijent/poslužitelj, raspodijeljeni objekti, komunikacija porukama, objavi-pretplati, istovrsni sudionici. Procesi, komunikacija i sinkronizacija u raspodijeljenim sustavima. Raspodijeljene transakcije. Odabrani raspodijeljeni algoritmi, sinkroni i asinkroni mrežni modeli. Konsenzus i koordinacija bez i uz prisutnost kvarova. Komunikacija skupine procesa. Raspodijeljeno pronalaženje podataka. Programski agenti, migracija agenata. Grid.
+izvodaci=
+nositelji=Prof. dr. sc. Ignac Lovrek\nProf. dr. sc. Leo Budin

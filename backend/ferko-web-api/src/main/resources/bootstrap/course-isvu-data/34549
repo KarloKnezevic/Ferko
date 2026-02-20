@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:58 CEST 2008
+liter=Digital Integrated Circuits - A Design Perspective, 2nd ed. J.M. Rabaey, A. Chandrakasan, B. Nikolić Prentice Hall 2003\nCMOS - Circuit Design, Layout, and Simulation, 2nd ed. R.J. Baker IEEE Press & Wiley-Interscience 2005\nAnalysis and Design of Digital Integrated Circuits - in Deep Submicron Technology, 3rd ed. D.A. Hodges, H.G. Jackson. R.A. Saleh Mc Graw Hill 2003
+opterecenja=3\n0\n0\n0\n5.0
+opis=Uvod. Komponente CMOS digitalnih sklopova. Modeli MOS tranzistora. Topološka pravila CMOS procesa. Programski alati za topološko i električko projektiranje. CMOS invertor - statičke i dinamičke karakteristike, disipacija snage. Kombinacijski CMOS logički sklopovi - komplementarni, omjerni, prijenosni, dinamički. Sekvencijski CMOS sklopovi - osnovni i složeni bistabili. Linije i prospoji - parametri i modeli prospojnih linija, problemi razvođenja linija. Aritmetički CMOS sklopovi - zbrajala, množila, sklopovi za posmak. Memorijski CMOS sklopovi - topološka organizacija, sklopovske izvedbe jezgre memorije, periferni sklopovi. Ulazno/izlazni sklopovi.
+izvodaci=
+nositelji=Prof. dr. sc. Željko Butković

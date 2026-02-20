@@ -1,0 +1,107 @@
+spring:
+  application:
+    name: ferko-web-api
+  datasource:
+    url: ${FERKO_DB_URL:jdbc:h2:mem:ferko;MODE=PostgreSQL;DB_CLOSE_DELAY=0;DATABASE_TO_LOWER=TRUE}
+    username: ${FERKO_DB_USERNAME:sa}
+    password: ${FERKO_DB_PASSWORD:}
+    driver-class-name: ${FERKO_DB_DRIVER:org.h2.Driver}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+ferko:
+  security:
+    jwt:
+      principal-claim: ${FERKO_JWT_PRINCIPAL_CLAIM:sub}
+      roles-claim: ${FERKO_JWT_ROLES_CLAIM:roles}
+      issuer-uri: ${FERKO_OIDC_ISSUER_URI:}
+      jwk-set-uri: ${FERKO_OIDC_JWK_SET_URI:}
+      hmac-secret: ${FERKO_JWT_HMAC_SECRET:}
+      allow-hmac-decoder: ${FERKO_JWT_ALLOW_HMAC_DECODER:true}
+    dev-token:
+      enabled: ${FERKO_DEV_TOKEN_ENABLED:false}
+  audit:
+    repository: ${FERKO_AUDIT_REPOSITORY:jdbc}
+  todo:
+    repository: ${FERKO_TODO_REPOSITORY:jdbc}
+  bootstrap:
+    legacy:
+      enabled: ${FERKO_BOOTSTRAP_LEGACY_ENABLED:true}
+  portal:
+    bootstrap:
+      enabled: ${FERKO_PORTAL_BOOTSTRAP_ENABLED:true}
+      max-courses: ${FERKO_PORTAL_BOOTSTRAP_MAX_COURSES:18}
+      max-students: ${FERKO_PORTAL_BOOTSTRAP_MAX_STUDENTS:260}
+      max-schedule-entries: ${FERKO_PORTAL_BOOTSTRAP_MAX_SCHEDULE_ENTRIES:220}
+      max-exam-entries: ${FERKO_PORTAL_BOOTSTRAP_MAX_EXAM_ENTRIES:80}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: ${FERKO_DB_URL:jdbc:postgresql://postgres:5432/ferko}
+    username: ${FERKO_DB_USERNAME:ferko}
+    password: ${FERKO_DB_PASSWORD:ferko}
+    driver-class-name: org.postgresql.Driver
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+ferko:
+  security:
+    dev-token:
+      enabled: ${FERKO_DEV_TOKEN_ENABLED:true}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: staging | prod
+  datasource:
+    url: ${FERKO_DB_URL}
+    username: ${FERKO_DB_USERNAME}
+    password: ${FERKO_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+ferko:
+  security:
+    jwt:
+      issuer-uri: ${FERKO_OIDC_ISSUER_URI:}
+      jwk-set-uri: ${FERKO_OIDC_JWK_SET_URI:}
+      hmac-secret: ${FERKO_JWT_HMAC_SECRET:}
+      allow-hmac-decoder: false
+    dev-token:
+      enabled: false
+  bootstrap:
+    legacy:
+      enabled: false
+  portal:
+    bootstrap:
+      enabled: false
+
+management:
+  endpoint:
+    health:
+      show-details: never
+
+server:
+  forward-headers-strategy: framework
+  shutdown: graceful
+  servlet:
+    session:
+      cookie:
+        secure: true
+        http-only: true
+        same-site: strict

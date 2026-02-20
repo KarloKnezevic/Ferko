@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FERKO Academic Portal</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="bg-layer"></div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+
+    <main class="app-root">
+      <section id="login-view" class="login-view">
+        <header class="brand-block">
+          <p class="brand-kicker">UNIVERSITY ACADEMIC PLATFORM</p>
+          <h1>FERKO Academic Portal</h1>
+          <p>
+            Centralized FER academic workflows for students, lecturers, assistants, student office,
+            and administration.
+          </p>
+        </header>
+
+        <div class="login-layout">
+          <article class="panel login-panel">
+            <h2>Sign In</h2>
+            <form id="login-form" class="stacked-form" novalidate>
+              <label>
+                Username
+                <input id="login-username" name="username" type="text" autocomplete="username" required />
+              </label>
+              <label>
+                Password
+                <input
+                  id="login-password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                />
+              </label>
+              <button class="btn btn-primary" type="submit">Login</button>
+            </form>
+            <p id="login-error" class="error-message" role="alert" aria-live="polite"></p>
+          </article>
+
+          <article class="panel credentials-panel">
+            <h2>Local demo accounts</h2>
+            <p>Each role opens a different FERKO dashboard and workflow surface.</p>
+            <div id="credential-cards" class="credential-cards"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="portal-view" class="portal-view hidden">
+        <header class="topbar panel">
+          <div class="topbar-left">
+            <p class="brand-kicker" id="portal-kicker">FERKO</p>
+            <h2 id="portal-title">FERKO Academic Portal</h2>
+            <p id="portal-subtitle" class="topbar-subtitle"></p>
+          </div>
+          <div class="topbar-right">
+            <div id="session-pill" class="session-pill"></div>
+            <button id="logout-button" class="btn btn-ghost" type="button">Logout</button>
+          </div>
+        </header>
+
+        <nav id="main-nav" class="main-nav panel" aria-label="Primary"></nav>
+
+        <section id="status-area" class="status-area"></section>
+
+        <section id="section-dashboard" class="content-section"></section>
+        <section id="section-courses" class="content-section hidden"></section>
+        <section id="section-calendar" class="content-section hidden"></section>
+        <section id="section-points" class="content-section hidden"></section>
+        <section id="section-exams" class="content-section hidden"></section>
+        <section id="section-exchange" class="content-section hidden"></section>
+        <section id="section-administration" class="content-section hidden"></section>
+      </section>
+    </main>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>

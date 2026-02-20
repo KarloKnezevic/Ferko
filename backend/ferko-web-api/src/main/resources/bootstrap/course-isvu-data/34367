@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=A Tutorial on Adaptive Control\: The Self-tuning Approach Z. Vukić IEEE Southeastcon 2000\nSelf-tuning Systems - Control and Signal Processing P. E. Wellstead; M. P. Zarrop John Wiley & Sons. 1992\nAdaptive Control K.J. Astrom; B. Wittenmark Addison Wesley 19\nAdaptive Control\: Stability, Convergence, Robustness S. Sastry; M. Bodson Prentice Hall Inc. 1989
+opterecenja=2\n0\n0\n0\n4.0
+opis=Uvod\: Problem upravljanja sustava koji su vremenski promjenjivi. Primjeri takvih sustava. Razlika između adaptivnog i robusnog upravljanja. Strukture kod adaptivnog upravljanja (s prethodno ugođenim pojačanjem (gain scheduling), s referentnim modelom (MRAS)). Samougađajući regulator. Rekurzivni postupak najmanjih kvadrata i prošireni postupak najmanjih kvadrata. Otklanjanje patoloških pojava tijekom estimacije parametara procesa. Stabilnost, konvergencija i robusnost. Sinteza STR regulatora postupkom postavljanja polova/nula. Stohastičko adaptivno upravljanje\: minimum varijansni regulator (MV) i poopćeni MV regulator (GMV). Prediktivni ST regulatori. Robusno upravljanje ? uvod. Vrste neizvjesnosti parametara. Robusni regulator za nestrukturiranu neizvjesnost. Sinteza QFT regulatora. Sinteza simultano stabilizirajućeg regulatora i Hinf regulatora.
+izvodaci=
+nositelji=Prof. dr. sc. Zoran Vukić\nProf. dr. sc. Željko Ban

@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:02 CEST 2008
+liter=I. Petrović\: Sustavi za daljinsko vođenje i distribuirano upravljanje B predavanja, Zavod za APR, Zavodska skripta, FER, Zagreb, 2000.\nL. L. Peterson, B. S. Davie\: Computer Networks, 2/e, Morgan Kaufman, 2000.\nH. Kopetz\: Real-Time Systems\: Design Principles for Distributed Embedded Applications, Kluwer, 1997.
+opterecenja=2\n0\n1\n0\n3.0
+opis=Osnovne strukture sustava daljinskog vođenja i distribuiranog upravljanja. Distribuirani računalni sustavi. Komunikacijski sustavi. Višerazinska organizacija sustava automatizacije postrojenja i procesa, funkcije i baze podataka razina automatizacije, integrirani informacijski sustav tvornice. Komunikacije u sustavima automatizacije. Distribuirani računalni sustavi za rad u stvarnom vremenu\: funkcionalni zahtjevi, analiza kašnjenja, globalno vrijeme u sustavu, sinkronizacija lokalnih satova čvorova. Mjerenje i modeliranje kašnjenja komunikacijske mreže. Upravljanje u zatvorenoj petlji preko komunikacijske mreže. Sinkronizacija rada više zatvorenih upravljačkih krugova preko jedne komunikacijske mreže.
+izvodaci=Marko Bago|Laboratorijske vježbe\nMišel Brezak|Laboratorijske vježbe
+nositelji=Prof. dr. sc. Ivan Petrović

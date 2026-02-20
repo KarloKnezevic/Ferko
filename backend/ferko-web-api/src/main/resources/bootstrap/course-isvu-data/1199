@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=E. M. Clarke, O. Grumberg, D.A. Peled\: Model Checking, MIT Press, 2000.\nM. Huth, M. Ryan\: Logic in Computor Science\: Modeling and reasoning about systems, Cambridge University Press, 1999.\nJ. M. Schumann\: Automated Theorem Proving in Software Engineering, Springer-Verlag, 2001.
+opterecenja=2\n0\n2\n0\n4.0
+opis=Formalna specifikacija i verifikacija sustava. Pristupi verifikaciji\: dokazivanje teorema i provjera modela. Dokazivanje teorema\: ciljevi, automatizacija, dokazivači teorema. Provjera modela\: ograničenost mogućnosti i primjene, potpuna automatiziranost, alati. Prikaz implementacije u obliku konačnog automata. Prikaz specifikacije korištenjem formula temporalne logike. Provjera\: zadovoljava li model karakteristike zadane formulama temporalne logike. Problem pretraživanja prostora stanja i eksplozije broja stanja. Pristupi rješavanju. Simbolička verifikacija. Formalna verifikacija i testiranje. Verifikacija hardvera. Trenutno stanje primjene formalnih metoda.
+izvodaci=
+nositelji=Prof. dr. sc. Miljenko Mikuc

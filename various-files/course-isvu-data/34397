@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:05 CEST 2008
+liter=DIGITAL SIGNAL PROCESSING\: a Computer-Based Approach S. K. Mitra McGraw-Hill Co. Inc. 1998\nDiscrete-Time Signal Processing A. V. Oppenheim, R. W.Schafer Prentice Hall 1992\nDigitalna obradba signala - Upute za laboratorijske vježbe D. Petrinović, D. Petrinović, R. Bregović, H. Babić. i B. Jeren FER-ZESOI 2003
+opterecenja=3\n0\n0\n0\n5.0
+opis=Razvoj teorije digitalne obradbe signala paralelno s razvojem digitalnih računala, omogućio je pojavu potpuno novih elektroničkih sustava s izuzetno širokim područjem primjene, kod kojih se obradba provodi računalom i to na vremenskim uzorcima ulaznih signala. Predmet obrađuje\: vremenski diskretni signali i Fouirerova transformacija; uvod u DOS i digitalne filtre; analogni električni filtri; projektiranje filtara s konačnim impulsnim odzivom (FIR); optimalni FIR filtri; projektiranje filtara s beskonačnim impulsnim odzivom (IIR); frekvencijske transformacije u Z-domeni; obradba signala u blokovima i obradba uzorak po uzorak; FIR i IIR filtarske strukture; kvantizacija koeficijenata filtra; brza Fourierova transformacija; višetaktna digitalna obradba signala; uvod u digitalnu obradbu govora i digitalnu obradbu slike.
+izvodaci=
+nositelji=Prof. dr. sc. Branko Jeren\nProf. dr. sc. Davor Petrinović

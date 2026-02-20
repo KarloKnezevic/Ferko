@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=Advanced Programming Language Design R. A. Finkel Addison-Wesley 1996
+opterecenja=2\n0\n0\n0\n4.0
+opis=Manje poznata i naprednija svojstva iz različitih programskih paradigmi te iz oblikovanja (dizajniranja) i implementacije programskih jezika. Svojstva se objašnjavaju na primjerima programskih jezika, a opisuje se i način njihove implementacije što je važno pri oblikovanju novog programskog jezika. Imperativna paradigma\: alternativni načini kontrole toka. Funkcijska paradigma\: lambda račun, semantika izvođenja, čistoća jezika, sustav tipova, monade i implementacija funkcijskih jezika. Objektna paradigma\: dinamički i statički OO jezici, sustav klasa i tipova, proširivanje metoda i parametara, implementacija objektnih jezika. Automatsko upravljanje memorijom. Kratki pregled nekih drugih ideja i paradigmi\: aspektno, generičko i meta programiranje, višeparadigmatičnost.
+izvodaci=
+nositelji=Prof. dr. sc. Danko Basch

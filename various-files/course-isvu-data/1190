@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:58 CEST 2008
+liter=R. C. Arkin\: Behavior-Based Robotics, MIT Press, 1998.\nU. Nehmzown\: Mobile Robotics - A Practical Introduction, Springer, 2000.\nG. Dudek, M. Jenkin\: Computational Principles of Mobile Robotics, Cambridge University Press, 2000.
+opterecenja=2\n0\n1\n0\n3.0
+opis=Uvodna razmatranja o mobilnim robotima\: osnovni pojmovi, definicije, klasifikacije, povijesni razvoj, primjene i primjeri mobilnih robota. Sklopovske izvedbe mobilnih robota\: mehanizmi, aktuatori, senzori, upravljačka elektronika. Obradba i interpretacija signala senzora robota. Fuzija senzora robota radi povećanja kakvoće i robusnosti njegove navigacije kroz prostor. Koncepcija sustava upravljanja i navigacije temeljena na paralelnoj organizaciji funkcija upravljanja i hijerarhijskoj organizaciji razina kompetencije, Brooksove postavke. Metode i algoritmi sustava upravljanja i navigacije za izbjegavanje prepreka, pretraživanje nepoznatog prostora, izgradnju karte prostora te za lokalizaciju i planiranje putanje robota. Osnove koordinacije rada više autonomnih mobilnih robota.
+izvodaci=Edouard Ivanjko|Laboratorijske vježbe\nMarija Seder|Laboratorijske vježbe
+nositelji=Prof. dr. sc. Ivan Petrović

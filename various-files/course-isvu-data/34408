@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=Communication Systems S. Haykin Yohn Wiley & Sons, Inc. 2000\nDigital Communication Techniques\: Signal Design and Detection M. K. Simon, S. M. Hinedi, W. C. Lindsey Prentice Hall 1994
+opterecenja=3\n0\n0\n0\n5.0
+opis=Modeliranje prijenosnih sustava. Prijenos u osnovnom i transponiranom frekvencijskom području. Multipleks. Kontinualne modulacije. Obrada kompleksnih signala. Hilbertova transformacija. Koherentna i nekoherentna detekcija. Mjere kvalitete prijenosa. Osnovna građa prijemnika. DSP procesori u formiranju i prijemu moduliranih signala. Impulsno kodne modulacije. Prijenos impulsa u osnovnom i transponiranom frekvencijskom području. Optimalan prijemnik. Vjerojatnost pogrešne detekcije bita i simbola. Preslušavanje između simbola (ISI). ISI filtri. Korekcija nesavršenosti kanala. Signali u vektorskom prostoru. Gram-Schmidt ortogonalizacija. Digitalni modulacijski postupci. Sinkronizacija takta u prijenosnim sustavima. Mjerenje svojstava prijenosnih sustava. Modemi. Postupci za prijenos pomoću proširenog spektra. Primjeri žičnih i bežičnih komunikacijskih sustava. Upotreba MATLAB-a u modeliranju i analizi komunikacijskih sustava.
+izvodaci=
+nositelji=Prof. dr. sc. Mladen Vučić

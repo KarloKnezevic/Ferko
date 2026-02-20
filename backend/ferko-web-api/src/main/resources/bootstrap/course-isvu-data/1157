@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:06 CEST 2008
+liter=R. J. Baker, H. W. Li, D. F. Boyce\: CMOS Circuit Design, Layout, and Simulation, IEEE Press, 1998.\nD. K. Ferry, L. A. Akers, E. W. Greeneich\: Ultra Large Scale Integrated Microeletronics, Prentice Hall, 1988.\nD. K. Ferry, L. A. Akers, E. W. Greeneich\: Ultra Large Scale Integrated Microeletronics IEEE Journal of Solid State Circuits, 1990-2000.
+opterecenja=2\n0\n2\n0\n4.0
+opis=Definiranje čipova ultra visokog stupnja kompleksnosti. Metodologija skaliranja i sažimanja podstruktura u čipu. Hijerarhijsko projektiranje. Metode projektiranja sklopova potpuno po narudžbi, sklopova sa standardnim ćelijama, sklopova s logičkim poljima i sklopova s programirljivim strukturama. Usporedba različitih pristupa projektiranja čipova ultra visokog stupnja kompleksnosti. Topološki i električki parametri u realiziranju čipova. Metode razmještaja i međusobnog povezivanja osnovnih ćelija. Karakteristike metalizacijskih sustava i njihov utjecaj na dosege čipova ultra visokog stupnja kompleksnosti. Mooreov zakon predviđanja daljeg razvoja čipova na siliciju, SOS i SOI čipova.
+izvodaci=Doc. dr. sc. Tomislav Suligoj|Laboratorijske vježbe
+nositelji=Prof. dr. sc. Petar Biljanović\nDoc. dr. sc. Tomislav Suligoj

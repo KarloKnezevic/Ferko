@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=Modern Power System Control and Operation A. S. DEBS DSI 1996\nPower System Control and Stability P. M. ANDERSON, A. A. FOUAD Wiley 2002\nState Estimation in Electric Power Systems A. MONTICELLI Kluwer 1999
+opterecenja=3\n0\n0\n0\n4.0
+opis=Kratka povijest razvoja sustava za vođenje EE mreža.Zadaci sustava za vođenje EE mreža (nadzor, upravljanje, optimiranje).Osnovne karakteristike sustava procesne informatike i komunikacijskog sustava.Komunikacijski i mrežni protokoli.Prikupljanje podataka iz realnog sustava (telemjerenja i signalizacija).Aplikacijski programi (SCADA, Modeli EE mreža, Baza podataka, Prezentacija EE mreža i dr.).Funkcije i struktura centara daljinskog upravljanja.Dispečerski centri za vođenje pogona prijenosnih mreža (NDC-i).Struktura i zadaci programske podrške u NDC-u (EMS).Programi za ON-LINE analizu EE mreža (procjena stanja, analiza sigurnosti N-1, kratki spoj).Programi za OFF-LINE analizu EE mreža (tokovi snaga, naponski plan i dr.).Dispečerski centri za vođenje pogona razdjelnih mreža.Funkcije DMS sustava (padovi napona, kratki spoj, gubici, optimiranje pogona i dr.).Centri daljinskog upravljanja u industrijskim postrojenjima.Programska podrška za vođenje industrijskih EE mreža.
+izvodaci=dr. sc. Srđan Skok|Predavanja
+nositelji=Prof. dr. sc. Ivica Pavić

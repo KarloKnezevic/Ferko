@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:07 CEST 2008
+liter=S. S. Muchnick\: Advanced Compiler Design and Implementation, Morgan Kaufmann, 1997.\nR. Morgan\: Building an Optimizing Compiler, Butterworth-Heinemann, 1998.\nS. Srbljić\: Jezični procesori 2\: Analiza izvornog i sinteza ciljnog programa, Element, Zagreb 2002.
+opterecenja=2\n1\n1\n0\n4.0
+opis=Struktura optimirajućih jezičnih procesora\: analiza toka podataka, analiza tijeka izvođenja programa, analiza zavisnosti podataka i analiza pseudonima. Postupna pretvorba međukoda više razine u međukod srednje i niže razine. Tehnike optimiranja\: strojno nezavisno optimiranje, strojno zavisno optimiranje, lokalno optimiranje, globalno optimiranje i interproceduralno optimiranje. Tehnike optimiranja namijenjene računalima posebne arhitekture. Tehnike optimiranja namijenjene računalima zasnovanim na višerazinskim hijerarhijskim memorijama. Vrednovanje tehnika optimiranja.
+izvodaci=mr. sc. Dejan Škvorc|Auditorne vježbe, Laboratorijske vježbe
+nositelji=Prof. dr. sc. Siniša Srbljić

@@ -1,0 +1,10 @@
+ferko:
+  bootstrap:
+    legacy:
+      enabled: false
+  portal:
+    bootstrap:
+      enabled: false
+  security:
+    jwt:
+      hmac-secret: ferko-test-hmac-secret-0123456789abcdef

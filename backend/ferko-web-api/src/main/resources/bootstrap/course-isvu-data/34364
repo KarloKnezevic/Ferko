@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=Fundamentals of robotics (in Croatian) Z. Kovačić, S. Bogdan, V. Krajči Graphis d.d. 2002\nIndustrial robots (in Croatian) M. Crneković, T. Šurina Školska knjiga 1990\nFundamentals of Robotics - Analysis and Control R.J. Schilling Prentice-Hall, Englewood Cliffs, New Jersey 1990
+opterecenja=3\n0\n0\n0\n5.0
+opis=Vrste i karakteristike robota. Izvedbe i karakteristike elemenata robota. Položaj i orijentacija krutog tijela. Konvencija Denavit-Hartenberga. Kinematika i inverzna kinematika. Dinamičko modeliranje robota. Lagrange-Eulerova i Newton-Eulerova metoda. Planiranje puta i trajektorije. Metode interpolacije u Euklidskom prostoru. Hijerarhijsko upravljanje robotima. Algoritmi upravljanja koordinatama slijednih sustava robota (položaj, brzina, zakretni moment i sila). Roboti s umjetnom inteligencijom. Robotski vid. Osnovne karakteristike fleksibilnih proizvodnih sustava.
+izvodaci=
+nositelji=Prof. dr. sc. Zdenko Kovačić

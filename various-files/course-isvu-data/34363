@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:03 CEST 2008
+liter=Identifikacija procesa-predavanja, Skripta Perić, N., Petrović, I FER, Zagreb 2005\nSystem Identification - Theory for the Users (2nd Edition) Ljung, L. Prentice-Hall 1998\nKalman Filtering and Neural Networks Haykin, S. (Editor) John Wiley&Sons 2001\nAdaptive Filtering and Change Detection Gustafsson, F. John Wiley&Sons 2000
+opterecenja=3\n0\n0\n0\n5.0
+opis=Obrađuju se metode estimacije modela sustava (identifikacija sustava) i metode estimacije stanja sustava. Identifikacija sustava na temelju determinističkih pobudnih signala. Neparametarske metode identifikacije sustava u vremenskom i frekvencijskom području. Estimacija parametara modela sustava\: metoda najmanjih kvadrata, metoda pomoćnih varijabli, metoda maksimalne vjerojatnosti. Odabir strukture modela i vrednovanje identificiranog modela. Estimacija stanja determinističkih sustava. Estimacija stanja stohastičkih sustava\: linearni i nelienarni Kalmanovi filtri. Istodobna estimacija stanja i parametara sustava. Primjeri primjene tehnika estimacije u upravljanju sustavima, otkrivanju kvarova u sustavima, obradbi signala i sl.
+izvodaci=
+nositelji=Prof. dr. sc. Nedjeljko Perić

@@ -1,0 +1,6 @@
+package hr.fer.zemris.ferko.webapi.dto;
+
+import java.time.LocalDateTime;
+
+public record CreateToDoTaskRequest(
+    long assigneeId, String title, String description, LocalDateTime deadline, String priority) {}

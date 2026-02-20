@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=K. J. Astr&ouml;m, B. Wittenmark\: Adaptive Control, Addison-Wesley, 1995.\nP. E. Wellstead, M. B. Zarrop\: Self-tuning Systems - Control and Signal Processing, J. Wiley, 1992.\nJ. J. D'Azzo, C. H. Houpis\: Linear Control System Analysis and Design - Conventional and Modern, McGraw-Hill, 1995.
+opterecenja=2\n0\n1\n0\n3.0
+opis=Osnovne strukture samopodešavajućih sustava upravljanja. Auotopodesivi regulator. Sustavi upravljanja s prethodno podešenim pojačanjem. Identifikacija parametara u stvarnom vremenu. Postupci otklanjanja nepovoljnih efekata koji se mogu pojaviti tijekom identifikacije u stvarnom vremenu. Projektiranje samopodešavajućih regulatora, prema različitim strategijama sinteze. Samopodešavajući PID regulator. Problem stabilnosti i robusnosti sustava. Osnovne strukture robusnog upravljanja. Postupak sinteze robusnog regulatora.
+izvodaci=Matko Barišić|Laboratorijske vježbe\nNikola Mišković dipl. ing.|Laboratorijske vježbe
+nositelji=Prof. dr. sc. Zoran Vukić

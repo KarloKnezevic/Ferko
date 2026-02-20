@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:58 CEST 2008
+liter=DSP Software Development Techniques for Embedded and Real-Time Systems Oshana, R. Elsevier 2005\nIntel Integrated Performance Primitives\: How to Optimize Software Applications Using Intel IPP Taylor, S. Intel Press 2003\nComputer Systems, A Programmer s Perspective Brayant, R.E., O Hallaron, D. Prentice Hall 2003
+opterecenja=2\n0\n0\n0\n4.0
+opis=Razvoj programske podrške za potrebe digitalne obradbe signala vrlo je specifičan, posebice zbog svojstava procesora na kojem se obradba provodi, ali i zbog zahtjeva koji se na te sustave postavljaju. Namjenska arhitektura procesora za obradbu signala otežava programiranje u višim programskim jezicima. Često se pojedine funkcije moraju optimirati na assemblerskoj razini, što zahtjeva detaljna znanja o arhitekturi suvremenih procesora, o algoritama obradbe signala kao i alatima za razvoj. U okviru predmeta stječu se znanja razvoja programske podrške za DSP procesore s VLIW arhitekturom, kao i za procesore opće namjene sa SIMD/DSP arhitekturnim proširenjima.
+izvodaci=
+nositelji=

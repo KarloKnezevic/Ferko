@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=Concurrent Programming in Erlang J. Armstrong, R. Virding, C. Vikstroem, M. Williams Prentice-Hall Europe 1996\nConcurrent Programming in Java - Design Principles and Patterns (2nd edition) D. Lea Addison Wesley 1999
+opterecenja=2\n0\n0\n0\n4.0
+opis=Konkurentnost i paralelizam procesa u mreži\: istodobnost poziva i usluga, unutarnji paralelizam procesa poziva i usluga, konkurentnost u tokovima upravljanja. Komunicirajući procesi, međuprocesna komunikacija, paralelizam i konkurentnost. Jezici za programiranje telekomunikacijskih funkcija\: definicija procesa, asinkrona komunikacija, stvarno vrijeme, neprekidnost operacija. Paralelizam procesa i raspoređivanje poslova u Grid okruženju. Načela konkurentnog i distribuiranog programiranja. Konkurentnost u objektno orijentiranim jezicima. Sinkronizacijski i višenitni mehanizmi. Programski jezici Erlang i Java. Razvojno okružje.
+izvodaci=
+nositelji=Doc. dr. sc. Gordan Ježić

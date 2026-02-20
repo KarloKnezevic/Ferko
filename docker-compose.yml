@@ -1,0 +1,60 @@
+services:
+  ferko-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ferko-web-api:local
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      FERKO_DB_URL: jdbc:postgresql://postgres:5432/${FERKO_DB_NAME:-ferko}
+      FERKO_DB_USERNAME: ${FERKO_DB_USERNAME:-ferko}
+      FERKO_DB_PASSWORD: ${FERKO_DB_PASSWORD:-ferko}
+      FERKO_DB_DRIVER: org.postgresql.Driver
+      FERKO_TODO_REPOSITORY: jdbc
+      FERKO_AUDIT_REPOSITORY: jdbc
+      FERKO_JWT_HMAC_SECRET: ${FERKO_JWT_HMAC_SECRET:-ferko-dev-jwt-hmac-secret-0123456789abcdef}
+      FERKO_DEV_TOKEN_ENABLED: ${FERKO_DEV_TOKEN_ENABLED:-true}
+      FERKO_BOOTSTRAP_LEGACY_ENABLED: ${FERKO_BOOTSTRAP_LEGACY_ENABLED:-true}
+      FERKO_PORTAL_BOOTSTRAP_ENABLED: ${FERKO_PORTAL_BOOTSTRAP_ENABLED:-true}
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${FERKO_DB_NAME:-ferko}
+      POSTGRES_USER: ${FERKO_DB_USERNAME:-ferko}
+      POSTGRES_PASSWORD: ${FERKO_DB_PASSWORD:-ferko}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${FERKO_DB_USERNAME:-ferko} -d ${FERKO_DB_NAME:-ferko}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - ferko-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    profiles: ["optional"]
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    profiles: ["optional"]
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    restart: unless-stopped
+
+volumes:
+  ferko-postgres-data:

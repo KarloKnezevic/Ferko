@@ -1,0 +1,6 @@
+#Wed Aug 20 18:16:59 CEST 2008
+liter=Design of Analog Filters R. Schaumann, M.E.Van Valkenburg Oxford Univ Press 2001\nDesign With Operational Amplifiers and Analog Integrated Circuits S. Franco McGraw Hill 2002
+opterecenja=3\n0\n0\n0\n5.0
+opis=Spektri realnih i kauzalnih signala; idealni prijenos signala; linearna i nelinearna izobličenja; pojačala s realnim integriranim krugovima; osnovne izvedbe, statička i dinamička svojstva, odstupanje od idealnih karakteristika; strujna povratna veza, strminska pojačala; sustavi za transformaciju signala i impedancije, simulacije induktiviteta; nelinearni sklopovi, komparatori, limiteri, nelinearna povratna veza; filtri; klasifikacija filtara; karakteristike amplitude, faze i grupnog kašnjenja; prijenosne funkcije; aproksimacije\: Butterworth, Čebišev, Cauer, linearna faza i grupno kašnjenje; pasivni filtri; aktivni RC filtri; filtri visokog reda; osjetljivosti; selektivna i usklađena pojačala; analogne sklopke i multiplekseri, modeli, pogreške, preslušavanje; SC sustavi za obradu signala, primjena u filtrima, pretvornicima, modulatorima; PLL; AD i DA pretvorba, sigma-delta pretvornici; VLSI sklopovi za obradu signala; programi za analizu i projektiranje.
+izvodaci=
+nositelji=Prof. dr. sc. Neven Mijat\nProf. dr. sc. Zoran Stare\nDoc. dr. sc. Igor Lacković

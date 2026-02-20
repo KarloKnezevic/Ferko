@@ -1,0 +1,350 @@
+name: Maven Phase 1 CI
+
+on:
+  pull_request:
+    paths:
+      - 'pom.xml'
+      - 'backend/**'
+      - 'build-tools/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'scripts/**'
+      - '.github/workflows/maven-phase1.yml'
+  push:
+    paths:
+      - 'pom.xml'
+      - 'backend/**'
+      - 'build-tools/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'scripts/**'
+      - '.github/workflows/maven-phase1.yml'
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Verify (tests + Spotless + Checkstyle + JaCoCo)
+        run: ./mvnw -B -ntp verify
+
+      - name: Upload JaCoCo XML reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-xml-reports
+          path: backend/**/target/site/jacoco/jacoco.xml
+          if-no-files-found: warn
+
+      - name: Upload generated OpenAPI specs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-spec
+          path: |
+            backend/ferko-web-api/target/openapi/openapi.json
+            backend/ferko-web-api/target/openapi/openapi.yaml
+          if-no-files-found: warn
+
+  dependency-vulnerability-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: quality
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: OWASP dependency vulnerability scan
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: |
+          if [ -n "$NVD_API_KEY" ]; then
+            ./mvnw -B -ntp \
+              -DskipTests \
+              -Dformats=HTML,JSON \
+              -DfailBuildOnCVSS=9 \
+              -DnvdApiKeyEnvironmentVariable=NVD_API_KEY \
+              -DsuppressionFile=build-tools/dependency-check/suppressions.xml \
+              -DoutputDirectory=target/dependency-vulnerability \
+              org.owasp:dependency-check-maven:9.2.0:aggregate
+          else
+            echo "::warning::NVD_API_KEY is not configured. Running non-blocking scan with local data only."
+            ./mvnw -B -ntp \
+              -DskipTests \
+              -Dformats=HTML,JSON \
+              -DfailBuildOnCVSS=0 \
+              -DfailOnError=false \
+              -DsuppressionFile=build-tools/dependency-check/suppressions.xml \
+              -DoutputDirectory=target/dependency-vulnerability \
+              org.owasp:dependency-check-maven:9.2.0:aggregate
+          fi
+
+      - name: Generate triage summary
+        if: always()
+        run: >
+          python3 scripts/generate_dependency_triage_summary.py
+          --input target/dependency-vulnerability/dependency-check-report.json
+          --output target/dependency-vulnerability/triage-summary.md
+
+      - name: Upload dependency-check report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: |
+            target/dependency-vulnerability/dependency-check-report.*
+            target/dependency-vulnerability/triage-summary.md
+          if-no-files-found: warn
+
+  dependency-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: quality
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Generate dependency tree and SBOM
+        run: ./scripts/generate_dependency_inventory.sh
+
+      - name: Upload dependency inventory artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-inventory
+          path: |
+            target/dependency-inventory/**
+          if-no-files-found: warn
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+
+  container-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: quality
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build and start compose stack
+        run: docker compose up -d --build ferko-app postgres
+
+      - name: Wait for API readiness
+        run: |
+          mkdir -p target/container-smoke
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://localhost:8080/actuator/health > target/container-smoke/health.json; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose logs ferko-app postgres > target/container-smoke/compose.log || true
+          echo "Ferko API did not become ready in time." >&2
+          exit 1
+
+      - name: Run authenticated ToDo smoke checks
+        env:
+          FERKO_BASE_URL: http://localhost:8080
+          FERKO_JWT_HMAC_SECRET: ferko-dev-jwt-hmac-secret-0123456789abcdef
+          FERKO_SMOKE_OUT_DIR: target/container-smoke
+          FERKO_DB_USERNAME: ferko
+          FERKO_DB_NAME: ferko
+          FERKO_POSTGRES_SERVICE: postgres
+        run: ./scripts/container_smoke_todo.sh
+
+      - name: Capture compose logs
+        if: always()
+        run: |
+          mkdir -p target/container-smoke
+          docker compose logs ferko-app postgres > target/container-smoke/compose.log || true
+
+      - name: Upload container smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-smoke-artifacts
+          path: target/container-smoke/**
+          if-no-files-found: warn
+
+      - name: Tear down compose stack
+        if: always()
+        run: docker compose down -v --remove-orphans
+
+  container-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: quality
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Ferko API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          tags: ferko-web-api:ci-${{ github.sha }}
+          load: true
+          push: false
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: ferko-web-api:ci-${{ github.sha }}
+          format: sarif
+          output: target/container-security/trivy-results.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          vuln-type: os,library
+          exit-code: '1'
+
+      - name: Upload Trivy SARIF report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-trivy-report
+          path: target/container-security/trivy-results.sarif
+          if-no-files-found: warn
+
+  staging-auth-guardrail-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: quality
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ferko
+          POSTGRES_USER: ferko
+          POSTGRES_PASSWORD: ferko
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ferko -d ferko"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build Ferko API executable JAR
+        run: ./mvnw -B -ntp -pl backend/ferko-web-api -am -DskipTests package
+
+      - name: Verify staging startup fails without OIDC/JWK config
+        run: |
+          mkdir -p target/staging-auth-guardrail
+          set +e
+          SPRING_PROFILES_ACTIVE=staging \
+          FERKO_DB_URL='jdbc:postgresql://localhost:5432/ferko' \
+          FERKO_DB_USERNAME=ferko \
+          FERKO_DB_PASSWORD=ferko \
+          FERKO_OIDC_ISSUER_URI= \
+          FERKO_OIDC_JWK_SET_URI= \
+          FERKO_JWT_HMAC_SECRET= \
+          timeout 120s java -jar backend/ferko-web-api/target/ferko-web-api-*-exec.jar \
+            > target/staging-auth-guardrail/startup.log 2>&1
+          status=$?
+          set -e
+
+          if [ "$status" -eq 0 ]; then
+            echo "Expected staging startup to fail without OIDC/JWK configuration, but it succeeded." >&2
+            cat target/staging-auth-guardrail/startup.log >&2
+            exit 1
+          fi
+
+          if [ "$status" -eq 124 ]; then
+            echo "Staging startup timed out; expected an immediate guardrail failure." >&2
+            cat target/staging-auth-guardrail/startup.log >&2
+            exit 1
+          fi
+
+          if ! grep -q "JWT decoder is not configured" target/staging-auth-guardrail/startup.log; then
+            echo "Expected JWT decoder hardening failure message was not found in startup output." >&2
+            cat target/staging-auth-guardrail/startup.log >&2
+            exit 1
+          fi
+
+      - name: Upload staging auth guardrail logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-auth-guardrail-logs
+          path: target/staging-auth-guardrail/**
+          if-no-files-found: warn
+
+  container-multiarch-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    needs: quality
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Validate multi-arch image build (amd64 + arm64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: false
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

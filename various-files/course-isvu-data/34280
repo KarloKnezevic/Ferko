@@ -1,0 +1,6 @@
+#Wed Aug 20 18:17:02 CEST 2008
+liter=JEZIČNI PROCESORI 2\: Analiza izvornog i sinteza ciljnog programa S. Srbljić Element, Zagreb 2003
+opterecenja=3\n0\n1\n0\n4.0
+opis=Izučavaju se procesi postupnog hijerarhijskog prevođenja korisničkih jezika, viših programskih jezika i jezika hijerarhije virtualnih strojeva. Opisuju se tehnike i načela procesa prevođenja jezika potrebnih u suvremenim sveprisutnim, svakidašnjim i nevidljivim raspodijeljenim računalnim sustavima. Daje se kratki pregled i povijest programskih jezika i jezičnih procesora. Prevođenje jezika objašnjava se osnovnim procesima analize izvornog i sinteze ciljnog programa. Uključene su osnovne faze analize (leksička, sintaksna i semantička analiza) i sinteze (generiranje međukôda, generiranje ciljnog programa i optimiranje). Razmatra se priprema i potpora izvođenju programa. Proučavaju se generatori jezičnih procesora.
+izvodaci=dr. sc. Andro Milanović|Predavanja\nmr. sc. Ivan Benc|Laboratorijske vježbe\nImamagić Emir|Laboratorijske vježbe\nBranimir Radić|Laboratorijske vježbe\nmr. sc. Daniel Skrobo|Laboratorijske vježbe\nmr. sc. Ivan Skuliber|Laboratorijske vježbe\nIvan Žužak dipl. ing.|Laboratorijske vježbe
+nositelji=Prof. dr. sc. Siniša Srbljić

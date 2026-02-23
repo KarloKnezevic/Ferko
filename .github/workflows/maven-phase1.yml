@@ -229,7 +229,7 @@ jobs:
           push: false
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.34.1
         with:
           image-ref: ferko-web-api:ci-${{ github.sha }}
           format: sarif

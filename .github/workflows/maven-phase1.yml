@@ -41,7 +41,7 @@ jobs:
 
       - name: Upload JaCoCo XML reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jacoco-xml-reports
           path: backend/**/target/site/jacoco/jacoco.xml
@@ -49,7 +49,7 @@ jobs:
 
       - name: Upload generated OpenAPI specs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: openapi-spec
           path: |
@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload dependency-check report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-check-report
           path: |
@@ -136,7 +136,7 @@ jobs:
 
       - name: Upload dependency inventory artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-inventory
           path: |
@@ -197,7 +197,7 @@ jobs:
 
       - name: Upload container smoke artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: container-smoke-artifacts
           path: target/container-smoke/**
@@ -241,7 +241,7 @@ jobs:
 
       - name: Upload Trivy SARIF report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: container-trivy-report
           path: target/container-security/trivy-results.sarif
@@ -316,7 +316,7 @@ jobs:
 
       - name: Upload staging auth guardrail logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: staging-auth-guardrail-logs
           path: target/staging-auth-guardrail/**

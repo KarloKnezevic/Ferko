@@ -63,7 +63,7 @@ jobs:
           echo "${{ steps.build-and-push.outputs.digest }}" > target/release-image/digest.txt
 
       - name: Upload release image artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ghcr-release-image-metadata
           path: target/release-image/**

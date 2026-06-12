@@ -12,6 +12,7 @@ COPY backend/ferko-domain/pom.xml backend/ferko-domain/pom.xml
 COPY backend/ferko-application/pom.xml backend/ferko-application/pom.xml
 COPY backend/ferko-infrastructure/pom.xml backend/ferko-infrastructure/pom.xml
 COPY backend/ferko-security/pom.xml backend/ferko-security/pom.xml
+COPY backend/ferko-scheduling/pom.xml backend/ferko-scheduling/pom.xml
 COPY backend/ferko-web-api/pom.xml backend/ferko-web-api/pom.xml
 COPY backend/ferko-architecture-tests/pom.xml backend/ferko-architecture-tests/pom.xml
 COPY build-tools build-tools

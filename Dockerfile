@@ -26,6 +26,14 @@ FROM --platform=$TARGETPLATFORM eclipse-temurin:21-jre-jammy AS runtime
 
 WORKDIR /app
 
+# Patch base-image OS packages so the published image carries no fixable
+# HIGH/CRITICAL OS vulnerabilities (e.g. openssl/libssl3). Kept as a single
+# layer and cleaned up to avoid image bloat.
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN groupadd --gid 10001 ferko \
     && useradd --uid 10001 --gid ferko --home-dir /app --shell /usr/sbin/nologin ferko
 

@@ -21,8 +21,14 @@
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.boot.version>3.3.5</spring.boot.version>
-        <springdoc.version>2.6.0</springdoc.version>
+        <!--
+          Spring Boot 3.5.x (latest patch) is the security baseline: its managed
+          BOM ships patched Spring Framework 6.2.x, Spring Security 6.5.x,
+          Tomcat 10.1.x and pgjdbc, clearing all fixable HIGH/CRITICAL findings.
+          Stays on the 3.x line (no Spring Boot 4 migration yet).
+        -->
+        <spring.boot.version>3.5.15</spring.boot.version>
+        <springdoc.version>2.8.17</springdoc.version>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
         <spotless.maven.plugin.version>2.43.0</spotless.maven.plugin.version>
@@ -42,6 +48,16 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!--
+              Force the patched commons-lang3 (transitive via springdoc) to clear
+              CVE-2025-48924. A direct dependencyManagement entry overrides the
+              version pulled in through the imported Spring Boot BOM.
+            -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

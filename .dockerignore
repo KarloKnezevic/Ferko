@@ -7,18 +7,12 @@
 .settings
 
 **/target
+**/node_modules
 
 docs
-allConfigs
-bin
-clib
-configs
-lib
-read-only-local
-res_gh
-src
-various-files
-web
+scripts
 
+# Local-only tooling and references (never part of the image)
+.claude
+CLAUDE.md
 *.pdf
-mysql-connector-java-5.1.6-bin.jar

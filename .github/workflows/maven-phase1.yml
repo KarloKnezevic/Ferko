@@ -2,14 +2,6 @@ name: Maven Phase 1 CI
 
 on:
   pull_request:
-    paths:
-      - 'pom.xml'
-      - 'backend/**'
-      - 'build-tools/**'
-      - 'Dockerfile'
-      - 'docker-compose.yml'
-      - 'scripts/**'
-      - '.github/workflows/maven-phase1.yml'
   push:
     paths:
       - 'pom.xml'

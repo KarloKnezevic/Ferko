@@ -3,6 +3,7 @@ package hr.fer.zemris.ferko.webapi.config;
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
+import hr.fer.zemris.ferko.application.port.ExamRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.SemesterRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
@@ -13,6 +14,7 @@ import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningServ
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
+import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.ListAssignedOpenToDoTasksUseCase;
@@ -22,6 +24,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSemesterRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcStudentRepository;
@@ -165,5 +168,21 @@ public class ApplicationBeans {
         studentRepository,
         roomRepository,
         appUserRepository);
+  }
+
+  @Bean
+  public ExamRepository examRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcExamRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public ExamSchedulingService examSchedulingService(
+      ExamRepository examRepository,
+      RoomRepository roomRepository,
+      StudentRepository studentRepository,
+      EnrollmentRepository enrollmentRepository,
+      AppUserRepository appUserRepository) {
+    return new ExamSchedulingService(
+        examRepository, roomRepository, studentRepository, enrollmentRepository, appUserRepository);
   }
 }

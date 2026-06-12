@@ -1,14 +1,18 @@
 package hr.fer.zemris.ferko.webapi.config;
 
+import hr.fer.zemris.ferko.application.port.AppUserRepository;
 import hr.fer.zemris.ferko.application.port.ToDoAuditLogPort;
 import hr.fer.zemris.ferko.application.port.ToDoTaskRepository;
 import hr.fer.zemris.ferko.application.usecase.PingUseCase;
+import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
+import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.ListAssignedOpenToDoTasksUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.ListMyOpenToDoTasksUseCase;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryAuditAdapter;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoAuditLogRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoTaskRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -75,5 +79,20 @@ public class ApplicationBeans {
   public CloseToDoTaskUseCase closeToDoTaskUseCase(
       ToDoTaskRepository repository, ToDoAuditLogPort auditLogPort) {
     return new CloseToDoTaskUseCase(repository, auditLogPort);
+  }
+
+  @Bean
+  public AppUserRepository appUserRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcAppUserRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public LoadAuthUserUseCase loadAuthUserUseCase(AppUserRepository appUserRepository) {
+    return new LoadAuthUserUseCase(appUserRepository);
+  }
+
+  @Bean
+  public ProvisionUserUseCase provisionUserUseCase(AppUserRepository appUserRepository) {
+    return new ProvisionUserUseCase(appUserRepository);
   }
 }

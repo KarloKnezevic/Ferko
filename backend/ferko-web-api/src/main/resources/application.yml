@@ -84,6 +84,9 @@ ferko:
       allow-hmac-decoder: false
     dev-token:
       enabled: false
+  seed:
+    users:
+      enabled: false
   bootstrap:
     legacy:
       enabled: false

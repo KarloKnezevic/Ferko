@@ -206,6 +206,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: quality
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout repository
@@ -223,6 +226,10 @@ jobs:
           load: true
           push: false
 
+      # Trivy does not create parent directories for its output file.
+      - name: Prepare scan output directory
+        run: mkdir -p target/container-security
+
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@0.35.0
         with:
@@ -233,6 +240,14 @@ jobs:
           ignore-unfixed: true
           vuln-type: os,library
           exit-code: '1'
+
+      - name: Publish Trivy findings to code scanning
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: target/container-security/trivy-results.sarif
+          category: trivy-container
 
       - name: Upload Trivy SARIF report
         if: always()

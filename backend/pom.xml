@@ -19,6 +19,7 @@
         <module>ferko-application</module>
         <module>ferko-infrastructure</module>
         <module>ferko-security</module>
+        <module>ferko-scheduling</module>
         <module>ferko-web-api</module>
         <module>ferko-architecture-tests</module>
     </modules>

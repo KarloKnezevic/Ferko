@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -42,6 +43,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.util.StringUtils;
 
 @Configuration
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
   @Bean
@@ -75,7 +77,7 @@ public class WebSecurityConfig {
   @Order(1)
   public SecurityFilterChain webSessionSecurityFilterChain(
       HttpSecurity http, SecurityContextRepository securityContextRepository) throws Exception {
-    http.securityMatcher("/api/v1/auth/**")
+    http.securityMatcher("/api/v1/auth/**", "/api/v1/academic/**")
         // TODO (Faza 6): enable cookie-based CSRF tokens once the SPA is in place.
         .csrf(AbstractHttpConfigurer::disable)
         .securityContext(context -> context.securityContextRepository(securityContextRepository))

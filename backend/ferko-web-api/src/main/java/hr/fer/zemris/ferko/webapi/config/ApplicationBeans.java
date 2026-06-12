@@ -1,9 +1,16 @@
 package hr.fer.zemris.ferko.webapi.config;
 
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
+import hr.fer.zemris.ferko.application.port.CourseRepository;
+import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
+import hr.fer.zemris.ferko.application.port.RoomRepository;
+import hr.fer.zemris.ferko.application.port.SemesterRepository;
+import hr.fer.zemris.ferko.application.port.StudentRepository;
 import hr.fer.zemris.ferko.application.port.ToDoAuditLogPort;
 import hr.fer.zemris.ferko.application.port.ToDoTaskRepository;
 import hr.fer.zemris.ferko.application.usecase.PingUseCase;
+import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningService;
+import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
@@ -13,6 +20,11 @@ import hr.fer.zemris.ferko.application.usecase.todo.ListMyOpenToDoTasksUseCase;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryAuditAdapter;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSemesterRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcStudentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoAuditLogRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoTaskRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -94,5 +106,64 @@ public class ApplicationBeans {
   @Bean
   public ProvisionUserUseCase provisionUserUseCase(AppUserRepository appUserRepository) {
     return new ProvisionUserUseCase(appUserRepository);
+  }
+
+  @Bean
+  public SemesterRepository semesterRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcSemesterRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public CourseRepository courseRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcCourseRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public EnrollmentRepository enrollmentRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcEnrollmentRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public StudentRepository studentRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcStudentRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public RoomRepository roomRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcRoomRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public AcademicQueryService academicQueryService(
+      SemesterRepository semesterRepository,
+      CourseRepository courseRepository,
+      EnrollmentRepository enrollmentRepository,
+      StudentRepository studentRepository,
+      RoomRepository roomRepository,
+      AppUserRepository appUserRepository) {
+    return new AcademicQueryService(
+        semesterRepository,
+        courseRepository,
+        enrollmentRepository,
+        studentRepository,
+        roomRepository,
+        appUserRepository);
+  }
+
+  @Bean
+  public AcademicProvisioningService academicProvisioningService(
+      SemesterRepository semesterRepository,
+      CourseRepository courseRepository,
+      EnrollmentRepository enrollmentRepository,
+      StudentRepository studentRepository,
+      RoomRepository roomRepository,
+      AppUserRepository appUserRepository) {
+    return new AcademicProvisioningService(
+        semesterRepository,
+        courseRepository,
+        enrollmentRepository,
+        studentRepository,
+        roomRepository,
+        appUserRepository);
   }
 }

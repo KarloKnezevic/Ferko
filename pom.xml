@@ -49,6 +49,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--
+              Force the patched commons-lang3 (transitive via springdoc) to clear
+              CVE-2025-48924. A direct dependencyManagement entry overrides the
+              version pulled in through the imported Spring Boot BOM.
+            -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

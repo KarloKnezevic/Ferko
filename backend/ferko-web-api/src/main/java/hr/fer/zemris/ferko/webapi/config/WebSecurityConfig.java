@@ -1,6 +1,8 @@
 package hr.fer.zemris.ferko.webapi.config;
 
 import hr.fer.zemris.ferko.application.port.ToDoAuditLogPort;
+import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
+import hr.fer.zemris.ferko.webapi.auth.FerkoUserDetailsService;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,12 +15,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -27,12 +36,70 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.util.StringUtils;
 
 @Configuration
 public class WebSecurityConfig {
 
   @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public FerkoUserDetailsService ferkoUserDetailsService(LoadAuthUserUseCase loadAuthUserUseCase) {
+    return new FerkoUserDetailsService(loadAuthUserUseCase);
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(
+      FerkoUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+    provider.setPasswordEncoder(passwordEncoder);
+    return new ProviderManager(provider);
+  }
+
+  @Bean
+  public SecurityContextRepository securityContextRepository() {
+    return new HttpSessionSecurityContextRepository();
+  }
+
+  /**
+   * Session/form authentication chain for the browser-facing FERKO API. Higher precedence than the
+   * JWT resource-server chain so it owns the {@code /api/v1/auth/**} surface.
+   */
+  @Bean
+  @Order(1)
+  public SecurityFilterChain webSessionSecurityFilterChain(
+      HttpSecurity http, SecurityContextRepository securityContextRepository) throws Exception {
+    http.securityMatcher("/api/v1/auth/**")
+        // TODO (Faza 6): enable cookie-based CSRF tokens once the SPA is in place.
+        .csrf(AbstractHttpConfigurer::disable)
+        .securityContext(context -> context.securityContextRepository(securityContextRepository))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+        .authorizeHttpRequests(
+            requests ->
+                requests
+                    .requestMatchers(HttpMethod.POST, "/api/v1/auth/login")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .exceptionHandling(
+            handling ->
+                handling.authenticationEntryPoint(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .logout(AbstractHttpConfigurer::disable);
+    return http.build();
+  }
+
+  @Bean
+  @Order(2)
   public SecurityFilterChain apiSecurityFilterChain(
       HttpSecurity http,
       JwtAuthenticationConverter jwtAuthenticationConverter,

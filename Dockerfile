@@ -20,6 +20,7 @@ COPY build-tools build-tools
 RUN ./mvnw -B -ntp -pl backend/ferko-web-api -am dependency:go-offline
 
 COPY backend backend
+COPY frontend frontend
 
 RUN ./mvnw -B -ntp -pl backend/ferko-web-api -am -DskipTests package
 

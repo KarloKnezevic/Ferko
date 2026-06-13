@@ -145,8 +145,10 @@ public class WebSecurityConfig {
                     .requestMatchers(
                         HttpMethod.POST, "/api/v1/todo/tasks", "/api/v1/todo/tasks/*/close")
                     .hasAnyAuthority("SCOPE_todo.write", "ROLE_TODO_WRITE")
+                    // Static SPA assets and client-side routes are public; the SPA itself
+                    // gates views by calling the session-protected APIs.
                     .anyRequest()
-                    .authenticated())
+                    .permitAll())
         .oauth2ResourceServer(
             resourceServer ->
                 resourceServer

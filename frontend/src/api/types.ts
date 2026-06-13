@@ -133,6 +133,16 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface RepoFile {
+  id: number;
+  courseId: number;
+  filename: string;
+  contentType: string | null;
+  sizeBytes: number;
+  uploadedBy: string | null;
+  uploadedAt: string;
+}
+
 export interface CourseComponent {
   id: number;
   courseId: number;

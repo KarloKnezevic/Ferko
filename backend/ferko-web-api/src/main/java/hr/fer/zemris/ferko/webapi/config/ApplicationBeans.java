@@ -6,9 +6,11 @@ import hr.fer.zemris.ferko.application.port.CourseComponentRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
+import hr.fer.zemris.ferko.application.port.FileStorage;
 import hr.fer.zemris.ferko.application.port.ForumRepository;
 import hr.fer.zemris.ferko.application.port.GradingRepository;
 import hr.fer.zemris.ferko.application.port.NoticeRepository;
+import hr.fer.zemris.ferko.application.port.RepositoryFileRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.SemesterRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
@@ -26,6 +28,7 @@ import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
+import hr.fer.zemris.ferko.application.usecase.repository.RepositoryService;
 import hr.fer.zemris.ferko.application.usecase.survey.SurveyService;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
@@ -42,12 +45,15 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcForumRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcNoticeRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRepositoryFileRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSemesterRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcStudentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSurveyRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoAuditLogRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoTaskRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.LocalFileStorage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -265,6 +271,23 @@ public class ApplicationBeans {
   public CourseComponentService courseComponentService(
       CourseComponentRepository courseComponentRepository) {
     return new CourseComponentService(courseComponentRepository);
+  }
+
+  @Bean
+  public RepositoryFileRepository repositoryFileRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcRepositoryFileRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public FileStorage fileStorage(
+      @Value("${ferko.storage.dir:${java.io.tmpdir}/ferko-files}") String storageDir) {
+    return new LocalFileStorage(storageDir);
+  }
+
+  @Bean
+  public RepositoryService repositoryService(
+      RepositoryFileRepository repositoryFileRepository, FileStorage fileStorage) {
+    return new RepositoryService(repositoryFileRepository, fileStorage);
   }
 
   @Bean

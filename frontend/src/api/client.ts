@@ -14,6 +14,7 @@ import type {
   GradeView,
   PointsOverviewRow,
   Room,
+  RepoFile,
   RoomSeating,
   SeatingResult,
   Semester,
@@ -132,6 +133,24 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
+
+  // Repository (datoteke)
+  courseFiles: (courseId: number) =>
+    request<RepoFile[]>(`/api/v1/academic/courses/${courseId}/files`),
+  uploadCourseFile: async (courseId: number, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    const response = await fetch(`/api/v1/academic/courses/${courseId}/files`, {
+      method: 'POST',
+      credentials: 'include',
+      body: form,
+    });
+    if (!response.ok) {
+      throw new ApiError(response.status, `Prijenos nije uspio (${response.status})`);
+    }
+    return (await response.json()) as { id: number };
+  },
+  fileDownloadUrl: (fileId: number) => `/api/v1/academic/files/${fileId}/download`,
 
   // Forum (Pitanja i problemi)
   courseForum: (courseId: number) =>

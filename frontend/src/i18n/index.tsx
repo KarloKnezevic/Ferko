@@ -87,6 +87,16 @@ const HR: Dict = {
   'forum.send': 'Pošalji',
   'forum.placeholder': 'Opišite pitanje ili problem…',
   'forum.empty': 'Još nema poruka. Budite prvi!',
+  'repo.title': 'Repozitorij',
+  'repo.upload': 'Učitaj datoteku',
+  'repo.uploadBtn': 'Učitaj',
+  'repo.uploading': 'Učitavanje…',
+  'repo.file': 'Datoteka',
+  'repo.size': 'Veličina',
+  'repo.uploadedBy': 'Učitao',
+  'repo.date': 'Datum',
+  'repo.download': 'Preuzmi',
+  'repo.empty': 'Nema datoteka.',
 };
 
 const EN: Dict = {
@@ -172,6 +182,16 @@ const EN: Dict = {
   'forum.send': 'Send',
   'forum.placeholder': 'Describe your question or problem…',
   'forum.empty': 'No messages yet. Be the first!',
+  'repo.title': 'Repository',
+  'repo.upload': 'Upload a file',
+  'repo.uploadBtn': 'Upload',
+  'repo.uploading': 'Uploading…',
+  'repo.file': 'File',
+  'repo.size': 'Size',
+  'repo.uploadedBy': 'Uploaded by',
+  'repo.date': 'Date',
+  'repo.download': 'Download',
+  'repo.empty': 'No files.',
 };
 
 const DICTS: Record<Lang, Dict> = { hr: HR, en: EN };

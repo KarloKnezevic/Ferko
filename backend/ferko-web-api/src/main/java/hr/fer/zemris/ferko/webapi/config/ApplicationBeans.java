@@ -2,6 +2,7 @@ package hr.fer.zemris.ferko.webapi.config;
 
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
 import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
+import hr.fer.zemris.ferko.application.port.CourseComponentRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
@@ -20,6 +21,7 @@ import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
+import hr.fer.zemris.ferko.application.usecase.component.CourseComponentService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
@@ -33,6 +35,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryAuditAdapter;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcClassScheduleRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseComponentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
@@ -251,6 +254,17 @@ public class ApplicationBeans {
   @Bean
   public ForumService forumService(ForumRepository forumRepository) {
     return new ForumService(forumRepository);
+  }
+
+  @Bean
+  public CourseComponentRepository courseComponentRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcCourseComponentRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public CourseComponentService courseComponentService(
+      CourseComponentRepository courseComponentRepository) {
+    return new CourseComponentService(courseComponentRepository);
   }
 
   @Bean

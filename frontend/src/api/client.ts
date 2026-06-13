@@ -3,6 +3,7 @@ import type {
   AlgorithmRun,
   AutoGradeResult,
   CalendarView,
+  CourseComponent,
   CourseDetail,
   CourseSummary,
   CurrentUser,
@@ -119,6 +120,18 @@ export const api = {
     }),
   surveyResults: (surveyId: number) =>
     request<SurveyResult[]>(`/api/v1/academic/surveys/${surveyId}/results`),
+
+  // Course components (KOMPONENTE)
+  courseComponents: (courseId: number) =>
+    request<CourseComponent[]>(`/api/v1/academic/courses/${courseId}/components`),
+  addCourseComponent: (
+    courseId: number,
+    body: { title: string; content: string; ordinal: number; visible: boolean },
+  ) =>
+    request<{ id: number }>(`/api/v1/academic/courses/${courseId}/components`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 
   // Forum (Pitanja i problemi)
   courseForum: (courseId: number) =>

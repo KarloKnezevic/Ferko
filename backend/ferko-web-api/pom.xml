@@ -160,6 +160,14 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
+                            <!-- Must overwrite the placeholder index.html shipped in
+                                 src/main/resources/static: it is copied during
+                                 process-resources (later than the SPA build in
+                                 generate-resources), so without overwrite=true the
+                                 resources plugin keeps the newer placeholder and the
+                                 real Vite index.html (which loads the JS/CSS bundle)
+                                 never reaches the jar. -->
+                            <overwrite>true</overwrite>
                             <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
                             <resources>
                                 <resource>

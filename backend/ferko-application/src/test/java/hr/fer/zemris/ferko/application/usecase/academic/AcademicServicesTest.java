@@ -141,6 +141,27 @@ class AcademicServicesTest {
   }
 
   @Test
+  void assignsStaffByUsernameAndReportsMissingUser() {
+    long courseId =
+        provisioning.provisionCourse("RASPORED", "Raspoređivanje", "2024Z", 5, "o", "l");
+    long userId =
+        provisioning.provisionStaffUser(
+            "asistent.iva",
+            "hash",
+            "Iva Asistent",
+            "iva@fer.hr",
+            Set.of("ASISTENT"),
+            LocalDateTime.now());
+    assertTrue(userId > 0);
+
+    assertTrue(provisioning.assignStaffByUsername(courseId, "asistent.iva", "ASISTENT"));
+    CourseDetailView detail = query.courseDetail(courseId).orElseThrow();
+    assertTrue(detail.staff().stream().anyMatch(s -> s.fullName().equals("Iva Asistent")));
+
+    assertTrue(!provisioning.assignStaffByUsername(courseId, "ne.postoji", "ASISTENT"));
+  }
+
+  @Test
   void provisioningIsIdempotent() {
     long firstCourse =
         provisioning.provisionCourse("UURA", "Uvod u računarstvo", "2024Z", 6, "o", "l");

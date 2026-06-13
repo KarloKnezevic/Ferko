@@ -74,6 +74,17 @@ public class AcademicAdminController {
     return query.listUsers();
   }
 
+  @PostMapping("/courses/{courseId}/staff")
+  @PreAuthorize("hasAnyRole('ADMIN', 'NOSITELJ')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void assignStaff(@PathVariable long courseId, @RequestBody AssignStaffRequest request) {
+    boolean assigned =
+        provisioning.assignStaffByUsername(courseId, request.username(), request.role());
+    if (!assigned) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Korisnik ne postoji.");
+    }
+  }
+
   @PostMapping("/semesters")
   @PreAuthorize("hasRole('ADMIN')")
   @ResponseStatus(HttpStatus.CREATED)
@@ -86,6 +97,9 @@ public class AcademicAdminController {
         LocalDate.parse(request.endsOn()),
         request.active());
   }
+
+  /** Request to assign a teaching role on a course to a user (by username). */
+  public record AssignStaffRequest(@NotBlank String username, @NotBlank String role) {}
 
   /** Request to create/update a semester. Dates are ISO {@code yyyy-MM-dd}. */
   public record CreateSemesterRequest(

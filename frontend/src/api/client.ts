@@ -6,6 +6,7 @@ import type {
   CurrentUser,
   Exam,
   GradeComponentView,
+  Notice,
   GradeView,
   PointsOverviewRow,
   Room,
@@ -97,6 +98,17 @@ export const api = {
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
+
+  // Notices (obavijesti)
+  notices: (limit = 20) =>
+    request<Notice[]>(`/api/v1/academic/notices?limit=${limit}`),
+  courseNotices: (courseId: number) =>
+    request<Notice[]>(`/api/v1/academic/courses/${courseId}/notices`),
+  publishNotice: (body: { courseId: number | null; title: string; body: string; pinned: boolean }) =>
+    request<{ id: number }>(`/api/v1/academic/notices`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 
   // Grading (points overview)
   gradeComponents: (courseId: number) =>

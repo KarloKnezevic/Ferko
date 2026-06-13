@@ -133,6 +133,16 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface Notice {
+  id: number;
+  courseId: number | null;
+  title: string;
+  body: string;
+  authorName: string | null;
+  createdAt: string;
+  pinned: boolean;
+}
+
 export interface AlgorithmRun {
   algorithm: string;
   penalty: number;

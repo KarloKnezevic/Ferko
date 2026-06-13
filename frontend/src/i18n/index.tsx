@@ -40,6 +40,12 @@ const HR: Dict = {
   'grading.result': 'Rezultat',
   'grading.correct': 'Točno',
   'login.subtitle': 'Sustav za organizaciju nastave',
+  'notices.new': 'Nova obavijest',
+  'notices.title': 'Naslov',
+  'notices.body': 'Sadržaj',
+  'notices.pin': 'Prikvači na vrh',
+  'notices.publish': 'Objavi',
+  'notices.empty': 'Trenutno nema obavijesti.',
 };
 
 const EN: Dict = {
@@ -78,6 +84,12 @@ const EN: Dict = {
   'grading.result': 'Result',
   'grading.correct': 'Correct',
   'login.subtitle': 'Teaching organisation system',
+  'notices.new': 'New notice',
+  'notices.title': 'Title',
+  'notices.body': 'Content',
+  'notices.pin': 'Pin to top',
+  'notices.publish': 'Publish',
+  'notices.empty': 'No notices yet.',
 };
 
 const DICTS: Record<Lang, Dict> = { hr: HR, en: EN };

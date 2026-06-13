@@ -5,6 +5,7 @@ import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
 import hr.fer.zemris.ferko.application.usecase.academic.AppUserView;
 import hr.fer.zemris.ferko.application.usecase.academic.SemesterView;
 import hr.fer.zemris.ferko.application.usecase.academic.StudentView;
+import hr.fer.zemris.ferko.application.usecase.academic.SyncStatusView;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -72,6 +73,12 @@ public class AcademicAdminController {
   @PreAuthorize("hasRole('ADMIN')")
   public List<AppUserView> listUsers() {
     return query.listUsers();
+  }
+
+  @GetMapping("/sync/status")
+  @PreAuthorize("hasRole('ADMIN')")
+  public SyncStatusView syncStatus() {
+    return query.syncStatus();
   }
 
   @PostMapping("/courses/{courseId}/staff")

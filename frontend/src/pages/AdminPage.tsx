@@ -9,6 +9,7 @@ export function AdminPage() {
 
   const users = useQuery({ queryKey: ['admin-users'], queryFn: api.adminUsers });
   const semesters = useQuery({ queryKey: ['semesters'], queryFn: api.semesters });
+  const sync = useQuery({ queryKey: ['sync-status'], queryFn: api.syncStatus });
 
   const [code, setCode] = useState('');
   const [academicYear, setAcademicYear] = useState('2025/2026');
@@ -30,6 +31,29 @@ export function AdminPage() {
     <div>
       <h1>{t('admin.title')}</h1>
       <p className="muted">{t('admin.subtitle')}</p>
+
+      <div className="card">
+        <h2>{t('admin.sync')}</h2>
+        <p className="muted">{t('admin.syncNote')}</p>
+        <div className="card-grid">
+          <div className="stat">
+            <div className="value">{sync.data?.semesters ?? '—'}</div>
+            <div className="label">{t('admin.semestersCount')}</div>
+          </div>
+          <div className="stat">
+            <div className="value">{sync.data?.courses ?? '—'}</div>
+            <div className="label">{t('nav.courses')}</div>
+          </div>
+          <div className="stat">
+            <div className="value">{sync.data?.students ?? '—'}</div>
+            <div className="label">{t('nav.students')}</div>
+          </div>
+          <div className="stat">
+            <div className="value">{sync.data?.rooms ?? '—'}</div>
+            <div className="label">{t('nav.rooms')}</div>
+          </div>
+        </div>
+      </div>
 
       <div className="card">
         <h2>{t('admin.newSemester')}</h2>

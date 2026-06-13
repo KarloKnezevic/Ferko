@@ -191,6 +191,13 @@ export interface AdminUser {
   roles: string[];
 }
 
+export interface SyncStatus {
+  semesters: number;
+  courses: number;
+  students: number;
+  rooms: number;
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

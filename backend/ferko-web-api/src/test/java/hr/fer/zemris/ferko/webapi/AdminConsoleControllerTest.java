@@ -49,6 +49,24 @@ class AdminConsoleControllerTest {
   }
 
   @Test
+  void adminSeesSyncStatusCounts() throws Exception {
+    MockHttpSession session = login("admin.ferko");
+    mockMvc
+        .perform(get("/api/v1/academic/sync/status").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.courses").isNumber())
+        .andExpect(jsonPath("$.students").isNumber());
+  }
+
+  @Test
+  void studentCannotSeeSyncStatus() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(get("/api/v1/academic/sync/status").session(session))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void adminCreatesSemester() throws Exception {
     MockHttpSession session = login("admin.ferko");
     mockMvc

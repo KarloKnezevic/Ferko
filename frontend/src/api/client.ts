@@ -9,6 +9,7 @@ import type {
   CurrentUser,
   Exam,
   ForumPost,
+  GroupExchange,
   GradeComponentView,
   Notice,
   GradeView,
@@ -152,6 +153,23 @@ export const api = {
     return (await response.json()) as { id: number };
   },
   fileDownloadUrl: (fileId: number) => `/api/v1/academic/files/${fileId}/download`,
+
+  // Group exchange (burza grupa)
+  courseGroupExchange: (courseId: number) =>
+    request<GroupExchange[]>(`/api/v1/academic/courses/${courseId}/group-exchange`),
+  requestGroupExchange: (
+    courseId: number,
+    body: { fromGroupId: number | null; toGroupId: number | null; reason: string },
+  ) =>
+    request<{ id: number }>(`/api/v1/academic/courses/${courseId}/group-exchange`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  decideGroupExchange: (requestId: number, approve: boolean) =>
+    request<void>(`/api/v1/academic/group-exchange/${requestId}/decision`, {
+      method: 'POST',
+      body: JSON.stringify({ approve }),
+    }),
 
   // Forum (Pitanja i problemi)
   courseForum: (courseId: number) =>

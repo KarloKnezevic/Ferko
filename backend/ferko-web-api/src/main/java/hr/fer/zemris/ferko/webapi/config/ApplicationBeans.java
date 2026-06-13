@@ -5,6 +5,7 @@ import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
 import hr.fer.zemris.ferko.application.port.GradingRepository;
+import hr.fer.zemris.ferko.application.port.NoticeRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.SemesterRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
@@ -17,6 +18,7 @@ import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
+import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.ListAssignedOpenToDoTasksUseCase;
@@ -28,6 +30,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcNoticeRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSemesterRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcStudentRepository;
@@ -202,5 +205,15 @@ public class ApplicationBeans {
       AppUserRepository appUserRepository) {
     return new GradingService(
         gradingRepository, enrollmentRepository, studentRepository, appUserRepository);
+  }
+
+  @Bean
+  public NoticeRepository noticeRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcNoticeRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public NoticeService noticeService(NoticeRepository noticeRepository) {
+    return new NoticeService(noticeRepository);
   }
 }

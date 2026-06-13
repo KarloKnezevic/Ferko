@@ -171,6 +171,10 @@ input, select {
 tbody tr:hover .grade-cell { filter: brightness(0.97); }
 .sparkline { vertical-align: middle; background: #f7fafc; border-radius: 4px; }
 
+/* Notices */
+.notice-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.notice .muted { font-size: 12px; }
+
 /* Login */
 .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--fer-blue) 0%, var(--fer-blue-dark) 100%); }
 .login-card { background: #fff; border-radius: 12px; padding: 32px; width: 360px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); }

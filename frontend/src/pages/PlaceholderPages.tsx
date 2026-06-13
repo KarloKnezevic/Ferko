@@ -20,12 +20,3 @@ export function CalendarPage() {
     />
   );
 }
-
-export function NoticesPage() {
-  return (
-    <Placeholder
-      titleKey="nav.notices"
-      note="Obavijesti s kolegija i fakulteta — pregled po kolegiju, čitanje i objava."
-    />
-  );
-}

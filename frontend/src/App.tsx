@@ -10,7 +10,8 @@ import { ExamSchedulingPage } from './pages/ExamSchedulingPage';
 import { GradingPage } from './pages/GradingPage';
 import { RoomsPage } from './pages/RoomsPage';
 import { StudentsPage } from './pages/StudentsPage';
-import { CalendarPage, NoticesPage } from './pages/PlaceholderPages';
+import { NoticesPage } from './pages/NoticesPage';
+import { CalendarPage } from './pages/PlaceholderPages';
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();

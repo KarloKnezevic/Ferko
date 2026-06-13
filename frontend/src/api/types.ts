@@ -133,6 +133,15 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface CourseComponent {
+  id: number;
+  courseId: number;
+  title: string;
+  content: string;
+  ordinal: number;
+  visible: boolean;
+}
+
 export interface ForumPost {
   id: number;
   courseId: number;

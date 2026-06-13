@@ -10,7 +10,12 @@ export function CourseDetailPage() {
   const queryClient = useQueryClient();
   const { hasRole } = useAuth();
   const canManageStaff = hasRole('ADMIN', 'NOSITELJ');
+  const canManageContent = hasRole('ADMIN', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR');
   const course = useQuery({ queryKey: ['course', courseId], queryFn: () => api.course(courseId) });
+  const components = useQuery({
+    queryKey: ['components', courseId],
+    queryFn: () => api.courseComponents(courseId),
+  });
 
   const [staffUser, setStaffUser] = useState('');
   const [staffRole, setStaffRole] = useState('ASISTENT');
@@ -19,6 +24,23 @@ export function CourseDetailPage() {
     onSuccess: () => {
       setStaffUser('');
       queryClient.invalidateQueries({ queryKey: ['course', courseId] });
+    },
+  });
+
+  const [compTitle, setCompTitle] = useState('');
+  const [compContent, setCompContent] = useState('');
+  const addComponent = useMutation({
+    mutationFn: () =>
+      api.addCourseComponent(courseId, {
+        title: compTitle,
+        content: compContent,
+        ordinal: components.data?.length ?? 0,
+        visible: true,
+      }),
+    onSuccess: () => {
+      setCompTitle('');
+      setCompContent('');
+      queryClient.invalidateQueries({ queryKey: ['components', courseId] });
     },
   });
 
@@ -59,6 +81,36 @@ export function CourseDetailPage() {
           </Link>
         </div>
       </div>
+
+      {(components.data?.length ?? 0) > 0 &&
+        components.data?.map((comp) => (
+          <div className="card" key={comp.id}>
+            <h2>{comp.title}</h2>
+            <p style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{comp.content}</p>
+          </div>
+        ))}
+
+      {canManageContent && (
+        <div className="card">
+          <h2>Dodaj komponentu</h2>
+          <label>Naslov</label>
+          <input value={compTitle} onChange={(e) => setCompTitle(e.target.value)} placeholder="Pravila ocjenjivanja" />
+          <label>Sadržaj</label>
+          <textarea
+            rows={3}
+            value={compContent}
+            onChange={(e) => setCompContent(e.target.value)}
+            style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid var(--border)' }}
+          />
+          <button
+            style={{ marginTop: 10 }}
+            disabled={!compTitle || addComponent.isPending}
+            onClick={() => addComponent.mutate()}
+          >
+            Dodaj
+          </button>
+        </div>
+      )}
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <table>

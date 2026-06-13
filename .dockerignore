@@ -12,7 +12,5 @@
 docs
 scripts
 
-# Local-only tooling and references (never part of the image)
-.claude
-CLAUDE.md
+# Local-only reference material (never part of the image)
 *.pdf

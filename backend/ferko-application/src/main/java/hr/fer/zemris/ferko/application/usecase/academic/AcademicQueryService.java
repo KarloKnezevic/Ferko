@@ -9,6 +9,7 @@ import hr.fer.zemris.ferko.application.port.StudentRepository;
 import hr.fer.zemris.ferko.domain.model.AppUser;
 import hr.fer.zemris.ferko.domain.model.Course;
 import hr.fer.zemris.ferko.domain.model.Enrollment;
+import hr.fer.zemris.ferko.domain.model.Role;
 import hr.fer.zemris.ferko.domain.model.Room;
 import hr.fer.zemris.ferko.domain.model.Semester;
 import hr.fer.zemris.ferko.domain.model.Student;
@@ -122,6 +123,20 @@ public class AcademicQueryService {
 
   public List<RoomView> listRooms() {
     return roomRepository.findAll().stream().map(AcademicQueryService::toView).toList();
+  }
+
+  public List<AppUserView> listUsers() {
+    return userRepository.findAll().stream()
+        .map(
+            user ->
+                new AppUserView(
+                    user.id(),
+                    user.username(),
+                    user.fullName(),
+                    user.email(),
+                    user.active(),
+                    user.roles().stream().map(Role::name).sorted().toList()))
+        .toList();
   }
 
   public List<EnrollmentView> listEnrollments(long courseId) {

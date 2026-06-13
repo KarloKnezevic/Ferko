@@ -1,4 +1,5 @@
 import type {
+  AdminUser,
   AlgorithmRun,
   AutoGradeResult,
   CalendarView,
@@ -102,6 +103,22 @@ export const api = {
 
   // Calendar (kalendar)
   calendar: () => request<CalendarView>('/api/v1/academic/calendar'),
+
+  // Admin
+  semesters: () => request<Semester[]>('/api/v1/academic/semesters'),
+  adminUsers: () => request<AdminUser[]>('/api/v1/academic/users'),
+  createSemester: (body: {
+    code: string;
+    academicYear: string;
+    term: string;
+    startsOn: string;
+    endsOn: string;
+    active: boolean;
+  }) =>
+    request<void>('/api/v1/academic/semesters', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 
   // Notices (obavijesti)
   notices: (limit = 20) =>

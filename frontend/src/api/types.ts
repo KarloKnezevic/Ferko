@@ -133,6 +133,15 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface AdminUser {
+  id: number;
+  username: string;
+  fullName: string;
+  email: string | null;
+  active: boolean;
+  roles: string[];
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

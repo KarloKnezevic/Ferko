@@ -10,6 +10,7 @@ import hr.fer.zemris.ferko.application.port.NoticeRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.SemesterRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
+import hr.fer.zemris.ferko.application.port.SurveyRepository;
 import hr.fer.zemris.ferko.application.port.ToDoAuditLogPort;
 import hr.fer.zemris.ferko.application.port.ToDoTaskRepository;
 import hr.fer.zemris.ferko.application.usecase.PingUseCase;
@@ -21,6 +22,7 @@ import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
+import hr.fer.zemris.ferko.application.usecase.survey.SurveyService;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.ListAssignedOpenToDoTasksUseCase;
@@ -37,6 +39,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcNoticeRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSemesterRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcStudentRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSurveyRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoAuditLogRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoTaskRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -225,6 +228,16 @@ public class ApplicationBeans {
   @Bean
   public ClassScheduleRepository classScheduleRepository(JdbcTemplate jdbcTemplate) {
     return new JdbcClassScheduleRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public SurveyRepository surveyRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcSurveyRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public SurveyService surveyService(SurveyRepository surveyRepository) {
+    return new SurveyService(surveyRepository);
   }
 
   @Bean

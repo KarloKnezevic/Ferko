@@ -8,6 +8,7 @@ import { CoursesPage } from './pages/CoursesPage';
 import { CourseDetailPage } from './pages/CourseDetailPage';
 import { ExamSchedulingPage } from './pages/ExamSchedulingPage';
 import { GradingPage } from './pages/GradingPage';
+import { SurveysPage } from './pages/SurveysPage';
 import { RoomsPage } from './pages/RoomsPage';
 import { StudentsPage } from './pages/StudentsPage';
 import { NoticesPage } from './pages/NoticesPage';
@@ -37,6 +38,7 @@ export function App() {
         <Route path="/kolegiji/:id" element={<CourseDetailPage />} />
         <Route path="/kolegiji/:id/ispiti" element={<ExamSchedulingPage />} />
         <Route path="/kolegiji/:id/bodovi" element={<GradingPage />} />
+        <Route path="/kolegiji/:id/ankete" element={<SurveysPage />} />
         <Route path="/kalendar" element={<CalendarPage />} />
         <Route path="/obavijesti" element={<NoticesPage />} />
         <Route path="/prostorije" element={<RoomsPage />} />

@@ -6,6 +6,7 @@ import hr.fer.zemris.ferko.webapi.bootstrap.LegacyDataset.EnrollmentEntry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -75,31 +76,49 @@ public class AcademicDataSeeder implements ApplicationRunner {
     long lecturerId = ensureStaff("lecturer.marko", "Marko Predavač", "NOSITELJ", now);
     long assistantId = ensureStaff("assistant.iva", "Iva Asistent", "ASISTENT", now);
 
-    Map<String, Long> courseIdByCode = new LinkedHashMap<>();
-    Map<String, Long> labGroupByCourse = new LinkedHashMap<>();
-    int courseCount = 0;
-    for (CourseCatalogEntry entry : dataset.courses().values()) {
-      if (courseCount >= maxCourses) {
-        break;
-      }
-      if (entry.courseCode() == null || entry.courseCode().isBlank()) {
+    // Pick the courses that actually have enrolled students (ranked by enrollment count) so the
+    // seeded portal is non-empty and the scheduler runs on real cohorts.
+    Map<String, Integer> enrollmentCountByCode = new LinkedHashMap<>();
+    Map<String, String> courseNameByCode = new LinkedHashMap<>();
+    for (EnrollmentEntry enrollment : dataset.enrollments()) {
+      String code = enrollment.courseCode();
+      if (code == null || code.isBlank()) {
         continue;
       }
+      enrollmentCountByCode.merge(code, 1, Integer::sum);
+      courseNameByCode.putIfAbsent(code, enrollment.courseName());
+    }
+    List<String> selectedCodes =
+        enrollmentCountByCode.entrySet().stream()
+            .sorted((left, right) -> Integer.compare(right.getValue(), left.getValue()))
+            .limit(maxCourses)
+            .map(Map.Entry::getKey)
+            .toList();
+
+    Map<String, Long> courseIdByCode = new LinkedHashMap<>();
+    Map<String, Long> labGroupByCourse = new LinkedHashMap<>();
+    for (String code : selectedCodes) {
+      CourseCatalogEntry entry = dataset.courses().get(code);
+      // Prefer the human-readable course name from enrollment data (e.g. "Fizika 2") over the
+      // ISVU catalogue placeholder, then the catalogue title, then the bare code.
+      String name =
+          blankToDefault(
+              courseNameByCode.get(code),
+              entry != null ? blankToDefault(entry.title(), code) : code);
       long courseId =
           provisioning.provisionCourse(
-              entry.courseCode(),
-              blankToDefault(entry.title(), entry.courseCode()),
+              code,
+              name,
               SEMESTER_CODE,
-              parseEcts(entry.workloadRaw()),
-              entry.description(),
-              entry.literature());
+              entry != null ? parseEcts(entry.workloadRaw()) : 5,
+              entry != null ? entry.description() : null,
+              entry != null ? entry.literature() : null);
       provisioning.assignStaff(courseId, lecturerId, "NOSITELJ");
       provisioning.assignStaff(courseId, assistantId, "ASISTENT");
-      provisioning.provisionGroup(courseId, "P1", "LECTURE", "Predavanja", 200);
-      long labGroup = provisioning.provisionGroup(courseId, "L1", "LAB", "Laboratorij", 24);
-      courseIdByCode.put(entry.courseCode(), courseId);
-      labGroupByCourse.put(entry.courseCode(), labGroup);
-      courseCount++;
+      provisioning.provisionGroup(courseId, "P1", "LECTURE", "Predavanja", 400);
+      long labGroup = provisioning.provisionGroup(courseId, "L1", "LAB", "Laboratorij", 400);
+      courseIdByCode.put(code, courseId);
+      labGroupByCourse.put(code, labGroup);
     }
 
     Map<String, Long> studentIdByJmbag = new LinkedHashMap<>();

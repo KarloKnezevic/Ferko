@@ -1,243 +1,139 @@
-# FERKO 2.0 (Modernized Academic Portal)
+# FERKO 2.0
 
-FERKO is a modernized, production-oriented rewrite path of the historical JCMS/FERKO academic platform used at the Faculty of Electrical Engineering and Computing (FER), University of Zagreb.
+Modernized rewrite of the **FERKO** academic portal of the Faculty of Electrical
+Engineering and Computing (FER), University of Zagreb — historically the JCMS platform.
 
-This repository now runs as a Java 21 + Spring Boot + PostgreSQL + Docker system with seeded FERKO academic workflows visible immediately in the browser.
+FERKO 2.0 is a full-stack system: a **React + TypeScript** single-page application served by a
+**Java 21 + Spring Boot 3** backend over **PostgreSQL**, with exam scheduling powered by an
+**evolutionary algorithm** based on Marko Čupić's doctoral thesis *"Raspoređivanje nastavnih
+aktivnosti evolucijskim računanjem"* (2011). The whole system starts with a single Docker command
+and comes pre-seeded with real FER course data.
 
-## 1. What You Get
-
-When you start the app and open `http://localhost:8080`, you get a role-based FERKO portal, not a blank CRUD demo.
-
-Implemented browser surface includes:
-
-- Login page with FERKO branding and role-aware redirect.
-- Role dashboards for:
-  - `STUDENT`
-  - `LECTURER`
-  - `ASSISTANT`
-  - `STUSLU` (student office)
-  - `ADMIN`
-- Core academic modules:
-  - semester lifecycle
-  - course/staff/group management
-  - student enrollment + JMBAG-centric records
-  - lecture/lab schedules
-  - points + grading overview
-  - exam organization + publishing
-  - group exchange workflow
-  - sync operation visibility
-
-The portal is pre-initialized with modern seed data and enriched with imported historical datasets from `course-isvu-data` and `noviPodatci`.
-
-## 2. Quick Start (Docker, Recommended)
-
-### Start
+## 1. Quick start (Docker)
 
 ```bash
-./scripts/dev-up.sh
+./scripts/dev-up.sh           # builds the image (SPA + backend) and starts app + PostgreSQL
 ```
 
-### Open
+Then open:
 
-- UI: `http://localhost:8080`
-- OpenAPI docs: `http://localhost:8080/swagger-ui/index.html`
-- Health: `http://localhost:8080/actuator/health`
+- **App (SPA):** http://localhost:8080
+- **OpenAPI / Swagger:** http://localhost:8080/swagger-ui/index.html
+- **Health:** http://localhost:8080/actuator/health
 
-### Stop
+Stop / reset:
 
 ```bash
-./scripts/dev-down.sh
+./scripts/dev-down.sh         # stop
+./scripts/dev-reset.sh        # stop and drop the database volume
 ```
 
-### Full reset (drop DB volume)
+> The image is multi-arch (`linux/amd64`, `linux/arm64`) and runs natively on Apple Silicon.
 
-```bash
-./scripts/dev-reset.sh
-```
+## 2. Demo accounts
 
-## 3. Local Demo Accounts
+All demo users share the password **`ferko123`**:
 
-All demo users use password `ferko123`.
+| Korisnik         | Uloga                  |
+|------------------|------------------------|
+| `admin.ferko`    | ADMIN                  |
+| `lecturer.marko` | NASTAVNIK + NOSITELJ   |
+| `assistant.iva`  | ASISTENT               |
+| `stuslu.sara`    | STUSLU (stud. služba)  |
+| `student.ana`    | STUDENT                |
 
-- `student.ana`
-- `lecturer.marko`
-- `assistant.iva`
-- `stuslu.sara`
-- `admin.ferko`
+## 3. What you get
 
-## 4. Apple Silicon (M1/M2/M3)
+On startup the database is seeded with a real FER course catalogue, students, enrollments,
+groups and rooms, so the application opens in a realistic, non-empty state:
 
-Intel CPU is not required.
+- **Prijava** i role-aware sučelje (FER branding).
+- **Kolegiji** — katalog, detalji, nastavno osoblje, grupe, broj upisa.
+- **Administracija provjera znanja** — definiranje provjera (međuispit, završni, …),
+  rezervacija dvorana, dohvat (prijava) upisanih studenata.
+- **Generiranje rasporeda ispita** — raspoređivanje studenata po dvoranama
+  **genetskim algoritmom** ili jednom od četiri FERKO strategije
+  (sortirano/slučajno × pohlepno/proporcionalno), pregled po dvoranama i **objava**.
+- **Prostorije** i **studenti** (za ovlaštene uloge).
 
-- Docker setup and GHCR pipeline are multi-arch (`linux/amd64`, `linux/arm64`).
-- Local Apple Silicon flow works with the standard commands above.
+## 4. Exam scheduling (Čupić)
 
-## 5. Project Structure
+The `ferko-scheduling` module is a self-contained engine that mirrors the thesis:
+
+- **Chromosome** = `int[]` (an option index per item), penalty ≥ 0 (0 = perfect).
+- **`GeneticAlgorithm`** — steady-state (elimination) GA, deterministic for a fixed seed.
+- **`SeatingProblem`** — student→room assignment minimizing non-linear over-capacity
+  `Σ max(0, load − capacity)^α`.
+- **`ExamTimetableProblem`** — exam→time-slot assignment minimizing student conflicts.
+- **`SeatingStrategies`** — the four deterministic FERKO fill modes.
+
+It is exposed through `/api/v1/academic/exams/{id}/seating` and driven from the
+"Administracija provjera znanja" screen.
+
+## 5. Modern stack
+
+- Java 21, Maven multi-module build
+- Spring Boot 3.5, Spring Security (form-login/session locally, OIDC resource-server for prod)
+- PostgreSQL 16 + Flyway migrations
+- React 18 + TypeScript + Vite (built into the jar via `frontend-maven-plugin`)
+- OpenAPI (springdoc), Actuator
+- Docker multi-stage, multi-arch image
+
+## 6. Project structure
 
 ```text
 backend/
-  ferko-domain/              # Domain model and core business value objects
-  ferko-application/         # Use cases and ports (hexagonal application layer)
-  ferko-infrastructure/      # JDBC adapters and persistence implementations
-  ferko-security/            # Security module boundary
-  ferko-web-api/             # Spring Boot app, REST API, portal web UI, Flyway
-  ferko-architecture-tests/  # ArchUnit rules for module boundaries
-build-tools/
-  checkstyle/
-  dependency-check/
-docs/
-  getting-started/
-  architecture/
-  operations/
-  modernization/
-  legacy/
-scripts/
-.github/workflows/
+  ferko-domain/              # domain aggregates / value objects
+  ferko-application/         # use cases, ports, view DTOs (hexagonal application layer)
+  ferko-infrastructure/      # JDBC adapters
+  ferko-security/            # security module boundary
+  ferko-scheduling/          # evolutionary scheduling engine (Čupić)
+  ferko-web-api/             # Spring Boot app, REST API, Flyway, serves the SPA
+  ferko-architecture-tests/  # ArchUnit module-boundary rules
+frontend/                    # React + TypeScript SPA (Vite)
+docs/                        # architecture, getting-started, operations, ADRs
+scripts/                     # dev-up / dev-down / dev-reset / smoke
+.github/workflows/           # CI + GHCR release
 ```
 
-## 6. Modern Stack
+## 7. Build, test, develop
 
-- Java 21
-- Maven multi-module build
-- Spring Boot 3
-- Spring Security (JWT/OIDC resource-server model)
-- PostgreSQL 16 (docker), Flyway migrations
-- OpenAPI (springdoc)
-- Actuator health endpoints
-- Docker multi-stage image
-
-## 7. Data Initialization and Bootstrap
-
-### 7.1 Schema and technical data
-
-Flyway migrations initialize:
-
-- `todo_tasks`
-- `todo_audit_log`
-- `legacy_bootstrap_*` import tables for historical datasets
-
-Migrations are under:
-
-- `backend/ferko-web-api/src/main/resources/db/migration`
-
-### 7.2 Historical FERKO dataset ingestion
-
-At startup, application ingests packaged dataset resources:
-
-- `bootstrap/course-isvu-data/*`
-- `bootstrap/noviPodatci/*.txt`
-
-Imported into DB tables:
-
-- `legacy_bootstrap_course`
-- `legacy_bootstrap_enrollment`
-- `legacy_bootstrap_schedule`
-- `legacy_bootstrap_exam`
-- `legacy_bootstrap_raw_line`
-
-### 7.3 Portal pre-initialization
-
-Portal service merges imported legacy data into visible FERKO workspace:
-
-- course catalog expansion
-- student enrollments/groups
-- schedule entries
-- exam terms
-- additional grading and exchange activity
-
-Result: app starts in a realistic, non-empty academic state.
-
-## 8. Configuration (Unified Profiles)
-
-All runtime config is unified in:
-
-- `backend/ferko-web-api/src/main/resources/application.yml`
-
-Profiles:
-
-- default: local/dev baseline (H2 fallback + bootstrap enabled)
-- `docker`: PostgreSQL container profile
-- `staging`/`prod`: hardened mode (no dev token fallback, no HMAC fallback)
-
-### Key environment variables
-
-- Database:
-  - `FERKO_DB_URL`
-  - `FERKO_DB_USERNAME`
-  - `FERKO_DB_PASSWORD`
-  - `FERKO_DB_DRIVER`
-- Security/JWT:
-  - `FERKO_OIDC_ISSUER_URI`
-  - `FERKO_OIDC_JWK_SET_URI`
-  - `FERKO_JWT_HMAC_SECRET`
-  - `FERKO_JWT_ALLOW_HMAC_DECODER`
-  - `FERKO_DEV_TOKEN_ENABLED`
-- Repository adapters:
-  - `FERKO_TODO_REPOSITORY`
-  - `FERKO_AUDIT_REPOSITORY`
-- Bootstrap controls:
-  - `FERKO_BOOTSTRAP_LEGACY_ENABLED`
-  - `FERKO_PORTAL_BOOTSTRAP_ENABLED`
-  - `FERKO_PORTAL_BOOTSTRAP_MAX_COURSES`
-  - `FERKO_PORTAL_BOOTSTRAP_MAX_STUDENTS`
-  - `FERKO_PORTAL_BOOTSTRAP_MAX_SCHEDULE_ENTRIES`
-  - `FERKO_PORTAL_BOOTSTRAP_MAX_EXAM_ENTRIES`
-
-## 9. Security Model
-
-- ToDo API endpoints are protected by OAuth2 resource-server JWT validation.
-- Principal identity is derived from authenticated JWT claims (not userId query params).
-- Privileged ToDo actions and denied attempts are audit-logged in DB.
-- Staging/prod guardrail enforces startup failure if OIDC/JWK decoder config is missing.
-- Dev token issuing endpoint is restricted to non-staging/non-prod profiles.
-
-## 10. Build, Quality, and CI/CD
-
-### Local quality gate
+Full backend quality gate (tests, Spotless, Checkstyle, JaCoCo, ArchUnit, SPA build):
 
 ```bash
 ./mvnw -B -ntp verify
 ```
 
-This runs tests, formatting, static checks, architecture tests, and coverage checks.
+Frontend with hot reload (proxies the API to `localhost:8080`):
 
-### CI highlights
+```bash
+cd frontend && npm install && npm run dev      # http://localhost:5173
+```
 
-- Spotless + Checkstyle + JaCoCo
-- OWASP dependency vulnerability scan
-- Dependency inventory artifacts
-- Container smoke tests
-- Container vulnerability scan (Trivy)
-- staging auth hardening smoke guardrail
-- GHCR release publishing with semantic + immutable SHA tags
+## 8. Architecture & data model
 
-Workflows:
+- Hexagonal layering enforced by ArchUnit: domain depends on nothing; the web layer never
+  imports domain types directly (it consumes application-layer views).
+- Flyway migrations define the academic schema: users/roles, semesters, courses, staff,
+  students, enrollments, groups, rooms, exams (registrations, rooms, seating), grade components,
+  points, grades, group-exchange requests and audit.
+- On startup `AcademicDataSeeder` ingests packaged FER datasets into the real tables
+  (disabled in `staging`/`prod`).
 
-- `/.github/workflows/maven-phase1.yml`
-- `/.github/workflows/release-image-ghcr.yml`
+## 9. Security
 
-## 11. Documentation Map
+- Browser sessions use Spring Security **form-login** backed by the `app_user` table (BCrypt),
+  with `ROLE_*` authorities and method-level checks on privileged actions.
+- The `staging`/`prod` profiles disable demo seeding and dev tokens, require OIDC/JWK
+  configuration, and harden session cookies.
 
-Start here:
+## 10. CI/CD
 
-- `docs/README.md`
-- `docs/getting-started/QUICKSTART.md`
-- `docs/getting-started/INSTALLATION.md`
-- `docs/getting-started/DATA_INITIALIZATION.md`
+- CI (`.github/workflows/maven-phase1.yml`): `verify` (incl. SPA build), OWASP dependency scan,
+  container build + smoke test, Trivy image scan (HIGH/CRITICAL gate), staging auth guardrail,
+  multi-arch build, SBOM/dependency inventory.
+- Release (`.github/workflows/release-image-ghcr.yml`): multi-arch GHCR publish on `v*.*.*` tags.
 
-Legacy translated references:
-
-- `docs/legacy/HOW_TO_INSTALL_EN.md`
-- `docs/legacy/INITIALIZE_ALL_DATA_EN.md`
-- `docs/legacy/LOAD_DATA_EN.md`
-
-## 12. Operational Notes
-
-- Default `docker-compose` starts `ferko-app` + `postgres`.
-- Optional profiles include `redis` and `mailhog`.
-- App is served from a single Spring Boot process with static frontend assets.
-- For production-style deployment, prefer externalized secrets + OIDC/JWK config + hardened profile.
-
-## 13. License
+## 11. License
 
 See `LICENSE` and `NOTICE`.

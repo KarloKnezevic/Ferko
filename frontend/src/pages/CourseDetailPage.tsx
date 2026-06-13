@@ -54,6 +54,9 @@ export function CourseDetailPage() {
           <Link className="btn" to={`/kolegiji/${c.id}/ankete`}>
             Ankete
           </Link>
+          <Link className="btn" to={`/kolegiji/${c.id}/forum`}>
+            Pitanja i problemi
+          </Link>
         </div>
       </div>
 

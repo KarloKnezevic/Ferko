@@ -179,6 +179,9 @@ tbody tr:hover .grade-cell { filter: brightness(0.97); }
 .slot-time { font-weight: 600; font-variant-numeric: tabular-nums; }
 .slot-course { font-weight: 600; }
 
+/* Forum */
+.forum-reply { border-left: 3px solid var(--border); margin: 8px 0 8px 16px; padding-left: 12px; }
+
 /* Notices */
 .notice-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .notice .muted { font-size: 12px; }

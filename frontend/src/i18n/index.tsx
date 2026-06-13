@@ -81,6 +81,12 @@ const HR: Dict = {
   'surveys.average': 'Prosjek',
   'surveys.responses': 'Odgovora',
   'surveys.empty': 'Trenutno nema anketa.',
+  'forum.title': 'Pitanja i problemi',
+  'forum.ask': 'Postavi pitanje',
+  'forum.reply': 'Odgovori',
+  'forum.send': 'Pošalji',
+  'forum.placeholder': 'Opišite pitanje ili problem…',
+  'forum.empty': 'Još nema poruka. Budite prvi!',
 };
 
 const EN: Dict = {
@@ -160,6 +166,12 @@ const EN: Dict = {
   'surveys.average': 'Average',
   'surveys.responses': 'Responses',
   'surveys.empty': 'No surveys yet.',
+  'forum.title': 'Questions & problems',
+  'forum.ask': 'Ask a question',
+  'forum.reply': 'Reply',
+  'forum.send': 'Send',
+  'forum.placeholder': 'Describe your question or problem…',
+  'forum.empty': 'No messages yet. Be the first!',
 };
 
 const DICTS: Record<Lang, Dict> = { hr: HR, en: EN };

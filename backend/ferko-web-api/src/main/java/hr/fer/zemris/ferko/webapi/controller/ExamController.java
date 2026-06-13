@@ -1,5 +1,6 @@
 package hr.fer.zemris.ferko.webapi.controller;
 
+import hr.fer.zemris.ferko.application.usecase.exam.AlgorithmRunView;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamView;
 import hr.fer.zemris.ferko.application.usecase.exam.RoomSeatingView;
@@ -79,6 +80,19 @@ public class ExamController {
   public SeatingResult generateSeating(
       @PathVariable long examId, @RequestParam(defaultValue = "GENETIC") SeatingStrategy strategy) {
     return scheduling.generateSeating(examId, strategy);
+  }
+
+  @PostMapping("/exams/{examId}/seating/algorithm")
+  @PreAuthorize(CAN_MANAGE)
+  public SeatingResult generateSeatingWithAlgorithm(
+      @PathVariable long examId, @RequestParam(defaultValue = "GENETIC") String algorithm) {
+    return scheduling.generateSeatingWith(examId, algorithm);
+  }
+
+  @PostMapping("/exams/{examId}/seating/compare")
+  @PreAuthorize(CAN_MANAGE)
+  public List<AlgorithmRunView> compareAlgorithms(@PathVariable long examId) {
+    return scheduling.compareSeatingAlgorithms(examId);
   }
 
   @GetMapping("/exams/{examId}/seating")

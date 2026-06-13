@@ -17,10 +17,13 @@ import hr.fer.zemris.ferko.domain.model.Student;
 import hr.fer.zemris.ferko.scheduling.GaConfig;
 import hr.fer.zemris.ferko.scheduling.GeneticAlgorithm;
 import hr.fer.zemris.ferko.scheduling.OptimizationResult;
+import hr.fer.zemris.ferko.scheduling.Optimizer;
+import hr.fer.zemris.ferko.scheduling.Optimizers;
 import hr.fer.zemris.ferko.scheduling.SeatingProblem;
 import hr.fer.zemris.ferko.scheduling.SeatingStrategies;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,8 @@ public class ExamSchedulingService {
 
   private static final double OVER_CAPACITY_ALPHA = 2.0;
   private static final long DEFAULT_SEED = 42L;
+  private static final int COMPARE_POPULATION = 40;
+  private static final int COMPARE_ITERATIONS = 800;
 
   private final ExamRepository examRepository;
   private final RoomRepository roomRepository;
@@ -175,9 +180,78 @@ public class ExamSchedulingService {
     return result;
   }
 
+  /**
+   * Runs an arbitrary named metaheuristic (any of {@link Optimizers#names()}) over the exam's
+   * seating problem and persists the resulting seating, returning the run summary.
+   */
+  public SeatingResult generateSeatingWith(long examId, String algorithm) {
+    SeatingSetup setup = seatingSetup(examId);
+    int studentCount = setup.studentIds().size();
+    SeatingProblem problem =
+        new SeatingProblem(studentCount, setup.capacities(), OVER_CAPACITY_ALPHA);
+    Optimizer optimizer = Optimizers.createDefault(algorithm, DEFAULT_SEED);
+    OptimizationResult result = optimizer.optimize(problem);
+
+    List<ExamSeat> seats =
+        buildSeats(examId, setup.studentIds(), setup.rooms(), result.assignment());
+    examRepository.replaceSeats(examId, seats);
+
+    double penalty = problem.penalty(result.assignment());
+    return new SeatingResult(
+        algorithm,
+        seats.size(),
+        penalty,
+        penalty <= 0.0,
+        result.penaltyHistory(),
+        roomSeating(examId));
+  }
+
+  /**
+   * Runs every supported metaheuristic over the exam's seating problem with an identical budget and
+   * seed and returns their results (penalty + convergence curve), sorted best-first, without
+   * persisting any seating — the FERKO "izbor algoritma + usporedni prikaz".
+   */
+  public List<AlgorithmRunView> compareSeatingAlgorithms(long examId) {
+    SeatingSetup setup = seatingSetup(examId);
+    int studentCount = setup.studentIds().size();
+    List<AlgorithmRunView> runs = new ArrayList<>();
+    for (String name : Optimizers.names()) {
+      SeatingProblem problem =
+          new SeatingProblem(studentCount, setup.capacities(), OVER_CAPACITY_ALPHA);
+      Optimizer optimizer =
+          Optimizers.create(name, COMPARE_POPULATION, COMPARE_ITERATIONS, DEFAULT_SEED);
+      long start = System.nanoTime();
+      OptimizationResult result = optimizer.optimize(problem);
+      long millis = (System.nanoTime() - start) / 1_000_000L;
+      runs.add(
+          new AlgorithmRunView(
+              name,
+              result.penalty(),
+              result.iterations(),
+              result.penalty() <= 0.0,
+              millis,
+              result.penaltyHistory()));
+    }
+    runs.sort(Comparator.comparingDouble(AlgorithmRunView::penalty));
+    return runs;
+  }
+
   public void publish(long examId) {
     examRepository.markPublished(examId, true);
   }
+
+  private SeatingSetup seatingSetup(long examId) {
+    List<Long> studentIds =
+        examRepository.findRegistrations(examId).stream().map(ExamRegistration::studentId).toList();
+    List<ExamRoom> rooms = examRepository.findRooms(examId);
+    if (rooms.isEmpty()) {
+      throw new IllegalStateException("Provjera nema rezerviranih dvorana.");
+    }
+    int[] capacities = rooms.stream().mapToInt(ExamRoom::capacity).toArray();
+    return new SeatingSetup(studentIds, rooms, capacities);
+  }
+
+  private record SeatingSetup(List<Long> studentIds, List<ExamRoom> rooms, int[] capacities) {}
 
   private int[] deterministic(SeatingStrategy strategy, int studentCount, int[] capacities) {
     return switch (strategy) {

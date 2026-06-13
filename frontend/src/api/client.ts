@@ -1,4 +1,5 @@
 import type {
+  AlgorithmRun,
   AutoGradeResult,
   CourseDetail,
   CourseSummary,
@@ -83,6 +84,15 @@ export const api = {
       `/api/v1/academic/exams/${examId}/seating?strategy=${strategy}`,
       { method: 'POST' },
     ),
+  seatingWithAlgorithm: (examId: number, algorithm: string) =>
+    request<SeatingResult>(
+      `/api/v1/academic/exams/${examId}/seating/algorithm?algorithm=${algorithm}`,
+      { method: 'POST' },
+    ),
+  compareAlgorithms: (examId: number) =>
+    request<AlgorithmRun[]>(`/api/v1/academic/exams/${examId}/seating/compare`, {
+      method: 'POST',
+    }),
   seating: (examId: number) =>
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>

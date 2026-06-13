@@ -5,6 +5,7 @@ import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
+import hr.fer.zemris.ferko.application.port.ForumRepository;
 import hr.fer.zemris.ferko.application.port.GradingRepository;
 import hr.fer.zemris.ferko.application.port.NoticeRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
@@ -20,6 +21,7 @@ import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
+import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
 import hr.fer.zemris.ferko.application.usecase.survey.SurveyService;
@@ -34,6 +36,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcClassScheduleRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcForumRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcNoticeRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
@@ -238,6 +241,16 @@ public class ApplicationBeans {
   @Bean
   public SurveyService surveyService(SurveyRepository surveyRepository) {
     return new SurveyService(surveyRepository);
+  }
+
+  @Bean
+  public ForumRepository forumRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcForumRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public ForumService forumService(ForumRepository forumRepository) {
+    return new ForumService(forumRepository);
   }
 
   @Bean

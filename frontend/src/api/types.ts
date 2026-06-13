@@ -133,6 +133,15 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface ForumPost {
+  id: number;
+  courseId: number;
+  parentId: number | null;
+  authorName: string | null;
+  body: string;
+  createdAt: string;
+}
+
 export interface SurveyQuestionView {
   id: number;
   text: string;

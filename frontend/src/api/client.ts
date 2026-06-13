@@ -7,6 +7,7 @@ import type {
   CourseSummary,
   CurrentUser,
   Exam,
+  ForumPost,
   GradeComponentView,
   Notice,
   GradeView,
@@ -118,6 +119,15 @@ export const api = {
     }),
   surveyResults: (surveyId: number) =>
     request<SurveyResult[]>(`/api/v1/academic/surveys/${surveyId}/results`),
+
+  // Forum (Pitanja i problemi)
+  courseForum: (courseId: number) =>
+    request<ForumPost[]>(`/api/v1/academic/courses/${courseId}/forum`),
+  postForum: (courseId: number, body: { parentId: number | null; body: string }) =>
+    request<{ id: number }>(`/api/v1/academic/courses/${courseId}/forum`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 
   // Calendar (kalendar)
   calendar: () => request<CalendarView>('/api/v1/academic/calendar'),

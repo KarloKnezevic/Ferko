@@ -70,6 +70,10 @@ const HR: Dict = {
   'admin.user': 'Korisnik',
   'admin.username': 'Korisničko ime',
   'admin.roles': 'Uloge',
+  'admin.sync': 'Sinkronizacija podataka',
+  'admin.syncNote':
+    'Trenutno učitani podaci. Uvoz iz ISVU-a izvodi se idempotentno pri pokretanju (seeder); brojači prikazuju zatečeno stanje.',
+  'admin.semestersCount': 'Semestri',
   'surveys.title': 'Ankete',
   'surveys.new': 'Nova anketa',
   'surveys.surveyTitle': 'Naziv ankete',
@@ -165,6 +169,10 @@ const EN: Dict = {
   'admin.user': 'User',
   'admin.username': 'Username',
   'admin.roles': 'Roles',
+  'admin.sync': 'Data synchronisation',
+  'admin.syncNote':
+    'Currently loaded data. The ISVU import runs idempotently on startup (seeder); the counts show the current state.',
+  'admin.semestersCount': 'Semesters',
   'surveys.title': 'Surveys',
   'surveys.new': 'New survey',
   'surveys.surveyTitle': 'Survey title',

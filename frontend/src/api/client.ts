@@ -21,6 +21,7 @@ import type {
   Student,
   SurveyResult,
   SurveyView,
+  SyncStatus,
 } from './types';
 
 export class ApiError extends Error {
@@ -167,6 +168,7 @@ export const api = {
   // Admin
   semesters: () => request<Semester[]>('/api/v1/academic/semesters'),
   adminUsers: () => request<AdminUser[]>('/api/v1/academic/users'),
+  syncStatus: () => request<SyncStatus>('/api/v1/academic/sync/status'),
   assignCourseStaff: (courseId: number, body: { username: string; role: string }) =>
     request<void>(`/api/v1/academic/courses/${courseId}/staff`, {
       method: 'POST',

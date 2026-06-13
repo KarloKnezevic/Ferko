@@ -125,6 +125,14 @@ public class AcademicQueryService {
     return roomRepository.findAll().stream().map(AcademicQueryService::toView).toList();
   }
 
+  public SyncStatusView syncStatus() {
+    return new SyncStatusView(
+        semesterRepository.findAll().size(),
+        courseRepository.findAll().size(),
+        studentRepository.findAll().size(),
+        roomRepository.findAll().size());
+  }
+
   public List<AppUserView> listUsers() {
     return userRepository.findAll().stream()
         .map(

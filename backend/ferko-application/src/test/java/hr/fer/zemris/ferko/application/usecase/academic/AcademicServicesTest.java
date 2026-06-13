@@ -138,6 +138,13 @@ class AcademicServicesTest {
             .orElseThrow();
     assertTrue(lecturer.roles().contains("NOSITELJ"));
     assertTrue(lecturer.active());
+
+    // Sync status snapshot: one of each provisioned above.
+    SyncStatusView sync = query.syncStatus();
+    assertEquals(1, sync.semesters());
+    assertEquals(1, sync.courses());
+    assertEquals(1, sync.students());
+    assertEquals(1, sync.rooms());
   }
 
   @Test

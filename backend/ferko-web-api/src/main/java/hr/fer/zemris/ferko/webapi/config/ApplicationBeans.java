@@ -4,6 +4,7 @@ import hr.fer.zemris.ferko.application.port.AppUserRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
+import hr.fer.zemris.ferko.application.port.GradingRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.SemesterRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
@@ -15,6 +16,7 @@ import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
+import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.ListAssignedOpenToDoTasksUseCase;
@@ -25,6 +27,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSemesterRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcStudentRepository;
@@ -184,5 +187,20 @@ public class ApplicationBeans {
       AppUserRepository appUserRepository) {
     return new ExamSchedulingService(
         examRepository, roomRepository, studentRepository, enrollmentRepository, appUserRepository);
+  }
+
+  @Bean
+  public GradingRepository gradingRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcGradingRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public GradingService gradingService(
+      GradingRepository gradingRepository,
+      EnrollmentRepository enrollmentRepository,
+      StudentRepository studentRepository,
+      AppUserRepository appUserRepository) {
+    return new GradingService(
+        gradingRepository, enrollmentRepository, studentRepository, appUserRepository);
   }
 }

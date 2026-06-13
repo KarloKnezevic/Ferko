@@ -1,12 +1,14 @@
 package hr.fer.zemris.ferko.application.usecase.academic;
 
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
+import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.SemesterRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
 import hr.fer.zemris.ferko.domain.model.AppUser;
+import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import hr.fer.zemris.ferko.domain.model.Course;
 import hr.fer.zemris.ferko.domain.model.CourseStaff;
 import hr.fer.zemris.ferko.domain.model.Enrollment;
@@ -18,8 +20,10 @@ import hr.fer.zemris.ferko.domain.model.Room;
 import hr.fer.zemris.ferko.domain.model.Semester;
 import hr.fer.zemris.ferko.domain.model.Student;
 import hr.fer.zemris.ferko.domain.model.StudentGroup;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +37,7 @@ public class AcademicProvisioningService {
   private final StudentRepository studentRepository;
   private final RoomRepository roomRepository;
   private final AppUserRepository userRepository;
+  private final ClassScheduleRepository classScheduleRepository;
 
   public AcademicProvisioningService(
       SemesterRepository semesterRepository,
@@ -40,13 +45,43 @@ public class AcademicProvisioningService {
       EnrollmentRepository enrollmentRepository,
       StudentRepository studentRepository,
       RoomRepository roomRepository,
-      AppUserRepository userRepository) {
+      AppUserRepository userRepository,
+      ClassScheduleRepository classScheduleRepository) {
     this.semesterRepository = semesterRepository;
     this.courseRepository = courseRepository;
     this.enrollmentRepository = enrollmentRepository;
     this.studentRepository = studentRepository;
     this.roomRepository = roomRepository;
     this.userRepository = userRepository;
+    this.classScheduleRepository = classScheduleRepository;
+  }
+
+  /**
+   * Adds a recurring weekly timetable slot for a course. Callers pass primitives only (kept free of
+   * domain types) — the {@link ClassSchedule} aggregate is assembled here.
+   */
+  public long provisionClassSchedule(
+      long courseId,
+      Long groupId,
+      String type,
+      Long roomId,
+      String dayOfWeek,
+      LocalTime startsAt,
+      LocalTime endsAt,
+      String instructor) {
+    return classScheduleRepository
+        .save(
+            new ClassSchedule(
+                0L,
+                courseId,
+                groupId,
+                GroupType.valueOf(type),
+                roomId,
+                DayOfWeek.valueOf(dayOfWeek),
+                startsAt,
+                endsAt,
+                instructor))
+        .id();
   }
 
   public void provisionSemester(

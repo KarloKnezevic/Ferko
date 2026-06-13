@@ -11,7 +11,7 @@ import { GradingPage } from './pages/GradingPage';
 import { RoomsPage } from './pages/RoomsPage';
 import { StudentsPage } from './pages/StudentsPage';
 import { NoticesPage } from './pages/NoticesPage';
-import { CalendarPage } from './pages/PlaceholderPages';
+import { CalendarPage } from './pages/CalendarPage';
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();

@@ -3,8 +3,10 @@ package hr.fer.zemris.ferko.webapi.bootstrap;
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningService;
 import hr.fer.zemris.ferko.webapi.bootstrap.LegacyDataset.CourseCatalogEntry;
 import hr.fer.zemris.ferko.webapi.bootstrap.LegacyDataset.EnrollmentEntry;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +99,7 @@ public class AcademicDataSeeder implements ApplicationRunner {
 
     Map<String, Long> courseIdByCode = new LinkedHashMap<>();
     Map<String, Long> labGroupByCourse = new LinkedHashMap<>();
+    int scheduleIndex = 0;
     for (String code : selectedCodes) {
       CourseCatalogEntry entry = dataset.courses().get(code);
       // Prefer the human-readable course name from enrollment data (e.g. "Fizika 2") over the
@@ -119,6 +122,7 @@ public class AcademicDataSeeder implements ApplicationRunner {
       long labGroup = provisioning.provisionGroup(courseId, "L1", "LAB", "Laboratorij", 400);
       courseIdByCode.put(code, courseId);
       labGroupByCourse.put(code, labGroup);
+      seedWeeklySchedule(courseId, labGroup, scheduleIndex++);
     }
 
     Map<String, Long> studentIdByJmbag = new LinkedHashMap<>();
@@ -155,6 +159,34 @@ public class AcademicDataSeeder implements ApplicationRunner {
         "Academic seeding complete: {} courses, {} students.",
         courseIdByCode.size(),
         studentIdByJmbag.size());
+  }
+
+  /**
+   * Seeds a deterministic weekly lecture + lab slot for a course so the calendar is non-empty. The
+   * day/time is varied by {@code index} to spread courses across the week.
+   */
+  private void seedWeeklySchedule(long courseId, long labGroupId, int index) {
+    String lectureDay = DayOfWeek.of((index % 5) + 1).name();
+    String labDay = DayOfWeek.of(((index + 2) % 5) + 1).name();
+    int lectureHour = 8 + (index % 6); // 08:00..13:00
+    provisioning.provisionClassSchedule(
+        courseId,
+        null,
+        "LECTURE",
+        null,
+        lectureDay,
+        LocalTime.of(lectureHour, 0),
+        LocalTime.of(lectureHour + 2, 0),
+        "Marko Predavač");
+    provisioning.provisionClassSchedule(
+        courseId,
+        labGroupId,
+        "LAB",
+        null,
+        labDay,
+        LocalTime.of(14, 0),
+        LocalTime.of(16, 0),
+        "Iva Asistent");
   }
 
   private void seedRooms() {

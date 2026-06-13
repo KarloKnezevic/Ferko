@@ -1,6 +1,7 @@
 import type {
   AlgorithmRun,
   AutoGradeResult,
+  CalendarView,
   CourseDetail,
   CourseSummary,
   CurrentUser,
@@ -98,6 +99,9 @@ export const api = {
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
+
+  // Calendar (kalendar)
+  calendar: () => request<CalendarView>('/api/v1/academic/calendar'),
 
   // Notices (obavijesti)
   notices: (limit = 20) =>

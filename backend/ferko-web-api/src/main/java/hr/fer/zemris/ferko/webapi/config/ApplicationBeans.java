@@ -1,6 +1,7 @@
 package hr.fer.zemris.ferko.webapi.config;
 
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
+import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
@@ -16,6 +17,7 @@ import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningServ
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
+import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
@@ -26,6 +28,7 @@ import hr.fer.zemris.ferko.application.usecase.todo.ListMyOpenToDoTasksUseCase;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryAuditAdapter;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcClassScheduleRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
@@ -166,14 +169,16 @@ public class ApplicationBeans {
       EnrollmentRepository enrollmentRepository,
       StudentRepository studentRepository,
       RoomRepository roomRepository,
-      AppUserRepository appUserRepository) {
+      AppUserRepository appUserRepository,
+      ClassScheduleRepository classScheduleRepository) {
     return new AcademicProvisioningService(
         semesterRepository,
         courseRepository,
         enrollmentRepository,
         studentRepository,
         roomRepository,
-        appUserRepository);
+        appUserRepository,
+        classScheduleRepository);
   }
 
   @Bean
@@ -215,5 +220,29 @@ public class ApplicationBeans {
   @Bean
   public NoticeService noticeService(NoticeRepository noticeRepository) {
     return new NoticeService(noticeRepository);
+  }
+
+  @Bean
+  public ClassScheduleRepository classScheduleRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcClassScheduleRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public CalendarService calendarService(
+      AppUserRepository appUserRepository,
+      StudentRepository studentRepository,
+      EnrollmentRepository enrollmentRepository,
+      CourseRepository courseRepository,
+      ExamRepository examRepository,
+      ClassScheduleRepository classScheduleRepository,
+      RoomRepository roomRepository) {
+    return new CalendarService(
+        appUserRepository,
+        studentRepository,
+        enrollmentRepository,
+        courseRepository,
+        examRepository,
+        classScheduleRepository,
+        roomRepository);
   }
 }

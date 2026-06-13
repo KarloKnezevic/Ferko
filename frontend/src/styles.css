@@ -171,6 +171,14 @@ input, select {
 tbody tr:hover .grade-cell { filter: brightness(0.97); }
 .sparkline { vertical-align: middle; background: #f7fafc; border-radius: 4px; }
 
+/* Calendar */
+.week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.week-day-name { font-weight: 700; color: var(--fer-blue); margin-bottom: 8px; }
+.slot { border-left: 4px solid var(--accent); background: var(--zebra); padding: 8px 10px; border-radius: 4px; margin-bottom: 8px; }
+.slot.lab { border-left-color: var(--fer-blue-light); }
+.slot-time { font-weight: 600; font-variant-numeric: tabular-nums; }
+.slot-course { font-weight: 600; }
+
 /* Notices */
 .notice-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .notice .muted { font-size: 12px; }

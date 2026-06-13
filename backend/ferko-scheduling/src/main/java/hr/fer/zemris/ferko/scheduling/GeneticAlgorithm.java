@@ -9,7 +9,7 @@ import java.util.Random;
  * individuals are drawn, the worst is eliminated and replaced by the mutated uniform crossover of
  * the other two. Deterministic for a fixed {@link GaConfig#seed()}.
  */
-public final class GeneticAlgorithm {
+public final class GeneticAlgorithm implements Optimizer {
 
   private final GaConfig config;
 
@@ -17,7 +17,13 @@ public final class GeneticAlgorithm {
     this.config = config;
   }
 
-  public GaResult solve(Problem problem) {
+  @Override
+  public String name() {
+    return "GENETIC";
+  }
+
+  @Override
+  public OptimizationResult optimize(Problem problem) {
     Random rng = new Random(config.seed());
     int genes = problem.geneCount();
     int popSize = config.populationSize();
@@ -67,7 +73,7 @@ public final class GeneticAlgorithm {
     }
     history.add(bestPenalty);
 
-    return new GaResult(best, bestPenalty, generation, List.copyOf(history));
+    return new OptimizationResult("GENETIC", best, bestPenalty, generation, List.copyOf(history));
   }
 
   private static int[] randomSolution(Problem problem, Random rng) {

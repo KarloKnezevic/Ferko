@@ -12,7 +12,8 @@ class GeneticAlgorithmTest {
   @Test
   void findsFeasibleSeatingWhenCapacityIsSufficient() {
     SeatingProblem problem = new SeatingProblem(20, new int[] {10, 10, 10}, 2.0);
-    GaResult result = new GeneticAlgorithm(new GaConfig(60, 8000, 0.05, 7L)).solve(problem);
+    OptimizationResult result =
+        new GeneticAlgorithm(new GaConfig(60, 8000, 0.05, 7L)).optimize(problem);
 
     assertTrue(
         result.isPerfect(), "expected an over-capacity-free seating, got " + result.penalty());
@@ -31,7 +32,8 @@ class GeneticAlgorithmTest {
       shared[j][i] = 5;
     }
     ExamTimetableProblem problem = new ExamTimetableProblem(n, 3, shared);
-    GaResult result = new GeneticAlgorithm(new GaConfig(60, 8000, 0.05, 11L)).solve(problem);
+    OptimizationResult result =
+        new GeneticAlgorithm(new GaConfig(60, 8000, 0.05, 11L)).optimize(problem);
 
     assertTrue(result.isPerfect(), "expected a conflict-free timetable, got " + result.penalty());
   }
@@ -41,8 +43,8 @@ class GeneticAlgorithmTest {
     SeatingProblem problem = new SeatingProblem(30, new int[] {12, 12, 12}, 2.0);
     GaConfig config = new GaConfig(40, 3000, 0.04, 123L);
 
-    GaResult first = new GeneticAlgorithm(config).solve(problem);
-    GaResult second = new GeneticAlgorithm(config).solve(problem);
+    OptimizationResult first = new GeneticAlgorithm(config).optimize(problem);
+    OptimizationResult second = new GeneticAlgorithm(config).optimize(problem);
 
     assertArrayEquals(first.assignment(), second.assignment());
     assertEquals(first.penalty(), second.penalty());
@@ -51,7 +53,8 @@ class GeneticAlgorithmTest {
   @Test
   void recordsConvergenceHistory() {
     SeatingProblem problem = new SeatingProblem(40, new int[] {8, 8, 8}, 2.0);
-    GaResult result = new GeneticAlgorithm(new GaConfig(50, 2000, 0.05, 5L)).solve(problem);
+    OptimizationResult result =
+        new GeneticAlgorithm(new GaConfig(50, 2000, 0.05, 5L)).optimize(problem);
     assertTrue(result.penaltyHistory().size() >= 2);
     // The cohort (40) exceeds capacity (24): a perfect solution is impossible.
     assertTrue(result.penalty() > 0.0);

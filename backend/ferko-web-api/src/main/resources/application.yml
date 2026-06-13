@@ -31,16 +31,13 @@ ferko:
     repository: ${FERKO_AUDIT_REPOSITORY:jdbc}
   todo:
     repository: ${FERKO_TODO_REPOSITORY:jdbc}
-  bootstrap:
-    legacy:
-      enabled: ${FERKO_BOOTSTRAP_LEGACY_ENABLED:true}
-  portal:
-    bootstrap:
-      enabled: ${FERKO_PORTAL_BOOTSTRAP_ENABLED:true}
-      max-courses: ${FERKO_PORTAL_BOOTSTRAP_MAX_COURSES:18}
-      max-students: ${FERKO_PORTAL_BOOTSTRAP_MAX_STUDENTS:260}
-      max-schedule-entries: ${FERKO_PORTAL_BOOTSTRAP_MAX_SCHEDULE_ENTRIES:220}
-      max-exam-entries: ${FERKO_PORTAL_BOOTSTRAP_MAX_EXAM_ENTRIES:80}
+  seed:
+    users:
+      enabled: ${FERKO_SEED_USERS_ENABLED:true}
+    academic:
+      enabled: ${FERKO_SEED_ACADEMIC_ENABLED:true}
+      max-courses: ${FERKO_SEED_ACADEMIC_MAX_COURSES:12}
+      max-students: ${FERKO_SEED_ACADEMIC_MAX_STUDENTS:120}
 
 ---
 spring:
@@ -87,11 +84,7 @@ ferko:
   seed:
     users:
       enabled: false
-  bootstrap:
-    legacy:
-      enabled: false
-  portal:
-    bootstrap:
+    academic:
       enabled: false
 
 management:

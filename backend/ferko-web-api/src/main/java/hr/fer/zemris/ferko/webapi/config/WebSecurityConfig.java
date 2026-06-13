@@ -129,8 +129,6 @@ public class WebSecurityConfig {
                         "/actuator/health",
                         "/actuator/info")
                     .permitAll()
-                    .requestMatchers("/api/v1/portal/**")
-                    .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/dev/token")
                     .permitAll()
                     .requestMatchers(

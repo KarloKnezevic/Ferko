@@ -1,11 +1,26 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client';
+import { useAuth } from '../auth/AuthContext';
 
 export function CourseDetailPage() {
   const { id } = useParams();
   const courseId = Number(id);
+  const queryClient = useQueryClient();
+  const { hasRole } = useAuth();
+  const canManageStaff = hasRole('ADMIN', 'NOSITELJ');
   const course = useQuery({ queryKey: ['course', courseId], queryFn: () => api.course(courseId) });
+
+  const [staffUser, setStaffUser] = useState('');
+  const [staffRole, setStaffRole] = useState('ASISTENT');
+  const assignStaff = useMutation({
+    mutationFn: () => api.assignCourseStaff(courseId, { username: staffUser, role: staffRole }),
+    onSuccess: () => {
+      setStaffUser('');
+      queryClient.invalidateQueries({ queryKey: ['course', courseId] });
+    },
+  });
 
   if (course.isLoading) return <p className="muted">Učitavanje…</p>;
   if (!course.data) return <p className="muted">Kolegij nije pronađen.</p>;
@@ -64,6 +79,41 @@ export function CourseDetailPage() {
           </tbody>
         </table>
       </div>
+
+      {canManageStaff && (
+        <div className="card">
+          <h2>Dozvole — dodaj nastavnika</h2>
+          <div className="form-row">
+            <div>
+              <label>Korisničko ime</label>
+              <input
+                value={staffUser}
+                onChange={(e) => setStaffUser(e.target.value)}
+                placeholder="assistant.iva"
+              />
+            </div>
+            <div>
+              <label>Uloga</label>
+              <select value={staffRole} onChange={(e) => setStaffRole(e.target.value)}>
+                <option value="NOSITELJ">Nositelj</option>
+                <option value="NASTAVNIK">Nastavnik</option>
+                <option value="ASISTENT_ORGANIZATOR">Asistent organizator</option>
+                <option value="ASISTENT">Asistent</option>
+              </select>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+              <button disabled={!staffUser || assignStaff.isPending} onClick={() => assignStaff.mutate()}>
+                Dodaj
+              </button>
+            </div>
+          </div>
+          {assignStaff.isError && (
+            <div className="banner err" style={{ marginTop: 12 }}>
+              {(assignStaff.error as Error).message}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <table>

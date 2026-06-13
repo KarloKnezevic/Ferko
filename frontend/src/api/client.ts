@@ -107,6 +107,11 @@ export const api = {
   // Admin
   semesters: () => request<Semester[]>('/api/v1/academic/semesters'),
   adminUsers: () => request<AdminUser[]>('/api/v1/academic/users'),
+  assignCourseStaff: (courseId: number, body: { username: string; role: string }) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/staff`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
   createSemester: (body: {
     code: string;
     academicYear: string;

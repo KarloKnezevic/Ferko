@@ -132,6 +132,21 @@ public class AcademicProvisioningService {
     }
   }
 
+  /**
+   * Assigns a teaching role on a course to the user with the given username. Returns {@code false}
+   * if no such user exists.
+   */
+  public boolean assignStaffByUsername(long courseId, String username, String role) {
+    return userRepository
+        .findByUsername(username)
+        .map(
+            user -> {
+              assignStaff(courseId, user.id(), role);
+              return true;
+            })
+        .orElse(false);
+  }
+
   public long provisionGroup(
       long courseId, String groupCode, String type, String category, int capacity) {
     GroupType groupType = GroupType.valueOf(type);

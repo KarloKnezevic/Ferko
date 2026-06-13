@@ -75,4 +75,40 @@ class AdminConsoleControllerTest {
                         + "\"startsOn\":\"2026-03-01\",\"endsOn\":\"2026-07-15\",\"active\":false}"))
         .andExpect(status().isForbidden());
   }
+
+  @Test
+  void lecturerAssignsStaffToCourse() throws Exception {
+    MockHttpSession session = login("lecturer.marko");
+    mockMvc
+        .perform(
+            post("/api/v1/academic/courses/1/staff")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"username\":\"assistant.iva\",\"role\":\"ASISTENT\"}"))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
+  void assigningUnknownUserReturnsNotFound() throws Exception {
+    MockHttpSession session = login("admin.ferko");
+    mockMvc
+        .perform(
+            post("/api/v1/academic/courses/1/staff")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"username\":\"ne.postoji\",\"role\":\"ASISTENT\"}"))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void studentCannotAssignStaff() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(
+            post("/api/v1/academic/courses/1/staff")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"username\":\"assistant.iva\",\"role\":\"ASISTENT\"}"))
+        .andExpect(status().isForbidden());
+  }
 }

@@ -15,8 +15,8 @@ import hr.fer.zemris.ferko.domain.model.ExamVisibility;
 import hr.fer.zemris.ferko.domain.model.Room;
 import hr.fer.zemris.ferko.domain.model.Student;
 import hr.fer.zemris.ferko.scheduling.GaConfig;
-import hr.fer.zemris.ferko.scheduling.GaResult;
 import hr.fer.zemris.ferko.scheduling.GeneticAlgorithm;
+import hr.fer.zemris.ferko.scheduling.OptimizationResult;
 import hr.fer.zemris.ferko.scheduling.SeatingProblem;
 import hr.fer.zemris.ferko.scheduling.SeatingStrategies;
 import java.time.LocalDateTime;
@@ -120,7 +120,7 @@ public class ExamSchedulingService {
     List<Double> history = List.of();
     if (strategy == SeatingStrategy.GENETIC) {
       SeatingProblem problem = new SeatingProblem(studentCount, capacities, OVER_CAPACITY_ALPHA);
-      GaResult result = new GeneticAlgorithm(GaConfig.defaults()).solve(problem);
+      OptimizationResult result = new GeneticAlgorithm(GaConfig.defaults()).optimize(problem);
       assignment = result.assignment();
       history = result.penaltyHistory();
     } else {

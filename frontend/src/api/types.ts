@@ -101,6 +101,38 @@ export interface RoomSeating {
   seats: ExamSeat[];
 }
 
+export interface GradeComponentView {
+  id: number;
+  name: string;
+  shortName: string;
+  maxPoints: number;
+  ordinal: number;
+}
+
+export interface PointsOverviewRow {
+  studentId: number;
+  jmbag: string;
+  fullName: string;
+  pointsByComponent: Record<string, number>;
+  total: number;
+  finalGrade: number;
+}
+
+export interface GradeView {
+  studentId: number;
+  jmbag: string;
+  fullName: string;
+  finalGrade: number;
+  pointsTotal: number;
+}
+
+export interface AutoGradeResult {
+  jmbag: string;
+  total: number;
+  correct: number;
+  questions: number;
+}
+
 export interface SeatingResult {
   strategy: string;
   seatedStudents: number;

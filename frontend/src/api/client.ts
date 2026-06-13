@@ -1,8 +1,12 @@
 import type {
+  AutoGradeResult,
   CourseDetail,
   CourseSummary,
   CurrentUser,
   Exam,
+  GradeComponentView,
+  GradeView,
+  PointsOverviewRow,
   Room,
   RoomSeating,
   SeatingResult,
@@ -83,4 +87,37 @@ export const api = {
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
+
+  // Grading (points overview)
+  gradeComponents: (courseId: number) =>
+    request<GradeComponentView[]>(`/api/v1/academic/courses/${courseId}/grade-components`),
+  addGradeComponent: (courseId: number, body: { name: string; shortName: string; maxPoints: number }) =>
+    request<GradeComponentView>(`/api/v1/academic/courses/${courseId}/grade-components`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  pointsOverview: (courseId: number) =>
+    request<PointsOverviewRow[]>(`/api/v1/academic/courses/${courseId}/points-overview`),
+  enterPoints: (courseId: number, body: { studentId: number; componentId: number; points: number }) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/points`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  grades: (courseId: number) =>
+    request<GradeView[]>(`/api/v1/academic/courses/${courseId}/grades`),
+  assignGrade: (courseId: number, body: { studentId: number; finalGrade: number }) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/grades`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+
+  // Auto-grading answer sheets
+  autoGrade: (
+    examId: number,
+    body: { correctAnswers: string[]; submissions: { jmbag: string; answers: string[] }[] },
+  ) =>
+    request<AutoGradeResult[]>(`/api/v1/academic/exams/${examId}/auto-grade`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 };

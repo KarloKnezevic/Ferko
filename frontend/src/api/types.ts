@@ -133,6 +133,15 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface AlgorithmRun {
+  algorithm: string;
+  penalty: number;
+  iterations: number;
+  feasible: boolean;
+  durationMillis: number;
+  penaltyHistory: number[];
+}
+
 export interface SeatingResult {
   strategy: string;
   seatedStudents: number;

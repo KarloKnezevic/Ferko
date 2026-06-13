@@ -104,6 +104,42 @@ class ExamSchedulingServiceTest {
   }
 
   @Test
+  void comparesAllAlgorithmsAndSortsBestFirst() {
+    long examId =
+        service.createExam(
+            COURSE_ID, "Usporedba", "U", "MEDJUISPIT", LocalDateTime.now(), 90, 20.0);
+    service.reserveRoom(examId, roomA, 15, 2);
+    service.reserveRoom(examId, roomB, 15, 2);
+    service.registerEnrolledStudents(examId, COURSE_ID);
+
+    var runs = service.compareSeatingAlgorithms(examId);
+
+    assertEquals(6, runs.size());
+    for (int i = 1; i < runs.size(); i++) {
+      assertTrue(
+          runs.get(i - 1).penalty() <= runs.get(i).penalty(),
+          "results must be sorted by penalty ascending");
+    }
+    assertTrue(runs.get(0).feasible(), "best algorithm should find a feasible seating");
+    assertTrue(runs.get(0).penaltyHistory().size() > 1, "convergence curve expected");
+  }
+
+  @Test
+  void generatesSeatingWithANamedMetaheuristic() {
+    long examId =
+        service.createExam(COURSE_ID, "PSO", "P", "MEDJUISPIT", LocalDateTime.now(), 90, 20.0);
+    service.reserveRoom(examId, roomA, 15, 2);
+    service.reserveRoom(examId, roomB, 15, 2);
+    service.registerEnrolledStudents(examId, COURSE_ID);
+
+    SeatingResult result = service.generateSeatingWith(examId, "PARTICLE_SWARM");
+
+    assertEquals("PARTICLE_SWARM", result.strategy());
+    assertEquals(20, result.seatedStudents());
+    assertTrue(result.feasible());
+  }
+
+  @Test
   void publishMarksTheExamPublished() {
     long examId =
         service.createExam(

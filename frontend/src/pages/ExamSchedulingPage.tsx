@@ -3,7 +3,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
-import type { SeatingResult } from '../api/types';
+import { Sparkline } from '../components/Sparkline';
+import type { AlgorithmRun, SeatingResult } from '../api/types';
+
+const ALGO_LABELS: Record<string, string> = {
+  GENETIC: 'Genetski algoritam',
+  DIFFERENTIAL_EVOLUTION: 'Diferencijska evolucija',
+  MAX_MIN_ANT_SYSTEM: 'Max-Min mravlji sustav',
+  PARTICLE_SWARM: 'Roj čestica (PSO)',
+  IMMUNE_ALGORITHM: 'Imunološki algoritam',
+  CLONALG: 'CLONALG',
+};
 
 const STRATEGIES = [
   { value: 'GENETIC', label: 'Genetski algoritam (optimizacija)' },
@@ -25,6 +35,7 @@ export function ExamSchedulingPage() {
 
   const [selectedExam, setSelectedExam] = useState<number | null>(null);
   const [result, setResult] = useState<SeatingResult | null>(null);
+  const [comparison, setComparison] = useState<AlgorithmRun[] | null>(null);
   const [strategy, setStrategy] = useState('GENETIC');
   const [roomId, setRoomId] = useState<number | ''>('');
   const [roomCapacity, setRoomCapacity] = useState(100);
@@ -62,6 +73,18 @@ export function ExamSchedulingPage() {
   const publish = useMutation({
     mutationFn: (examId: number) => api.publishExam(examId),
     onSuccess: invalidate,
+  });
+  const compare = useMutation({
+    mutationFn: (examId: number) => api.compareAlgorithms(examId),
+    onSuccess: (data) => setComparison(data),
+  });
+  const applyAlgorithm = useMutation({
+    mutationFn: ({ examId, algorithm }: { examId: number; algorithm: string }) =>
+      api.seatingWithAlgorithm(examId, algorithm),
+    onSuccess: (data) => {
+      setResult(data);
+      invalidate();
+    },
   });
 
   return (
@@ -212,7 +235,63 @@ export function ExamSchedulingPage() {
             <button className="ghost" onClick={() => publish.mutate(selectedExam)} disabled={publish.isPending}>
               Objavi raspored
             </button>
+            <button
+              className="secondary"
+              onClick={() => compare.mutate(selectedExam)}
+              disabled={compare.isPending}
+            >
+              {compare.isPending ? 'Uspoređivanje…' : 'Usporedi algoritme'}
+            </button>
           </div>
+
+          {comparison && (
+            <div className="card" style={{ marginTop: 16 }}>
+              <h2>Usporedba algoritama raspoređivanja</h2>
+              <p className="muted">
+                Svih šest metaheuristika izvedeno nad istim problemom razmještaja (jednak budžet i
+                sjeme). Manja kazna je bolja; krivulja prikazuje konvergenciju.
+              </p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Algoritam</th>
+                    <th>Kazna</th>
+                    <th>Iteracija</th>
+                    <th>Vrijeme</th>
+                    <th>Konvergencija</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparison.map((run, idx) => (
+                    <tr key={run.algorithm}>
+                      <td>
+                        {ALGO_LABELS[run.algorithm] ?? run.algorithm}
+                        {idx === 0 && <span className="pill ok" style={{ marginLeft: 8 }}>najbolji</span>}
+                      </td>
+                      <td>{run.penalty.toFixed(2)}</td>
+                      <td>{run.iterations}</td>
+                      <td>{run.durationMillis} ms</td>
+                      <td>
+                        <Sparkline values={run.penaltyHistory} />
+                      </td>
+                      <td>
+                        <button
+                          className="ghost"
+                          disabled={applyAlgorithm.isPending}
+                          onClick={() =>
+                            applyAlgorithm.mutate({ examId: selectedExam, algorithm: run.algorithm })
+                          }
+                        >
+                          Primijeni
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {register.data && (
             <div className="banner info" style={{ marginTop: 14 }}>

@@ -169,6 +169,7 @@ input, select {
 .grade-cell.g2 { background: #fbe3cd; }
 .grade-cell.g1 { background: #fbd9d4; }
 tbody tr:hover .grade-cell { filter: brightness(0.97); }
+.sparkline { vertical-align: middle; background: #f7fafc; border-radius: 4px; }
 
 /* Login */
 .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--fer-blue) 0%, var(--fer-blue-dark) 100%); }

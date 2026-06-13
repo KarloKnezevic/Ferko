@@ -16,6 +16,8 @@ import type {
   SeatingResult,
   Semester,
   Student,
+  SurveyResult,
+  SurveyView,
 } from './types';
 
 export class ApiError extends Error {
@@ -100,6 +102,22 @@ export const api = {
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
+
+  // Surveys (ankete)
+  courseSurveys: (courseId: number) =>
+    request<SurveyView[]>(`/api/v1/academic/courses/${courseId}/surveys`),
+  createSurvey: (courseId: number, body: { title: string; questions: string[] }) =>
+    request<{ id: number }>(`/api/v1/academic/courses/${courseId}/surveys`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  submitSurvey: (surveyId: number, answers: { questionId: number; rating: number }[]) =>
+    request<void>(`/api/v1/academic/surveys/${surveyId}/responses`, {
+      method: 'POST',
+      body: JSON.stringify({ answers }),
+    }),
+  surveyResults: (surveyId: number) =>
+    request<SurveyResult[]>(`/api/v1/academic/surveys/${surveyId}/results`),
 
   // Calendar (kalendar)
   calendar: () => request<CalendarView>('/api/v1/academic/calendar'),

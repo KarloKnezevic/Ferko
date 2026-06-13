@@ -70,6 +70,17 @@ const HR: Dict = {
   'admin.user': 'Korisnik',
   'admin.username': 'Korisničko ime',
   'admin.roles': 'Uloge',
+  'surveys.title': 'Ankete',
+  'surveys.new': 'Nova anketa',
+  'surveys.surveyTitle': 'Naziv ankete',
+  'surveys.questions': 'Pitanja (jedno po retku)',
+  'surveys.submit': 'Pošalji ocjene',
+  'surveys.thanks': 'Hvala na ispunjenoj anketi!',
+  'surveys.results': 'Rezultati',
+  'surveys.question': 'Pitanje',
+  'surveys.average': 'Prosjek',
+  'surveys.responses': 'Odgovora',
+  'surveys.empty': 'Trenutno nema anketa.',
 };
 
 const EN: Dict = {
@@ -138,6 +149,17 @@ const EN: Dict = {
   'admin.user': 'User',
   'admin.username': 'Username',
   'admin.roles': 'Roles',
+  'surveys.title': 'Surveys',
+  'surveys.new': 'New survey',
+  'surveys.surveyTitle': 'Survey title',
+  'surveys.questions': 'Questions (one per line)',
+  'surveys.submit': 'Submit ratings',
+  'surveys.thanks': 'Thank you for completing the survey!',
+  'surveys.results': 'Results',
+  'surveys.question': 'Question',
+  'surveys.average': 'Average',
+  'surveys.responses': 'Responses',
+  'surveys.empty': 'No surveys yet.',
 };
 
 const DICTS: Record<Lang, Dict> = { hr: HR, en: EN };

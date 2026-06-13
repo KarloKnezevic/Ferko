@@ -133,6 +133,27 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface SurveyQuestionView {
+  id: number;
+  text: string;
+  ordinal: number;
+}
+
+export interface SurveyView {
+  id: number;
+  courseId: number;
+  title: string;
+  active: boolean;
+  questions: SurveyQuestionView[];
+}
+
+export interface SurveyResult {
+  questionId: number;
+  text: string;
+  responses: number;
+  average: number;
+}
+
 export interface AdminUser {
   id: number;
   username: string;

@@ -79,6 +79,9 @@ export function CourseDetailPage() {
           <Link className="btn" to={`/kolegiji/${c.id}/forum`}>
             Pitanja i problemi
           </Link>
+          <Link className="btn" to={`/kolegiji/${c.id}/repozitorij`}>
+            Repozitorij
+          </Link>
         </div>
       </div>
 

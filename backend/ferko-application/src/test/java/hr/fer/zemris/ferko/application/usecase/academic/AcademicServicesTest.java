@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.support.InMemoryAcademicRepositories;
+// AppUserView is in this package; no import needed.
 import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -126,6 +127,17 @@ class AcademicServicesTest {
     EnrollmentView enrollmentView = query.listEnrollments(courseId).get(0);
     assertEquals("0036501001", enrollmentView.studentJmbag());
     assertEquals("Ana Studentica", enrollmentView.studentFullName());
+
+    // Admin console: list all users with their roles.
+    List<AppUserView> appUsers = query.listUsers();
+    assertEquals(2, appUsers.size());
+    AppUserView lecturer =
+        appUsers.stream()
+            .filter(u -> u.username().equals("lecturer.marko"))
+            .findFirst()
+            .orElseThrow();
+    assertTrue(lecturer.roles().contains("NOSITELJ"));
+    assertTrue(lecturer.active());
   }
 
   @Test

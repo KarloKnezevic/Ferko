@@ -27,6 +27,7 @@ export function Layout() {
           <NavLink to="/obavijesti">{t('nav.notices')}</NavLink>
           <NavLink to="/prostorije">{t('nav.rooms')}</NavLink>
           {hasRole('ADMIN', 'STUSLU') && <NavLink to="/studenti">{t('nav.students')}</NavLink>}
+          {hasRole('ADMIN') && <NavLink to="/admin">{t('nav.admin')}</NavLink>}
         </nav>
         <div className="user">
           <span>{user?.fullName}</span>

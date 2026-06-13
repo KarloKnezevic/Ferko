@@ -12,6 +12,7 @@ import { RoomsPage } from './pages/RoomsPage';
 import { StudentsPage } from './pages/StudentsPage';
 import { NoticesPage } from './pages/NoticesPage';
 import { CalendarPage } from './pages/CalendarPage';
+import { AdminPage } from './pages/AdminPage';
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
@@ -40,6 +41,7 @@ export function App() {
         <Route path="/obavijesti" element={<NoticesPage />} />
         <Route path="/prostorije" element={<RoomsPage />} />
         <Route path="/studenti" element={<StudentsPage />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

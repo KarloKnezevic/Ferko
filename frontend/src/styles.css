@@ -136,6 +136,40 @@ input, select {
 .muted { color: var(--muted); }
 .row-actions a { margin-right: 12px; }
 
+/* Footer */
+.sitefooter {
+  max-width: 1140px;
+  margin: 24px auto 0;
+  padding: 18px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+}
+.lang-switch { display: flex; align-items: center; gap: 6px; }
+.lang-btn {
+  background: transparent;
+  color: var(--fer-blue);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+.lang-btn.active { background: var(--fer-blue); color: #fff; }
+
+/* Grade overview cells */
+.grade-table th .th-sub { font-weight: 400; opacity: 0.8; font-size: 11px; }
+.grade-cell { text-align: center; font-variant-numeric: tabular-nums; }
+.grade-cell.g5 { background: #c8ecd4; }
+.grade-cell.g4 { background: #e0f3d6; }
+.grade-cell.g3 { background: #fcf3cf; }
+.grade-cell.g2 { background: #fbe3cd; }
+.grade-cell.g1 { background: #fbd9d4; }
+tbody tr:hover .grade-cell { filter: brightness(0.97); }
+
 /* Login */
 .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--fer-blue) 0%, var(--fer-blue-dark) 100%); }
 .login-card { background: #fff; border-radius: 12px; padding: 32px; width: 360px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); }

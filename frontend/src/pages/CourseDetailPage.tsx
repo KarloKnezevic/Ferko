@@ -29,9 +29,14 @@ export function CourseDetailPage() {
             <strong>Literatura:</strong> {c.literature}
           </p>
         )}
-        <Link className="btn" to={`/kolegiji/${c.id}/ispiti`}>
-          Administracija provjera znanja
-        </Link>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <Link className="btn" to={`/kolegiji/${c.id}/ispiti`}>
+            Administracija provjera znanja
+          </Link>
+          <Link className="btn" to={`/kolegiji/${c.id}/bodovi`}>
+            Preglednik bodova
+          </Link>
+        </div>
       </div>
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>

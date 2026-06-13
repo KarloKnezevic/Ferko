@@ -1,0 +1,120 @@
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+
+export type Lang = 'hr' | 'en';
+
+type Dict = Record<string, string>;
+
+const HR: Dict = {
+  'nav.home': 'Početna',
+  'nav.courses': 'Kolegiji',
+  'nav.calendar': 'Kalendar',
+  'nav.notices': 'Obavijesti',
+  'nav.rooms': 'Prostorije',
+  'nav.students': 'Studenti',
+  'nav.logout': 'Odjava',
+  'footer.tagline': 'FERKO — sustav za organizaciju nastave',
+  'footer.faculty': 'Fakultet elektrotehnike i računarstva, Sveučilište u Zagrebu',
+  'footer.language': 'Jezik',
+  'common.loading': 'Učitavanje…',
+  'common.total': 'Ukupno',
+  'common.grade': 'Ocjena',
+  'common.student': 'Student',
+  'common.add': 'Dodaj',
+  'common.save': 'Spremi',
+  'grading.title': 'Preglednik bodova',
+  'grading.subtitle': 'Bodovne komponente, unos bodova, ocjene i auto-ocjenjivanje',
+  'grading.components': 'Bodovne komponente',
+  'grading.addComponent': 'Dodaj komponentu',
+  'grading.name': 'Naziv',
+  'grading.short': 'Kratica',
+  'grading.maxPoints': 'Maks. bodova',
+  'grading.overview': 'Preglednik bodova',
+  'grading.enterPoints': 'Unos bodova',
+  'grading.points': 'Bodovi',
+  'grading.assignGrade': 'Dodijeli ocjenu',
+  'grading.noComponents': 'Još nema definiranih bodovnih komponenti.',
+  'grading.autograde': 'Auto-ocjenjivanje obrasca',
+  'grading.correctKey': 'Točni odgovori (npr. A, B, A,C, A+B — odvojeni s ;)',
+  'grading.submissions': 'Odgovori studenata (jedan red: JMBAG = A;B;C)',
+  'grading.run': 'Ocijeni',
+  'grading.result': 'Rezultat',
+  'grading.correct': 'Točno',
+  'login.subtitle': 'Sustav za organizaciju nastave',
+};
+
+const EN: Dict = {
+  'nav.home': 'Home',
+  'nav.courses': 'Courses',
+  'nav.calendar': 'Calendar',
+  'nav.notices': 'Notices',
+  'nav.rooms': 'Rooms',
+  'nav.students': 'Students',
+  'nav.logout': 'Sign out',
+  'footer.tagline': 'FERKO — teaching organisation system',
+  'footer.faculty': 'Faculty of Electrical Engineering and Computing, University of Zagreb',
+  'footer.language': 'Language',
+  'common.loading': 'Loading…',
+  'common.total': 'Total',
+  'common.grade': 'Grade',
+  'common.student': 'Student',
+  'common.add': 'Add',
+  'common.save': 'Save',
+  'grading.title': 'Points overview',
+  'grading.subtitle': 'Grade components, points entry, grades and auto-grading',
+  'grading.components': 'Grade components',
+  'grading.addComponent': 'Add component',
+  'grading.name': 'Name',
+  'grading.short': 'Short name',
+  'grading.maxPoints': 'Max points',
+  'grading.overview': 'Points overview',
+  'grading.enterPoints': 'Enter points',
+  'grading.points': 'Points',
+  'grading.assignGrade': 'Assign grade',
+  'grading.noComponents': 'No grade components defined yet.',
+  'grading.autograde': 'Answer-sheet auto-grading',
+  'grading.correctKey': 'Correct answers (e.g. A, B, A,C, A+B — separated by ;)',
+  'grading.submissions': 'Student answers (one row: JMBAG = A;B;C)',
+  'grading.run': 'Grade',
+  'grading.result': 'Result',
+  'grading.correct': 'Correct',
+  'login.subtitle': 'Teaching organisation system',
+};
+
+const DICTS: Record<Lang, Dict> = { hr: HR, en: EN };
+
+interface I18nValue {
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+  t: (key: string) => string;
+}
+
+const I18nContext = createContext<I18nValue | null>(null);
+
+const STORAGE_KEY = 'ferko.lang';
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(() => {
+    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+    return stored === 'en' ? 'en' : 'hr';
+  });
+
+  const setLang = useCallback((next: Lang) => {
+    setLangState(next);
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* storage unavailable */
+    }
+  }, []);
+
+  const t = useCallback((key: string) => DICTS[lang][key] ?? DICTS.hr[key] ?? key, [lang]);
+
+  const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}
+
+export function useI18n(): I18nValue {
+  const ctx = useContext(I18nContext);
+  if (!ctx) throw new Error('useI18n must be used within I18nProvider');
+  return ctx;
+}

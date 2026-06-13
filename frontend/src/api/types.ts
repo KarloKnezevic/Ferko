@@ -133,6 +133,31 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface WeeklySlot {
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  type: string;
+  courseCode: string;
+  courseName: string;
+  room: string | null;
+  instructor: string | null;
+}
+
+export interface UpcomingExam {
+  startsAt: string;
+  title: string;
+  shortName: string;
+  courseCode: string;
+  courseName: string;
+  durationMinutes: number;
+}
+
+export interface CalendarView {
+  weekly: WeeklySlot[];
+  exams: UpcomingExam[];
+}
+
 export interface Notice {
   id: number;
   courseId: number | null;

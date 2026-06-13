@@ -46,6 +46,13 @@ const HR: Dict = {
   'notices.pin': 'Prikvači na vrh',
   'notices.publish': 'Objavi',
   'notices.empty': 'Trenutno nema obavijesti.',
+  'calendar.subtitle': 'Tjedni raspored nastave i nadolazeće provjere',
+  'calendar.weekly': 'Tjedni raspored nastave',
+  'calendar.exams': 'Nadolazeće provjere',
+  'calendar.emptyWeekly': 'Nema unesenog rasporeda nastave.',
+  'calendar.emptyExams': 'Nema datiranih provjera.',
+  'calendar.when': 'Termin',
+  'calendar.exam': 'Provjera',
 };
 
 const EN: Dict = {
@@ -90,6 +97,13 @@ const EN: Dict = {
   'notices.pin': 'Pin to top',
   'notices.publish': 'Publish',
   'notices.empty': 'No notices yet.',
+  'calendar.subtitle': 'Weekly teaching timetable and upcoming assessments',
+  'calendar.weekly': 'Weekly timetable',
+  'calendar.exams': 'Upcoming assessments',
+  'calendar.emptyWeekly': 'No timetable entries.',
+  'calendar.emptyExams': 'No dated assessments.',
+  'calendar.when': 'When',
+  'calendar.exam': 'Assessment',
 };
 
 const DICTS: Record<Lang, Dict> = { hr: HR, en: EN };

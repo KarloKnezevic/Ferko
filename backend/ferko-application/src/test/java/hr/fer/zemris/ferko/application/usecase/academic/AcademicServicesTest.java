@@ -3,14 +3,45 @@ package hr.fer.zemris.ferko.application.usecase.academic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.support.InMemoryAcademicRepositories;
+import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class AcademicServicesTest {
+
+  private static final class FakeSchedule implements ClassScheduleRepository {
+    private final List<ClassSchedule> store = new ArrayList<>();
+    private long seq = 0;
+
+    @Override
+    public ClassSchedule save(ClassSchedule entry) {
+      ClassSchedule saved =
+          new ClassSchedule(
+              ++seq,
+              entry.courseId(),
+              entry.groupId(),
+              entry.type(),
+              entry.roomId(),
+              entry.dayOfWeek(),
+              entry.startsAt(),
+              entry.endsAt(),
+              entry.instructor());
+      store.add(saved);
+      return saved;
+    }
+
+    @Override
+    public List<ClassSchedule> findByCourse(long courseId) {
+      return store.stream().filter(s -> s.courseId() == courseId).toList();
+    }
+  }
 
   private InMemoryAcademicRepositories.Users users;
   private InMemoryAcademicRepositories.Semesters semesters;
@@ -30,7 +61,8 @@ class AcademicServicesTest {
     enrollments = new InMemoryAcademicRepositories.Enrollments();
     rooms = new InMemoryAcademicRepositories.Rooms();
     provisioning =
-        new AcademicProvisioningService(semesters, courses, enrollments, students, rooms, users);
+        new AcademicProvisioningService(
+            semesters, courses, enrollments, students, rooms, users, new FakeSchedule());
     query = new AcademicQueryService(semesters, courses, enrollments, students, rooms, users);
   }
 

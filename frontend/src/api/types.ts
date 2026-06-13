@@ -133,6 +133,19 @@ export interface AutoGradeResult {
   questions: number;
 }
 
+export interface GroupExchange {
+  id: number;
+  courseId: number;
+  studentJmbag: string;
+  studentName: string;
+  fromGroup: string;
+  toGroup: string;
+  status: string;
+  reason: string | null;
+  decidedBy: string | null;
+  createdAt: string;
+}
+
 export interface RepoFile {
   id: number;
   courseId: number;

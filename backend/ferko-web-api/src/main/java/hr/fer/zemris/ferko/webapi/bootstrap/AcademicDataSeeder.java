@@ -155,6 +155,23 @@ public class AcademicDataSeeder implements ApplicationRunner {
       }
     }
 
+    // Make the demo STUDENT user (student.ana, created by the user seeder) a real enrolled student
+    // so every student-facing feature (burza grupa, kalendar, ankete) works out of the box.
+    if (!courseIdByCode.isEmpty()) {
+      long demoCourseId = courseIdByCode.values().iterator().next();
+      long demoStudentId =
+          provisioning.provisionStudent(
+              "student.ana",
+              studentPassword,
+              "Ana Studentica",
+              "ana@fer.hr",
+              "0036500000",
+              "Računarstvo",
+              1,
+              now);
+      provisioning.enroll(demoStudentId, demoCourseId, now);
+    }
+
     LOG.info(
         "Academic seeding complete: {} courses, {} students.",
         courseIdByCode.size(),

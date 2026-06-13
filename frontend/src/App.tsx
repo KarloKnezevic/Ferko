@@ -11,6 +11,7 @@ import { GradingPage } from './pages/GradingPage';
 import { SurveysPage } from './pages/SurveysPage';
 import { ForumPage } from './pages/ForumPage';
 import { RepositoryPage } from './pages/RepositoryPage';
+import { GroupExchangePage } from './pages/GroupExchangePage';
 import { RoomsPage } from './pages/RoomsPage';
 import { StudentsPage } from './pages/StudentsPage';
 import { NoticesPage } from './pages/NoticesPage';
@@ -43,6 +44,7 @@ export function App() {
         <Route path="/kolegiji/:id/ankete" element={<SurveysPage />} />
         <Route path="/kolegiji/:id/forum" element={<ForumPage />} />
         <Route path="/kolegiji/:id/repozitorij" element={<RepositoryPage />} />
+        <Route path="/kolegiji/:id/burza" element={<GroupExchangePage />} />
         <Route path="/kalendar" element={<CalendarPage />} />
         <Route path="/obavijesti" element={<NoticesPage />} />
         <Route path="/prostorije" element={<RoomsPage />} />

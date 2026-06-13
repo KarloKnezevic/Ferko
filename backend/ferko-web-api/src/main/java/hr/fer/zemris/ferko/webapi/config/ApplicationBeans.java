@@ -9,6 +9,7 @@ import hr.fer.zemris.ferko.application.port.ExamRepository;
 import hr.fer.zemris.ferko.application.port.FileStorage;
 import hr.fer.zemris.ferko.application.port.ForumRepository;
 import hr.fer.zemris.ferko.application.port.GradingRepository;
+import hr.fer.zemris.ferko.application.port.GroupExchangeRepository;
 import hr.fer.zemris.ferko.application.port.NoticeRepository;
 import hr.fer.zemris.ferko.application.port.RepositoryFileRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
@@ -25,6 +26,7 @@ import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
 import hr.fer.zemris.ferko.application.usecase.component.CourseComponentService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
+import hr.fer.zemris.ferko.application.usecase.exchange.GroupExchangeService;
 import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
@@ -44,6 +46,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcForumRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGroupExchangeRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcNoticeRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRepositoryFileRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
@@ -288,6 +291,21 @@ public class ApplicationBeans {
   public RepositoryService repositoryService(
       RepositoryFileRepository repositoryFileRepository, FileStorage fileStorage) {
     return new RepositoryService(repositoryFileRepository, fileStorage);
+  }
+
+  @Bean
+  public GroupExchangeRepository groupExchangeRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcGroupExchangeRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public GroupExchangeService groupExchangeService(
+      GroupExchangeRepository groupExchangeRepository,
+      AppUserRepository appUserRepository,
+      StudentRepository studentRepository,
+      CourseRepository courseRepository) {
+    return new GroupExchangeService(
+        groupExchangeRepository, appUserRepository, studentRepository, courseRepository);
   }
 
   @Bean

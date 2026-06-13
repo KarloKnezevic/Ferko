@@ -101,6 +101,17 @@ const HR: Dict = {
   'repo.date': 'Datum',
   'repo.download': 'Preuzmi',
   'repo.empty': 'Nema datoteka.',
+  'burza.title': 'Burza grupa',
+  'burza.subtitle': 'Zahtjevi za zamjenu grupe; nastavno osoblje ili studentska služba odlučuju.',
+  'burza.request': 'Zatraži zamjenu',
+  'burza.from': 'Iz grupe',
+  'burza.to': 'U grupu',
+  'burza.reason': 'Razlog',
+  'burza.send': 'Pošalji zahtjev',
+  'burza.switch': 'Zamjena',
+  'burza.approve': 'Odobri',
+  'burza.reject': 'Odbij',
+  'burza.empty': 'Nema zahtjeva za zamjenu.',
 };
 
 const EN: Dict = {
@@ -200,6 +211,17 @@ const EN: Dict = {
   'repo.date': 'Date',
   'repo.download': 'Download',
   'repo.empty': 'No files.',
+  'burza.title': 'Group exchange',
+  'burza.subtitle': 'Group-switch requests; teaching staff or student office decide.',
+  'burza.request': 'Request a switch',
+  'burza.from': 'From group',
+  'burza.to': 'To group',
+  'burza.reason': 'Reason',
+  'burza.send': 'Send request',
+  'burza.switch': 'Switch',
+  'burza.approve': 'Approve',
+  'burza.reject': 'Reject',
+  'burza.empty': 'No exchange requests.',
 };
 
 const DICTS: Record<Lang, Dict> = { hr: HR, en: EN };

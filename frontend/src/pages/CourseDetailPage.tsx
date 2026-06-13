@@ -82,6 +82,9 @@ export function CourseDetailPage() {
           <Link className="btn" to={`/kolegiji/${c.id}/repozitorij`}>
             Repozitorij
           </Link>
+          <Link className="btn" to={`/kolegiji/${c.id}/burza`}>
+            Burza grupa
+          </Link>
         </div>
       </div>
 

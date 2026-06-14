@@ -7,6 +7,7 @@ import type {
   CalendarView,
   CollisionReport,
   Consultation,
+  GeneratedTimetable,
   CourseComponent,
   CourseDetail,
   CourseEnrollment,
@@ -267,6 +268,16 @@ export const api = {
   // Timetable (raspored nastave)
   timetable: () => request<TimetableSlot[]>('/api/v1/academic/timetable'),
   timetableCollisions: () => request<CollisionReport>('/api/v1/academic/timetable/collisions'),
+  generateTimetable: (body: {
+    studyYear?: number;
+    courseIds?: number[];
+    periods: number;
+    algorithm: string;
+  }) =>
+    request<GeneratedTimetable>('/api/v1/academic/timetable/generate', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 
   // Admin
   semesters: () => request<Semester[]>('/api/v1/academic/semesters'),

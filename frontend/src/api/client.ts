@@ -5,6 +5,7 @@ import type {
   CalendarView,
   CourseComponent,
   CourseDetail,
+  CourseLiterature,
   CourseSummary,
   CurrentUser,
   Exam,
@@ -148,6 +149,16 @@ export const api = {
     body: { title: string; content: string; ordinal: number; visible: boolean },
   ) =>
     request<{ id: number }>(`/api/v1/academic/courses/${courseId}/components`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  courseLiterature: (courseId: number) =>
+    request<CourseLiterature[]>(`/api/v1/academic/courses/${courseId}/literature`),
+  addCourseLiterature: (
+    courseId: number,
+    body: { title: string; author: string; mandatory: boolean; ordinal: number },
+  ) =>
+    request<{ id: number }>(`/api/v1/academic/courses/${courseId}/literature`, {
       method: 'POST',
       body: JSON.stringify(body),
     }),

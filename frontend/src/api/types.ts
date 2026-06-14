@@ -208,6 +208,15 @@ export interface CourseComponent {
   visible: boolean;
 }
 
+export interface CourseLiterature {
+  id: number;
+  courseId: number;
+  title: string;
+  author: string;
+  mandatory: boolean;
+  ordinal: number;
+}
+
 export interface ForumPost {
   id: number;
   courseId: number;

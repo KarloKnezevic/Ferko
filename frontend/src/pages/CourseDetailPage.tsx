@@ -16,6 +16,10 @@ export function CourseDetailPage() {
     queryKey: ['components', courseId],
     queryFn: () => api.courseComponents(courseId),
   });
+  const literature = useQuery({
+    queryKey: ['literature', courseId],
+    queryFn: () => api.courseLiterature(courseId),
+  });
 
   const [staffUser, setStaffUser] = useState('');
   const [staffRole, setStaffRole] = useState('ASISTENT');
@@ -24,6 +28,24 @@ export function CourseDetailPage() {
     onSuccess: () => {
       setStaffUser('');
       queryClient.invalidateQueries({ queryKey: ['course', courseId] });
+    },
+  });
+
+  const [litTitle, setLitTitle] = useState('');
+  const [litAuthor, setLitAuthor] = useState('');
+  const [litMandatory, setLitMandatory] = useState(true);
+  const addLiterature = useMutation({
+    mutationFn: () =>
+      api.addCourseLiterature(courseId, {
+        title: litTitle,
+        author: litAuthor,
+        mandatory: litMandatory,
+        ordinal: literature.data?.length ?? 0,
+      }),
+    onSuccess: () => {
+      setLitTitle('');
+      setLitAuthor('');
+      queryClient.invalidateQueries({ queryKey: ['literature', courseId] });
     },
   });
 
@@ -86,6 +108,60 @@ export function CourseDetailPage() {
             Burza grupa
           </Link>
         </div>
+      </div>
+
+      <div className="card">
+        <h2>Literatura</h2>
+        {(literature.data?.length ?? 0) === 0 ? (
+          <p className="muted">Literatura još nije unesena.</p>
+        ) : (
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
+            {literature.data?.map((lit) => (
+              <li key={lit.id} style={{ marginBottom: 4 }}>
+                {lit.title}
+                {lit.author && <span className="muted"> — {lit.author}</span>}{' '}
+                <span className={`pill ${lit.mandatory ? 'ok' : 'warn'}`}>
+                  {lit.mandatory ? 'obavezna' : 'preporučena'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        {canManageContent && (
+          <div className="form-row" style={{ marginTop: 14 }}>
+            <div>
+              <label>Naslov</label>
+              <input
+                value={litTitle}
+                onChange={(e) => setLitTitle(e.target.value)}
+                placeholder="Uvod u programiranje"
+              />
+            </div>
+            <div>
+              <label>Autor</label>
+              <input
+                value={litAuthor}
+                onChange={(e) => setLitAuthor(e.target.value)}
+                placeholder="I. Anić"
+              />
+            </div>
+            <div>
+              <label>Vrsta</label>
+              <select
+                value={litMandatory ? 'obavezna' : 'preporucena'}
+                onChange={(e) => setLitMandatory(e.target.value === 'obavezna')}
+              >
+                <option value="obavezna">Obavezna</option>
+                <option value="preporucena">Preporučena</option>
+              </select>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+              <button disabled={!litTitle || addLiterature.isPending} onClick={() => addLiterature.mutate()}>
+                Dodaj
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {(components.data?.length ?? 0) > 0 &&

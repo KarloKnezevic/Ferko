@@ -3,6 +3,7 @@ package hr.fer.zemris.ferko.webapi.config;
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
 import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseComponentRepository;
+import hr.fer.zemris.ferko.application.port.CourseLiteratureRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamAssistantRepository;
@@ -31,6 +32,7 @@ import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.exchange.GroupExchangeService;
 import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
+import hr.fer.zemris.ferko.application.usecase.literature.CourseLiteratureService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
 import hr.fer.zemris.ferko.application.usecase.repository.RepositoryService;
 import hr.fer.zemris.ferko.application.usecase.student.StudentExamService;
@@ -45,6 +47,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcClassScheduleRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseComponentRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseLiteratureRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamAssistantRepository;
@@ -294,6 +297,17 @@ public class ApplicationBeans {
   public CourseComponentService courseComponentService(
       CourseComponentRepository courseComponentRepository) {
     return new CourseComponentService(courseComponentRepository);
+  }
+
+  @Bean
+  public CourseLiteratureRepository courseLiteratureRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcCourseLiteratureRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public CourseLiteratureService courseLiteratureService(
+      CourseLiteratureRepository courseLiteratureRepository) {
+    return new CourseLiteratureService(courseLiteratureRepository);
   }
 
   @Bean

@@ -16,6 +16,7 @@ import type {
   ForumPost,
   MyCourseGrade,
   MyExam,
+  MyProfile,
   GroupExchange,
   GradeComponentView,
   Notice,
@@ -114,6 +115,7 @@ export const api = {
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
+  myProfile: () => request<MyProfile>(`/api/v1/academic/my/profile`),
   myExams: () => request<MyExam[]>(`/api/v1/academic/my/exams`),
   registerForExam: (examId: number) =>
     request<void>(`/api/v1/academic/my/exams/${examId}/registration`, { method: 'POST' }),

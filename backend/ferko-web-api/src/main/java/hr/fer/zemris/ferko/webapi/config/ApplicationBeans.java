@@ -27,6 +27,7 @@ import hr.fer.zemris.ferko.application.port.ToDoTaskRepository;
 import hr.fer.zemris.ferko.application.usecase.PingUseCase;
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningService;
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
+import hr.fer.zemris.ferko.application.usecase.access.AccessControlService;
 import hr.fer.zemris.ferko.application.usecase.audit.AuditService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
@@ -201,6 +202,16 @@ public class ApplicationBeans {
         studentRepository,
         roomRepository,
         appUserRepository);
+  }
+
+  @Bean
+  public AccessControlService accessControlService(
+      AppUserRepository appUserRepository,
+      StudentRepository studentRepository,
+      EnrollmentRepository enrollmentRepository,
+      CourseRepository courseRepository) {
+    return new AccessControlService(
+        appUserRepository, studentRepository, enrollmentRepository, courseRepository);
   }
 
   @Bean

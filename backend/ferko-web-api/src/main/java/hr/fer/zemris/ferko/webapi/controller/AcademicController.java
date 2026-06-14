@@ -22,6 +22,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/v1/academic")
 public class AcademicController {
 
+  /** Roles that may browse the faculty-wide student roster. Students may not enumerate it. */
+  private static final String STAFF =
+      "hasAnyRole('ADMIN', 'STUSLU', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT')";
+
   private final AcademicQueryService query;
 
   public AcademicController(AcademicQueryService query) {
@@ -62,11 +66,13 @@ public class AcademicController {
   }
 
   @GetMapping("/students")
+  @PreAuthorize(STAFF)
   public List<StudentView> students() {
     return query.listStudents();
   }
 
   @GetMapping("/students/{jmbag}")
+  @PreAuthorize(STAFF)
   public StudentView student(@PathVariable String jmbag) {
     return query
         .getStudentByJmbag(jmbag)

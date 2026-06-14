@@ -24,8 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Course file repository ("Repozitorij"): list and download for anyone authenticated; teaching
- * staff upload. Binary content is kept by the file-storage adapter.
+ * Course file repository ("Repozitorij"): listing and download are gated by {@link
+ * CourseAccessGuard} to users related to the course (enrolled students, teaching staff, or {@code
+ * ADMIN}/{@code STUSLU}); teaching staff upload. Binary content is kept by the file-storage
+ * adapter.
  */
 @RestController
 @RequestMapping("/api/v1/academic")
@@ -35,13 +37,17 @@ public class RepositoryController {
       "hasAnyRole('ADMIN', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT')";
 
   private final RepositoryService repositoryService;
+  private final CourseAccessGuard courseAccess;
 
-  public RepositoryController(RepositoryService repositoryService) {
+  public RepositoryController(RepositoryService repositoryService, CourseAccessGuard courseAccess) {
     this.repositoryService = repositoryService;
+    this.courseAccess = courseAccess;
   }
 
   @GetMapping("/courses/{courseId}/files")
-  public List<RepositoryViews.FileView> list(@PathVariable long courseId) {
+  public List<RepositoryViews.FileView> list(
+      @PathVariable long courseId, Authentication authentication) {
+    courseAccess.requireCourseAccess(authentication, courseId);
     return repositoryService.list(courseId);
   }
 
@@ -69,7 +75,14 @@ public class RepositoryController {
   }
 
   @GetMapping("/files/{fileId}/download")
-  public ResponseEntity<Resource> download(@PathVariable long fileId) {
+  public ResponseEntity<Resource> download(
+      @PathVariable long fileId, Authentication authentication) {
+    long courseId =
+        repositoryService
+            .courseIdForFile(fileId)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Datoteka ne postoji."));
+    courseAccess.requireCourseAccess(authentication, courseId);
     RepositoryViews.DownloadedFile file =
         repositoryService
             .download(fileId)

@@ -12,6 +12,14 @@ export function CourseDetailPage() {
   const canManageStaff = hasRole('ADMIN', 'NOSITELJ');
   const canManageContent = hasRole('ADMIN', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR');
   const canManageGroups = hasRole('ADMIN', 'NOSITELJ', 'STUSLU');
+  const canManageExams = hasRole('ADMIN', 'NOSITELJ', 'ASISTENT_ORGANIZATOR');
+  const canManageGrades = hasRole(
+    'ADMIN',
+    'NOSITELJ',
+    'NASTAVNIK',
+    'ASISTENT_ORGANIZATOR',
+    'ASISTENT',
+  );
   const enrollments = useQuery({
     queryKey: ['enrollments', courseId],
     queryFn: () => api.courseEnrollments(courseId),
@@ -150,12 +158,16 @@ export function CourseDetailPage() {
           </p>
         )}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <Link className="btn" to={`/kolegiji/${c.id}/ispiti`}>
-            Administracija provjera znanja
-          </Link>
-          <Link className="btn" to={`/kolegiji/${c.id}/bodovi`}>
-            Preglednik bodova
-          </Link>
+          {canManageExams && (
+            <Link className="btn" to={`/kolegiji/${c.id}/ispiti`}>
+              Administracija provjera znanja
+            </Link>
+          )}
+          {canManageGrades && (
+            <Link className="btn" to={`/kolegiji/${c.id}/bodovi`}>
+              Preglednik bodova
+            </Link>
+          )}
           <Link className="btn" to={`/kolegiji/${c.id}/ankete`}>
             Ankete
           </Link>

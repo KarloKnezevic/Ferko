@@ -66,6 +66,11 @@ public final class InMemoryExamRepository implements ExamRepository {
   }
 
   @Override
+  public void removeRegistration(long examId, long studentId) {
+    registrations.removeIf(r -> r.examId() == examId && r.studentId() == studentId);
+  }
+
+  @Override
   public List<ExamRegistration> findRegistrations(long examId) {
     return registrations.stream().filter(r -> r.examId() == examId).toList();
   }

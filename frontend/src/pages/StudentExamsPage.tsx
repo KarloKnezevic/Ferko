@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 
@@ -10,11 +10,22 @@ const KIND_LABELS: Record<string, string> = {
 };
 
 export function StudentExamsPage() {
+  const queryClient = useQueryClient();
   const exams = useQuery({ queryKey: ['my-exams'], queryFn: api.myExams });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['my-exams'] });
+  const register = useMutation({
+    mutationFn: (examId: number) => api.registerForExam(examId),
+    onSuccess: invalidate,
+  });
+  const unregister = useMutation({
+    mutationFn: (examId: number) => api.unregisterFromExam(examId),
+    onSuccess: invalidate,
+  });
 
   if (exams.isLoading) return <p className="muted">Učitavanje…</p>;
 
   const data = exams.data ?? [];
+  const busy = register.isPending || unregister.isPending;
 
   return (
     <div>
@@ -37,6 +48,7 @@ export function StudentExamsPage() {
                 <th>Kolegij</th>
                 <th>Termin</th>
                 <th>Prijava</th>
+                <th></th>
                 <th>Dvorana / mjesto</th>
               </tr>
             </thead>
@@ -58,6 +70,19 @@ export function StudentExamsPage() {
                       <span className="pill ok">Prijavljen</span>
                     ) : (
                       <span className="pill warn">Nije prijavljen</span>
+                    )}
+                  </td>
+                  <td className="row-actions">
+                    {e.published ? (
+                      <span className="muted">—</span>
+                    ) : e.registered ? (
+                      <button className="ghost" disabled={busy} onClick={() => unregister.mutate(e.examId)}>
+                        Odjavi se
+                      </button>
+                    ) : (
+                      <button className="secondary" disabled={busy} onClick={() => register.mutate(e.examId)}>
+                        Prijavi se
+                      </button>
                     )}
                   </td>
                   <td>

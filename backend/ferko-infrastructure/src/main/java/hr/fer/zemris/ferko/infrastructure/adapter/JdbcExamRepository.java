@@ -134,6 +134,12 @@ public class JdbcExamRepository implements ExamRepository {
   }
 
   @Override
+  public void removeRegistration(long examId, long studentId) {
+    jdbcTemplate.update(
+        "delete from exam_registration where exam_id = ? and student_id = ?", examId, studentId);
+  }
+
+  @Override
   public List<ExamRegistration> findRegistrations(long examId) {
     return jdbcTemplate.query(
         "select * from exam_registration where exam_id = ? order by id",

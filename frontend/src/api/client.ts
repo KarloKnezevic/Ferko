@@ -112,6 +112,10 @@ export const api = {
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
   myExams: () => request<MyExam[]>(`/api/v1/academic/my/exams`),
+  registerForExam: (examId: number) =>
+    request<void>(`/api/v1/academic/my/exams/${examId}/registration`, { method: 'POST' }),
+  unregisterFromExam: (examId: number) =>
+    request<void>(`/api/v1/academic/my/exams/${examId}/registration`, { method: 'DELETE' }),
   myGrades: () => request<MyCourseGrade[]>(`/api/v1/academic/my/grades`),
   examAssistants: (examId: number) =>
     request<ExamAssistant[]>(`/api/v1/academic/exams/${examId}/assistants`),

@@ -120,8 +120,11 @@ Skripta čeka da aplikacija postane zdrava, a zatim je dostupno:
 ./scripts/dev-reset.sh       # zaustavi i obriši volumen baze (čisti reset)
 ```
 
-Baza se pri prvom pokretanju automatski migrira (Flyway) i puni stvarnim FER-ovim podacima
-(12 kolegija sa stvarnim upisima, dvorane, grupe, satnica).
+Baza se pri prvom pokretanju automatski migrira (Flyway) i puni stvarnim FER-ovim podacima:
+aktivni ljetni semestar 2026. s cijelim skupom kolegija i stvarnim upisima studenata, nositeljima
+i izvođačima iz ISVU kataloga, dvoranama izvedenim iz rasporeda te prošlim zimskim semestrom
+2025/2026. za povijest. Opseg punjenja podesiv je preko `FERKO_SEED_ACADEMIC_MAX_COURSES` i
+`FERKO_SEED_ACADEMIC_MAX_STUDENTS` (0 = bez ograničenja).
 
 ---
 

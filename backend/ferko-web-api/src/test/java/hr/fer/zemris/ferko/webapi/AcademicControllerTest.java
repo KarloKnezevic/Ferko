@@ -37,7 +37,7 @@ class AcademicControllerTest {
     mockMvc
         .perform(get("/api/v1/academic/semesters/active").session(session))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.code").value("2025Z"))
+        .andExpect(jsonPath("$.code").value("2026LJ"))
         .andExpect(jsonPath("$.active").value(true));
 
     mockMvc
@@ -48,7 +48,7 @@ class AcademicControllerTest {
     mockMvc
         .perform(get("/api/v1/academic/rooms").session(session))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[?(@.code == 'A101')]").exists());
+        .andExpect(jsonPath("$[?(@.code == 'D272')]").exists());
 
     mockMvc.perform(get("/api/v1/academic/students").session(session)).andExpect(status().isOk());
   }
@@ -67,7 +67,7 @@ class AcademicControllerTest {
                         + "\"description\":\"opis\",\"literature\":\"lit\"}"))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.code").value("TST-API"))
-        .andExpect(jsonPath("$.semesterCode").value("2025Z"))
+        .andExpect(jsonPath("$.semesterCode").value("2026LJ"))
         .andExpect(jsonPath("$.id").isNumber());
   }
 

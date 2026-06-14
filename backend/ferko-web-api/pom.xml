@@ -103,6 +103,8 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                            <!-- Generates META-INF/build-info.properties for /actuator/info. -->
+                            <goal>build-info</goal>
                         </goals>
                     </execution>
                 </executions>

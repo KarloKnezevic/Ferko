@@ -1,4 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n, type Lang } from '../i18n';
 
@@ -6,6 +8,13 @@ export function Layout() {
   const { user, logout, hasRole } = useAuth();
   const { t, lang, setLang } = useI18n();
   const navigate = useNavigate();
+  const appInfo = useQuery({
+    queryKey: ['app-info'],
+    queryFn: api.appInfo,
+    staleTime: Infinity,
+    retry: false,
+  });
+  const version = appInfo.data?.build?.version;
 
   const onLogout = async () => {
     await logout();
@@ -54,7 +63,10 @@ export function Layout() {
       <footer className="sitefooter">
         <div>
           <strong>{t('footer.tagline')}</strong>
-          <div className="muted">{t('footer.faculty')}</div>
+          <div className="muted">
+            {t('footer.faculty')}
+            {version && ` · v${version}`}
+          </div>
         </div>
         <div className="lang-switch">
           <span className="muted">{t('footer.language')}:</span>

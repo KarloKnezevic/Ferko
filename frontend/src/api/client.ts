@@ -65,6 +65,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  // Build/version info (public Actuator endpoint)
+  appInfo: () => request<{ build?: { version?: string } }>(`/actuator/info`),
   // Auth
   login: (username: string, password: string) =>
     request<CurrentUser>('/api/v1/auth/login', {

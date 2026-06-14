@@ -8,7 +8,14 @@ This documentation is split into modern runtime guides and historical legacy ref
 - [Installation](./getting-started/INSTALLATION.md)
 - [Data Initialization](./getting-started/DATA_INITIALIZATION.md)
 
-## Architecture and Engineering Rules
+## Architecture and Engineering (current)
+
+- [Architecture](./architecture/ARCHITECTURE.md) — hexagonal layers, modules, boundaries, request flow
+- [Domain Model](./architecture/DOMAIN_MODEL.md) — aggregates, roles, ER diagrams, migrations
+- [Scheduling Engine](./architecture/SCHEDULING_ENGINE.md) — Čupić thesis models → optimizers & problems
+- [Contributing](./architecture/CONTRIBUTING.md) — vertical-slice recipe, verification, conventions
+
+### Engineering rules and history
 
 - [Legacy Architecture Map](./architecture/LEGACY_ARCHITECTURE_MAP.md)
 - [Module Dependency Rules](./architecture/MODULE_DEPENDENCY_RULES.md)

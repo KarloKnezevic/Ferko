@@ -78,6 +78,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoAuditLogRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.LocalFileStorage;
 import hr.fer.zemris.ferko.infrastructure.adapter.LoggingMailSender;
+import hr.fer.zemris.ferko.infrastructure.adapter.SmtpMailSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -227,8 +228,17 @@ public class ApplicationBeans {
   }
 
   @Bean
-  public MailSender mailSender() {
+  @ConditionalOnProperty(name = "ferko.mail.enabled", havingValue = "false", matchIfMissing = true)
+  public MailSender loggingMailSender() {
     return new LoggingMailSender();
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "ferko.mail.enabled", havingValue = "true")
+  public MailSender smtpMailSender(
+      org.springframework.mail.MailSender springMailSender,
+      @Value("${ferko.mail.from:ferko@fer.hr}") String from) {
+    return new SmtpMailSender(springMailSender, from);
   }
 
   @Bean

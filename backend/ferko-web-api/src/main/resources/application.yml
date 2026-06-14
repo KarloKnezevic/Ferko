@@ -9,6 +9,11 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  mail:
+    host: ${FERKO_MAIL_HOST:localhost}
+    port: ${FERKO_MAIL_PORT:1025}
+    username: ${FERKO_MAIL_USERNAME:}
+    password: ${FERKO_MAIL_PASSWORD:}
 
 management:
   endpoints:
@@ -17,6 +22,9 @@ management:
         include: health,info
 
 ferko:
+  mail:
+    enabled: ${FERKO_MAIL_ENABLED:false}
+    from: ${FERKO_MAIL_FROM:ferko@fer.hr}
   security:
     jwt:
       principal-claim: ${FERKO_JWT_PRINCIPAL_CLAIM:sub}

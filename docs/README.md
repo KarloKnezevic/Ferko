@@ -31,6 +31,7 @@ This documentation is split into modern runtime guides and historical legacy ref
 
 ## Operations
 
+- [Production Deployment](./operations/PRODUCTION_DEPLOYMENT.md) — prod compose, prod profile, env, topology
 - [Containerization Baseline](./operations/CONTAINERIZATION_BASELINE.md)
 
 ## API Contracts

@@ -415,6 +415,7 @@ ferko/
 | [docs/architecture/DOMAIN_MODEL.md](docs/architecture/DOMAIN_MODEL.md) | Model podataka, agregati, uloge, ER dijagram |
 | [docs/architecture/SCHEDULING_ENGINE.md](docs/architecture/SCHEDULING_ENGINE.md) | Disertacija prof. Čupića → kod: problemi i algoritmi |
 | [docs/architecture/CONTRIBUTING.md](docs/architecture/CONTRIBUTING.md) | Razvojni ritam, vertikalni rez, konvencije |
+| [docs/operations/PRODUCTION_DEPLOYMENT.md](docs/operations/PRODUCTION_DEPLOYMENT.md) | Produkcijski compose, prod profil, env, topologija |
 | [docs/adr/](docs/adr) | Architecture Decision Records |
 | [docs/api/openapi.yaml](docs/api/openapi.yaml) | OpenAPI specifikacija |
 

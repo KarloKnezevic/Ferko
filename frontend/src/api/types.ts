@@ -218,6 +218,16 @@ export interface CourseEnrollment {
   groupCodes: string[];
 }
 
+export interface MyProfile {
+  username: string;
+  fullName: string;
+  email: string;
+  roles: string[];
+  jmbag: string | null;
+  studyProgram: string | null;
+  yearOfStudy: number;
+}
+
 export interface ScheduleSlot {
   id: number;
   dayOfWeek: string;

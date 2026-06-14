@@ -7,6 +7,7 @@ import hr.fer.zemris.ferko.webapi.bootstrap.LegacyDataset.ScheduleEntry;
 import hr.fer.zemris.ferko.webapi.bootstrap.RoomInference.RoomSpec;
 import hr.fer.zemris.ferko.webapi.config.FerkoProperties;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
@@ -104,6 +106,10 @@ public class AcademicDataSeeder implements ApplicationRunner {
 
     List<String> selectedCodes = selectCourses(dataset);
     Map<String, String> courseNameByCode = courseNamesByCode(dataset);
+    Map<String, List<ScheduleEntry>> schedulesByCode =
+        dataset.schedules().stream()
+            .filter(s -> s.courseCode() != null && !s.courseCode().isBlank())
+            .collect(Collectors.groupingBy(ScheduleEntry::courseCode));
 
     Map<String, Long> courseIdByCode = new LinkedHashMap<>();
     Map<String, Long> labGroupByCourse = new LinkedHashMap<>();
@@ -124,7 +130,8 @@ public class AcademicDataSeeder implements ApplicationRunner {
       long labGroup = provisioning.provisionGroup(courseId, "L1", "LAB", "Laboratorij", 400);
       courseIdByCode.put(code, courseId);
       labGroupByCourse.put(code, labGroup);
-      seedWeeklySchedule(courseId, labGroup, scheduleIndex++);
+      seedTimetable(
+          courseId, labGroup, schedulesByCode.get(code), courseHolder(entry), scheduleIndex++);
     }
 
     int students = seedStudents(dataset, courseIdByCode, labGroupByCourse, studentPassword, now);
@@ -289,9 +296,55 @@ public class AcademicDataSeeder implements ApplicationRunner {
   }
 
   /**
+   * Imports the real weekly timetable for a course from the legacy {@code satnica} entries
+   * (distinct weekday/time/room slots, dates mapped to weekday), falling back to a deterministic
+   * synthetic slot when the course has no timetable data so the calendar is never empty.
+   */
+  private void seedTimetable(
+      long courseId, long labGroupId, List<ScheduleEntry> schedules, String instructor, int index) {
+    if (schedules == null || schedules.isEmpty()) {
+      seedWeeklySchedule(courseId, labGroupId, index);
+      return;
+    }
+    Set<String> seen = new LinkedHashSet<>();
+    for (ScheduleEntry schedule : schedules) {
+      if (schedule.date() == null || schedule.startsAt() == null) {
+        continue;
+      }
+      DayOfWeek day = schedule.date().getDayOfWeek();
+      LocalTime start = schedule.startsAt();
+      LocalTime end = start.plus(Duration.ofMinutes(Math.max(60, schedule.durationMinutes())));
+      String room = schedule.room() == null ? "" : schedule.room().trim();
+      String key = day + "|" + start + "|" + end + "|" + room;
+      if (!seen.add(key)) {
+        continue;
+      }
+      Long roomId = room.isBlank() ? null : ensureRoom(room);
+      provisioning.provisionClassSchedule(
+          courseId, null, "LECTURE", roomId, day.name(), start, end, instructor);
+    }
+  }
+
+  /** Resolves (idempotently) a room id from a code, inferring its attributes if new. */
+  private Long ensureRoom(String code) {
+    RoomSpec spec = RoomInference.infer(code);
+    return provisioning.provisionRoom(
+        code, spec.building(), spec.capacity(), spec.requiredAssistants(), spec.hasComputers());
+  }
+
+  /** Course holder display name for the timetable instructor field. */
+  private static String courseHolder(CourseCatalogEntry entry) {
+    if (entry == null) {
+      return "";
+    }
+    List<String> leaders = StaffNames.parseNames(entry.leaders());
+    return leaders.isEmpty() ? "" : leaders.get(0);
+  }
+
+  /**
    * Seeds a deterministic weekly lecture + lab slot for a course so the calendar is non-empty. The
-   * day/time is varied by {@code index} to spread courses across the week. Real timetable import is
-   * a separate concern.
+   * day/time is varied by {@code index} to spread courses across the week. Used only as a fallback
+   * when the course has no real timetable data.
    */
   private void seedWeeklySchedule(long courseId, long labGroupId, int index) {
     String lectureDay = DayOfWeek.of((index % 5) + 1).name();

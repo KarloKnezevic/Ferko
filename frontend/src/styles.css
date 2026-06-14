@@ -232,3 +232,7 @@ tbody tr:hover .grade-cell { filter: brightness(0.97); }
 .kv { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; margin: 0; }
 .kv dt { color: var(--muted); font-size: 13px; }
 .kv dd { margin: 0; font-weight: 600; text-align: right; }
+
+/* Timetable conflict list */
+.conflict-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.conflict-list li { font-size: 13px; padding: 6px 8px; background: var(--surface, #f7f8fa); border-radius: 6px; }

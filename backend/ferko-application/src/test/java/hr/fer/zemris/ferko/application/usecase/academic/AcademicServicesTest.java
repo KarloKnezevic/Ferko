@@ -42,6 +42,11 @@ class AcademicServicesTest {
     public List<ClassSchedule> findByCourse(long courseId) {
       return store.stream().filter(s -> s.courseId() == courseId).toList();
     }
+
+    @Override
+    public List<ClassSchedule> findAll() {
+      return List.copyOf(store);
+    }
   }
 
   private InMemoryAcademicRepositories.Users users;
@@ -215,5 +220,28 @@ class AcademicServicesTest {
     long firstEnrollment = provisioning.enroll(firstStudent, firstCourse, LocalDateTime.now());
     long secondEnrollment = provisioning.enroll(firstStudent, firstCourse, LocalDateTime.now());
     assertEquals(firstEnrollment, secondEnrollment);
+
+    // Re-running timetable seeding must not duplicate the slot.
+    long firstSlot =
+        provisioning.provisionClassSchedule(
+            firstCourse,
+            null,
+            "LECTURE",
+            firstRoom,
+            "MONDAY",
+            java.time.LocalTime.of(10, 0),
+            java.time.LocalTime.of(12, 0),
+            "Prof");
+    long secondSlot =
+        provisioning.provisionClassSchedule(
+            firstCourse,
+            null,
+            "LECTURE",
+            firstRoom,
+            "MONDAY",
+            java.time.LocalTime.of(10, 0),
+            java.time.LocalTime.of(12, 0),
+            "Prof");
+    assertEquals(firstSlot, secondSlot);
   }
 }

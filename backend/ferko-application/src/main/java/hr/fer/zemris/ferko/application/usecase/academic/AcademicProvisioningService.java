@@ -69,19 +69,35 @@ public class AcademicProvisioningService {
       LocalTime startsAt,
       LocalTime endsAt,
       String instructor) {
-    return classScheduleRepository
-        .save(
-            new ClassSchedule(
-                0L,
-                courseId,
-                groupId,
-                GroupType.valueOf(type),
-                roomId,
-                DayOfWeek.valueOf(dayOfWeek),
-                startsAt,
-                endsAt,
-                instructor))
-        .id();
+    GroupType groupType = GroupType.valueOf(type);
+    DayOfWeek day = DayOfWeek.valueOf(dayOfWeek);
+    // Idempotent: a slot is identified by its course, type, weekday, time span and room, so
+    // re-running the seeder on a persistent database does not duplicate the timetable.
+    return classScheduleRepository.findByCourse(courseId).stream()
+        .filter(
+            slot ->
+                slot.type() == groupType
+                    && slot.dayOfWeek() == day
+                    && slot.startsAt().equals(startsAt)
+                    && slot.endsAt().equals(endsAt)
+                    && java.util.Objects.equals(slot.roomId(), roomId))
+        .map(ClassSchedule::id)
+        .findFirst()
+        .orElseGet(
+            () ->
+                classScheduleRepository
+                    .save(
+                        new ClassSchedule(
+                            0L,
+                            courseId,
+                            groupId,
+                            groupType,
+                            roomId,
+                            day,
+                            startsAt,
+                            endsAt,
+                            instructor))
+                    .id());
   }
 
   public void provisionSemester(

@@ -9,4 +9,7 @@ public interface ClassScheduleRepository {
   ClassSchedule save(ClassSchedule entry);
 
   List<ClassSchedule> findByCourse(long courseId);
+
+  /** All timetable slots across every course (used for faculty-wide views and collision checks). */
+  List<ClassSchedule> findAll();
 }

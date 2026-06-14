@@ -16,6 +16,7 @@ import { RoomsPage } from './pages/RoomsPage';
 import { StudentsPage } from './pages/StudentsPage';
 import { NoticesPage } from './pages/NoticesPage';
 import { CalendarPage } from './pages/CalendarPage';
+import { TimetablePage } from './pages/TimetablePage';
 import { StudentExamsPage } from './pages/StudentExamsPage';
 import { StudentGradesPage } from './pages/StudentGradesPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -55,6 +56,7 @@ export function App() {
         <Route path="/moja-dezurstva" element={<DutiesPage />} />
         <Route path="/profil" element={<ProfilePage />} />
         <Route path="/e-portfolio" element={<PortfolioPage />} />
+        <Route path="/raspored" element={<TimetablePage />} />
         <Route path="/kalendar" element={<CalendarPage />} />
         <Route path="/obavijesti" element={<NoticesPage />} />
         <Route path="/prostorije" element={<RoomsPage />} />

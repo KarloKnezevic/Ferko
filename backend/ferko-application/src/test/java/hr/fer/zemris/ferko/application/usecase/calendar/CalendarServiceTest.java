@@ -54,6 +54,11 @@ class CalendarServiceTest {
     public List<ClassSchedule> findByCourse(long courseId) {
       return store.stream().filter(s -> s.courseId() == courseId).toList();
     }
+
+    @Override
+    public List<ClassSchedule> findAll() {
+      return List.copyOf(store);
+    }
   }
 
   private InMemoryAcademicRepositories.Users users;

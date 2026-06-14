@@ -65,4 +65,10 @@ public class JdbcClassScheduleRepository implements ClassScheduleRepository {
         MAPPER,
         courseId);
   }
+
+  @Override
+  public List<ClassSchedule> findAll() {
+    return jdbcTemplate.query(
+        "select * from class_schedule order by day_of_week, starts_at", MAPPER);
+  }
 }

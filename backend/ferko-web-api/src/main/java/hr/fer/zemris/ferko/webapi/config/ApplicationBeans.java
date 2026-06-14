@@ -14,6 +14,7 @@ import hr.fer.zemris.ferko.application.port.ForumRepository;
 import hr.fer.zemris.ferko.application.port.GradingRepository;
 import hr.fer.zemris.ferko.application.port.GroupExchangeRepository;
 import hr.fer.zemris.ferko.application.port.NoticeRepository;
+import hr.fer.zemris.ferko.application.port.PortfolioRepository;
 import hr.fer.zemris.ferko.application.port.RepositoryFileRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.SemesterRepository;
@@ -37,6 +38,7 @@ import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.literature.CourseLiteratureService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
+import hr.fer.zemris.ferko.application.usecase.portfolio.PortfolioService;
 import hr.fer.zemris.ferko.application.usecase.profile.ProfileService;
 import hr.fer.zemris.ferko.application.usecase.repository.RepositoryService;
 import hr.fer.zemris.ferko.application.usecase.schedule.CourseScheduleService;
@@ -62,6 +64,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcForumRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGroupExchangeRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcNoticeRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcPortfolioRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRepositoryFileRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcRoomRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSemesterRepository;
@@ -396,6 +399,17 @@ public class ApplicationBeans {
   public ProfileService profileService(
       AppUserRepository appUserRepository, StudentRepository studentRepository) {
     return new ProfileService(appUserRepository, studentRepository);
+  }
+
+  @Bean
+  public PortfolioRepository portfolioRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcPortfolioRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public PortfolioService portfolioService(
+      PortfolioRepository portfolioRepository, AppUserRepository appUserRepository) {
+    return new PortfolioService(portfolioRepository, appUserRepository);
   }
 
   @Bean

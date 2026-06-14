@@ -19,6 +19,7 @@ import { CalendarPage } from './pages/CalendarPage';
 import { StudentExamsPage } from './pages/StudentExamsPage';
 import { StudentGradesPage } from './pages/StudentGradesPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { PortfolioPage } from './pages/PortfolioPage';
 import { DutiesPage } from './pages/DutiesPage';
 import { AdminPage } from './pages/AdminPage';
 
@@ -53,6 +54,7 @@ export function App() {
         <Route path="/moji-bodovi" element={<StudentGradesPage />} />
         <Route path="/moja-dezurstva" element={<DutiesPage />} />
         <Route path="/profil" element={<ProfilePage />} />
+        <Route path="/e-portfolio" element={<PortfolioPage />} />
         <Route path="/kalendar" element={<CalendarPage />} />
         <Route path="/obavijesti" element={<NoticesPage />} />
         <Route path="/prostorije" element={<RoomsPage />} />

@@ -52,8 +52,20 @@ ferko:
       enabled: ${FERKO_SEED_USERS_ENABLED:true}
     academic:
       enabled: ${FERKO_SEED_ACADEMIC_ENABLED:true}
+      # 0 or negative means "no limit" (seed the entire bundled dataset).
       max-courses: ${FERKO_SEED_ACADEMIC_MAX_COURSES:12}
       max-students: ${FERKO_SEED_ACADEMIC_MAX_STUDENTS:120}
+  # Default grade thresholds; courses may override their own. 50 is always the passing minimum.
+  grading:
+    excellent: ${FERKO_GRADING_EXCELLENT:88}
+    very-good: ${FERKO_GRADING_VERY_GOOD:75}
+    good: ${FERKO_GRADING_GOOD:62}
+    sufficient: ${FERKO_GRADING_SUFFICIENT:50}
+  # Default metaheuristic parameters for the scheduling engine.
+  scheduler:
+    default-population-size: ${FERKO_SCHEDULER_POPULATION:60}
+    default-iterations: ${FERKO_SCHEDULER_ITERATIONS:5000}
+    default-seed: ${FERKO_SCHEDULER_SEED:42}
 
 ---
 spring:

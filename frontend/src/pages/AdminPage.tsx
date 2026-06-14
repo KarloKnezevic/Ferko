@@ -10,6 +10,7 @@ export function AdminPage() {
   const users = useQuery({ queryKey: ['admin-users'], queryFn: api.adminUsers });
   const semesters = useQuery({ queryKey: ['semesters'], queryFn: api.semesters });
   const sync = useQuery({ queryKey: ['sync-status'], queryFn: api.syncStatus });
+  const settings = useQuery({ queryKey: ['settings'], queryFn: api.settings });
   const audit = useQuery({ queryKey: ['audit'], queryFn: () => api.auditEvents(100) });
 
   const [code, setCode] = useState('');
@@ -56,6 +57,69 @@ export function AdminPage() {
           </div>
         </div>
       </div>
+
+      {settings.data && (
+        <div className="card">
+          <h2>{t('admin.settings')}</h2>
+          <p className="muted">{t('admin.settingsNote')}</p>
+          <div className="settings-grid">
+            <section>
+              <h3>{t('admin.settingsGrading')}</h3>
+              <dl className="kv">
+                <dt>{t('admin.gradeExcellent')}</dt>
+                <dd>≥ {settings.data.grading.excellent}</dd>
+                <dt>{t('admin.gradeVeryGood')}</dt>
+                <dd>≥ {settings.data.grading.veryGood}</dd>
+                <dt>{t('admin.gradeGood')}</dt>
+                <dd>≥ {settings.data.grading.good}</dd>
+                <dt>{t('admin.gradeSufficient')}</dt>
+                <dd>≥ {settings.data.grading.sufficient}</dd>
+              </dl>
+            </section>
+            <section>
+              <h3>{t('admin.settingsScheduler')}</h3>
+              <dl className="kv">
+                <dt>{t('admin.schedPopulation')}</dt>
+                <dd>{settings.data.scheduler.defaultPopulationSize}</dd>
+                <dt>{t('admin.schedIterations')}</dt>
+                <dd>{settings.data.scheduler.defaultIterations}</dd>
+                <dt>{t('admin.schedSeed')}</dt>
+                <dd>{settings.data.scheduler.defaultSeed}</dd>
+              </dl>
+            </section>
+            <section>
+              <h3>{t('admin.settingsSeed')}</h3>
+              <dl className="kv">
+                <dt>{t('admin.seedMaxCourses')}</dt>
+                <dd>{settings.data.seed.maxCourses <= 0 ? '∞' : settings.data.seed.maxCourses}</dd>
+                <dt>{t('admin.seedMaxStudents')}</dt>
+                <dd>
+                  {settings.data.seed.maxStudents <= 0 ? '∞' : settings.data.seed.maxStudents}
+                </dd>
+                <dt>{t('admin.seedUsers')}</dt>
+                <dd>{settings.data.seed.usersEnabled ? t('common.yes') : t('common.no')}</dd>
+              </dl>
+            </section>
+            <section>
+              <h3>{t('admin.settingsSecurity')}</h3>
+              <dl className="kv">
+                <dt>{t('admin.secMail')}</dt>
+                <dd>{settings.data.mail.enabled ? t('common.yes') : t('common.no')}</dd>
+                <dt>{t('admin.secRateLimit')}</dt>
+                <dd>
+                  {settings.data.security.loginRateLimitEnabled
+                    ? `${settings.data.security.loginRateLimitMaxAttempts} / ${settings.data.security.loginRateLimitWindowSeconds}s`
+                    : t('common.no')}
+                </dd>
+                <dt>{t('admin.secOidc')}</dt>
+                <dd>
+                  {settings.data.security.oidcIssuerConfigured ? t('common.yes') : t('common.no')}
+                </dd>
+              </dl>
+            </section>
+          </div>
+        </div>
+      )}
 
       <div className="card">
         <h2>{t('admin.newSemester')}</h2>

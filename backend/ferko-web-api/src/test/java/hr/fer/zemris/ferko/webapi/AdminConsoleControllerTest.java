@@ -49,6 +49,28 @@ class AdminConsoleControllerTest {
   }
 
   @Test
+  void adminSeesSettingsWithoutSecrets() throws Exception {
+    MockHttpSession session = login("admin.ferko");
+    mockMvc
+        .perform(get("/api/v1/academic/settings").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.grading.excellent").value(88))
+        .andExpect(jsonPath("$.grading.sufficient").value(50))
+        .andExpect(jsonPath("$.scheduler.defaultPopulationSize").isNumber())
+        .andExpect(jsonPath("$.security.jwtHmacSecretConfigured").isBoolean())
+        // The actual secret must never be serialised.
+        .andExpect(jsonPath("$.security.hmacSecret").doesNotExist());
+  }
+
+  @Test
+  void studentCannotSeeSettings() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(get("/api/v1/academic/settings").session(session))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void adminSeesSyncStatusCounts() throws Exception {
     MockHttpSession session = login("admin.ferko");
     mockMvc

@@ -119,6 +119,21 @@ export interface MyExam {
   testGroup: string | null;
 }
 
+export interface MyCourseGrade {
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  components: {
+    shortName: string;
+    name: string;
+    points: number;
+    maxPoints: number;
+  }[];
+  totalPoints: number;
+  maxPoints: number;
+  finalGrade: number;
+}
+
 export interface ExamAssistant {
   id: number;
   examId: number;

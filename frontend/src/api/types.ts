@@ -430,6 +430,27 @@ export interface MyDemonstratorDuty {
   courseName: string;
 }
 
+export interface GeneratedExamAssignment {
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  slot: number;
+  date: string;
+}
+
+export interface GeneratedExamTimetable {
+  algorithm: string;
+  slots: number;
+  exams: number;
+  baselineConflicts: number;
+  resultConflicts: number;
+  legacyConflicts: number;
+  feasible: boolean;
+  iterations: number;
+  convergence: number[];
+  assignments: GeneratedExamAssignment[];
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

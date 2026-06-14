@@ -7,6 +7,7 @@ import type {
   CalendarView,
   CollisionReport,
   Consultation,
+  GeneratedExamTimetable,
   GeneratedTimetable,
   CourseComponent,
   CourseDetail,
@@ -278,6 +279,18 @@ export const api = {
     }),
   myDemonstratures: () =>
     request<MyDemonstratorDuty[]>('/api/v1/academic/my/demonstratures'),
+
+  generateExamTimetable: (body: {
+    studyYear?: number;
+    courseIds?: number[];
+    slots: number;
+    algorithm: string;
+    referenceTerm?: string;
+  }) =>
+    request<GeneratedExamTimetable>('/api/v1/academic/exam-timetable/generate', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 
   // Calendar (kalendar)
   calendar: () => request<CalendarView>('/api/v1/academic/calendar'),

@@ -218,6 +218,17 @@ export interface CourseEnrollment {
   groupCodes: string[];
 }
 
+export interface ScheduleSlot {
+  id: number;
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  type: string;
+  groupCode: string;
+  roomCode: string;
+  instructor: string;
+}
+
 export interface Consultation {
   id: number;
   courseId: number;

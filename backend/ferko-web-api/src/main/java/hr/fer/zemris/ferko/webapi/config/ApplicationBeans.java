@@ -5,6 +5,7 @@ import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseComponentRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
+import hr.fer.zemris.ferko.application.port.ExamAssistantRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
 import hr.fer.zemris.ferko.application.port.FileStorage;
 import hr.fer.zemris.ferko.application.port.ForumRepository;
@@ -25,6 +26,7 @@ import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
 import hr.fer.zemris.ferko.application.usecase.component.CourseComponentService;
+import hr.fer.zemris.ferko.application.usecase.exam.ExamAssistantService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.exchange.GroupExchangeService;
 import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
@@ -43,6 +45,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcClassScheduleRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseComponentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamAssistantRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcForumRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
@@ -213,6 +216,21 @@ public class ApplicationBeans {
       AppUserRepository appUserRepository) {
     return new ExamSchedulingService(
         examRepository, roomRepository, studentRepository, enrollmentRepository, appUserRepository);
+  }
+
+  @Bean
+  public ExamAssistantRepository examAssistantRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcExamAssistantRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public ExamAssistantService examAssistantService(
+      ExamAssistantRepository examAssistantRepository,
+      ExamRepository examRepository,
+      RoomRepository roomRepository,
+      AppUserRepository appUserRepository) {
+    return new ExamAssistantService(
+        examAssistantRepository, examRepository, roomRepository, appUserRepository);
   }
 
   @Bean

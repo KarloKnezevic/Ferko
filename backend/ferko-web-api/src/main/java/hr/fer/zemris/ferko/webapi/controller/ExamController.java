@@ -1,6 +1,8 @@
 package hr.fer.zemris.ferko.webapi.controller;
 
 import hr.fer.zemris.ferko.application.usecase.exam.AlgorithmRunView;
+import hr.fer.zemris.ferko.application.usecase.exam.ExamAssistantService;
+import hr.fer.zemris.ferko.application.usecase.exam.ExamAssistantView;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamView;
 import hr.fer.zemris.ferko.application.usecase.exam.RoomSeatingView;
@@ -10,7 +12,9 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +37,11 @@ public class ExamController {
       "hasAnyRole('ADMIN', 'NOSITELJ', 'ASISTENT_ORGANIZATOR')";
 
   private final ExamSchedulingService scheduling;
+  private final ExamAssistantService assistants;
 
-  public ExamController(ExamSchedulingService scheduling) {
+  public ExamController(ExamSchedulingService scheduling, ExamAssistantService assistants) {
     this.scheduling = scheduling;
+    this.assistants = assistants;
   }
 
   @GetMapping("/courses/{courseId}/exams")
@@ -107,6 +113,28 @@ public class ExamController {
     scheduling.publish(examId);
   }
 
+  @GetMapping("/exams/{examId}/assistants")
+  public List<ExamAssistantView> assistants(@PathVariable long examId) {
+    return assistants.listForExam(examId);
+  }
+
+  @PostMapping("/exams/{examId}/rooms/{roomId}/assistants")
+  @PreAuthorize(CAN_MANAGE)
+  public ResponseEntity<Void> assignAssistant(
+      @PathVariable long examId,
+      @PathVariable long roomId,
+      @RequestBody AssignAssistantRequest request) {
+    boolean assigned = assistants.assignByUsername(examId, roomId, request.username());
+    return assigned ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+  }
+
+  @DeleteMapping("/exams/{examId}/assistants/{assignmentId}")
+  @PreAuthorize(CAN_MANAGE)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void removeAssistant(@PathVariable long examId, @PathVariable long assignmentId) {
+    assistants.remove(examId, assignmentId);
+  }
+
   /** Request to define a new assessment. */
   public record CreateExamRequest(
       @NotBlank String title,
@@ -124,4 +152,7 @@ public class ExamController {
 
   /** Result of bulk-registering enrolled students. */
   public record RegistrationResult(int registered) {}
+
+  /** Request to assign an invigilator ("dežurni") to an exam room. */
+  public record AssignAssistantRequest(@NotBlank String username) {}
 }

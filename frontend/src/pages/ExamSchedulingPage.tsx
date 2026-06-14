@@ -43,8 +43,36 @@ export function ExamSchedulingPage() {
   const [title, setTitle] = useState('');
   const [shortName, setShortName] = useState('');
   const [kind, setKind] = useState('MEDJUISPIT');
+  const [assistantUser, setAssistantUser] = useState('');
+  const [assistantRoom, setAssistantRoom] = useState<number | ''>('');
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['exams', courseId] });
+
+  const examRooms = useQuery({
+    queryKey: ['exam-rooms', selectedExam],
+    queryFn: () => api.seating(selectedExam as number),
+    enabled: selectedExam != null,
+  });
+  const assistants = useQuery({
+    queryKey: ['exam-assistants', selectedExam],
+    queryFn: () => api.examAssistants(selectedExam as number),
+    enabled: selectedExam != null,
+  });
+  const invalidateAssistants = () =>
+    queryClient.invalidateQueries({ queryKey: ['exam-assistants', selectedExam] });
+  const assignAssistant = useMutation({
+    mutationFn: ({ examId, roomId, username }: { examId: number; roomId: number; username: string }) =>
+      api.assignAssistant(examId, roomId, username),
+    onSuccess: () => {
+      setAssistantUser('');
+      invalidateAssistants();
+    },
+  });
+  const removeAssistant = useMutation({
+    mutationFn: ({ examId, assignmentId }: { examId: number; assignmentId: number }) =>
+      api.removeAssistant(examId, assignmentId),
+    onSuccess: invalidateAssistants,
+  });
 
   const createExam = useMutation({
     mutationFn: () =>
@@ -196,7 +224,7 @@ export function ExamSchedulingPage() {
                   { label: 'Dohvati studente', done: (sel?.registeredStudents ?? 0) > 0 },
                   { label: 'Uredi dvorane', done: (sel?.reservedRooms ?? 0) > 0 },
                   { label: 'Definiranje rasporeda', done: (sel?.seatedStudents ?? 0) > 0 },
-                  { label: 'Dodjela asistenata', done: (sel?.reservedRooms ?? 0) > 0 },
+                  { label: 'Dodjela asistenata', done: (assistants.data?.length ?? 0) > 0 },
                   { label: 'Objavi', done: sel?.published ?? false },
                 ]}
               />
@@ -257,6 +285,106 @@ export function ExamSchedulingPage() {
             >
               {compare.isPending ? 'Uspoređivanje…' : 'Usporedi algoritme'}
             </button>
+          </div>
+
+          <div className="card" style={{ marginTop: 16 }}>
+            <h2>Dodjela asistenata (dežurstva)</h2>
+            <p className="muted">
+              Dodijelite dežurne asistente rezerviranim dvoranama provjere.
+            </p>
+            {(examRooms.data?.length ?? 0) === 0 ? (
+              <p className="muted">Najprije rezervirajte dvorane za provjeru.</p>
+            ) : (
+              <>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Dvorana</th>
+                      <th>Dežurni</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {examRooms.data?.map((room) => {
+                      const roomAssistants =
+                        assistants.data?.filter((a) => a.roomId === room.roomId) ?? [];
+                      return (
+                        <tr key={room.roomId}>
+                          <td>{room.roomCode}</td>
+                          <td>
+                            {roomAssistants.length === 0 && (
+                              <span className="muted">Nije dodijeljen.</span>
+                            )}
+                            {roomAssistants.map((a) => (
+                              <span key={a.id} className="pill" style={{ marginRight: 6 }}>
+                                {a.fullName}
+                                <a
+                                  href="#ukloni"
+                                  style={{ marginLeft: 6 }}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    removeAssistant.mutate({
+                                      examId: selectedExam,
+                                      assignmentId: a.id,
+                                    });
+                                  }}
+                                >
+                                  ×
+                                </a>
+                              </span>
+                            ))}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <div className="form-row" style={{ marginTop: 14 }}>
+                  <div>
+                    <label>Dvorana</label>
+                    <select
+                      value={assistantRoom}
+                      onChange={(e) => setAssistantRoom(Number(e.target.value))}
+                    >
+                      <option value="">— odaberi —</option>
+                      {examRooms.data?.map((room) => (
+                        <option key={room.roomId} value={room.roomId}>
+                          {room.roomCode}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label>Korisničko ime asistenta</label>
+                    <input
+                      value={assistantUser}
+                      onChange={(e) => setAssistantUser(e.target.value)}
+                      placeholder="assistant.iva"
+                    />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <button
+                      disabled={
+                        assistantRoom === '' || !assistantUser || assignAssistant.isPending
+                      }
+                      onClick={() =>
+                        assignAssistant.mutate({
+                          examId: selectedExam,
+                          roomId: assistantRoom as number,
+                          username: assistantUser,
+                        })
+                      }
+                    >
+                      Dodijeli
+                    </button>
+                  </div>
+                </div>
+                {assignAssistant.isError && (
+                  <div className="banner err" style={{ marginTop: 12 }}>
+                    Asistent nije pronađen ili dvorana nije rezervirana za ovu provjeru.
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           {comparison && (

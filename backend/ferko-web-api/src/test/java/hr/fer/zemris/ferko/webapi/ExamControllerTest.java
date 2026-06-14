@@ -105,6 +105,88 @@ class ExamControllerTest {
   }
 
   @Test
+  void lecturerCanAssignAndRemoveInvigilator() throws Exception {
+    MockHttpSession session = login("lecturer.marko");
+    long courseId = firstId(session, "/api/v1/academic/courses");
+    long roomId = firstId(session, "/api/v1/academic/rooms");
+
+    String examBody =
+        mockMvc
+            .perform(
+                post("/api/v1/academic/courses/" + courseId + "/exams")
+                    .session(session)
+                    .contentType("application/json")
+                    .content(
+                        "{\"title\":\"Dežurstvo test\",\"shortName\":\"DZ\","
+                            + "\"kind\":\"MEDJUISPIT\",\"durationMinutes\":90,\"maxPoints\":20.0}"))
+            .andExpect(status().isCreated())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    long examId = json.readTree(examBody).get("id").asLong();
+
+    mockMvc
+        .perform(
+            post("/api/v1/academic/exams/" + examId + "/rooms")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"roomId\":" + roomId + ",\"capacity\":100,\"requiredAssistants\":2}"))
+        .andExpect(status().isNoContent());
+
+    // Assigning an unknown user to an exam room yields 404.
+    mockMvc
+        .perform(
+            post("/api/v1/academic/exams/" + examId + "/rooms/" + roomId + "/assistants")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"username\":\"ne.postoji\"}"))
+        .andExpect(status().isNotFound());
+
+    // Assigning a real assistant succeeds.
+    mockMvc
+        .perform(
+            post("/api/v1/academic/exams/" + examId + "/rooms/" + roomId + "/assistants")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"username\":\"assistant.iva\"}"))
+        .andExpect(status().isNoContent());
+
+    String listBody =
+        mockMvc
+            .perform(get("/api/v1/academic/exams/" + examId + "/assistants").session(session))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].username").value("assistant.iva"))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    long assignmentId = json.readTree(listBody).get(0).get("id").asLong();
+
+    mockMvc
+        .perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete(
+                    "/api/v1/academic/exams/" + examId + "/assistants/" + assignmentId)
+                .session(session))
+        .andExpect(status().isNoContent());
+
+    mockMvc
+        .perform(get("/api/v1/academic/exams/" + examId + "/assistants").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(0));
+  }
+
+  @Test
+  void studentCannotAssignInvigilator() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(
+            post("/api/v1/academic/exams/1/rooms/1/assistants")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"username\":\"assistant.iva\"}"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void studentCannotCreateExam() throws Exception {
     MockHttpSession session = login("student.ana");
     long courseId = firstId(session, "/api/v1/academic/courses");

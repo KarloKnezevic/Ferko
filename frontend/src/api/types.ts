@@ -101,6 +101,16 @@ export interface RoomSeating {
   seats: ExamSeat[];
 }
 
+export interface ExamAssistant {
+  id: number;
+  examId: number;
+  roomId: number;
+  roomCode: string;
+  userId: number;
+  username: string;
+  fullName: string;
+}
+
 export interface GradeComponentView {
   id: number;
   name: string;

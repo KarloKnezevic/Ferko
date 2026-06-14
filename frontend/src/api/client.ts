@@ -8,6 +8,7 @@ import type {
   CourseSummary,
   CurrentUser,
   Exam,
+  ExamAssistant,
   ForumPost,
   GroupExchange,
   GradeComponentView,
@@ -107,6 +108,17 @@ export const api = {
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
+  examAssistants: (examId: number) =>
+    request<ExamAssistant[]>(`/api/v1/academic/exams/${examId}/assistants`),
+  assignAssistant: (examId: number, roomId: number, username: string) =>
+    request<void>(`/api/v1/academic/exams/${examId}/rooms/${roomId}/assistants`, {
+      method: 'POST',
+      body: JSON.stringify({ username }),
+    }),
+  removeAssistant: (examId: number, assignmentId: number) =>
+    request<void>(`/api/v1/academic/exams/${examId}/assistants/${assignmentId}`, {
+      method: 'DELETE',
+    }),
 
   // Surveys (ankete)
   courseSurveys: (courseId: number) =>

@@ -17,6 +17,7 @@ import { StudentsPage } from './pages/StudentsPage';
 import { NoticesPage } from './pages/NoticesPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { StudentExamsPage } from './pages/StudentExamsPage';
+import { StudentGradesPage } from './pages/StudentGradesPage';
 import { AdminPage } from './pages/AdminPage';
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -47,6 +48,7 @@ export function App() {
         <Route path="/kolegiji/:id/repozitorij" element={<RepositoryPage />} />
         <Route path="/kolegiji/:id/burza" element={<GroupExchangePage />} />
         <Route path="/moje-provjere" element={<StudentExamsPage />} />
+        <Route path="/moji-bodovi" element={<StudentGradesPage />} />
         <Route path="/kalendar" element={<CalendarPage />} />
         <Route path="/obavijesti" element={<NoticesPage />} />
         <Route path="/prostorije" element={<RoomsPage />} />

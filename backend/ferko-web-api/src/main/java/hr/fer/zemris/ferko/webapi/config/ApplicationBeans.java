@@ -34,6 +34,7 @@ import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
 import hr.fer.zemris.ferko.application.usecase.repository.RepositoryService;
 import hr.fer.zemris.ferko.application.usecase.student.StudentExamService;
+import hr.fer.zemris.ferko.application.usecase.student.StudentGradesService;
 import hr.fer.zemris.ferko.application.usecase.survey.SurveyService;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
@@ -361,5 +362,20 @@ public class ApplicationBeans {
         courseRepository,
         examRepository,
         roomRepository);
+  }
+
+  @Bean
+  public StudentGradesService studentGradesService(
+      AppUserRepository appUserRepository,
+      StudentRepository studentRepository,
+      EnrollmentRepository enrollmentRepository,
+      CourseRepository courseRepository,
+      GradingRepository gradingRepository) {
+    return new StudentGradesService(
+        appUserRepository,
+        studentRepository,
+        enrollmentRepository,
+        courseRepository,
+        gradingRepository);
   }
 }

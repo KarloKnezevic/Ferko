@@ -17,6 +17,11 @@ export function DashboardPage() {
     queryFn: api.myDuties,
     enabled: isInvigilator,
   });
+  const demonstratures = useQuery({
+    queryKey: ['my-demonstratures'],
+    queryFn: api.myDemonstratures,
+    enabled: isStudent,
+  });
 
   const upcomingExams = (calendar.data?.exams ?? []).slice(0, 4);
   const weekly = calendar.data?.weekly ?? [];
@@ -98,6 +103,22 @@ export function DashboardPage() {
               Moj profil
             </Link>
           </div>
+        </div>
+      )}
+
+      {isStudent && (demonstratures.data?.length ?? 0) > 0 && (
+        <div className="card">
+          <h2>Moje demonstrature</h2>
+          <p className="muted">Kolegiji na kojima ste demonstrator:</p>
+          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {demonstratures.data?.map((d) => (
+              <li key={d.courseId} className="role-badge">
+                <Link to={`/kolegiji/${d.courseId}`}>
+                  {d.courseCode} {d.courseName}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

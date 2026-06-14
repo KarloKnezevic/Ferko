@@ -418,6 +418,18 @@ export interface GeneratedTimetable {
   assignments: GeneratedCourseAssignment[];
 }
 
+export interface Demonstrator {
+  studentId: number;
+  jmbag: string;
+  fullName: string;
+}
+
+export interface MyDemonstratorDuty {
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

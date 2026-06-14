@@ -7,6 +7,7 @@ import hr.fer.zemris.ferko.application.port.ConsultationRepository;
 import hr.fer.zemris.ferko.application.port.CourseComponentRepository;
 import hr.fer.zemris.ferko.application.port.CourseLiteratureRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
+import hr.fer.zemris.ferko.application.port.DemonstratorRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamAssistantRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
@@ -34,6 +35,7 @@ import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
 import hr.fer.zemris.ferko.application.usecase.component.CourseComponentService;
 import hr.fer.zemris.ferko.application.usecase.consultation.ConsultationService;
+import hr.fer.zemris.ferko.application.usecase.demonstrator.DemonstratorService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamAssistantService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.exam.InvigilationService;
@@ -64,6 +66,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcConsultationRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseComponentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseLiteratureRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcDemonstratorRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamAssistantRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
@@ -483,6 +486,21 @@ public class ApplicationBeans {
       EnrollmentRepository enrollmentRepository,
       StudentRepository studentRepository) {
     return new LectureTimetablingService(courseRepository, enrollmentRepository, studentRepository);
+  }
+
+  @Bean
+  public DemonstratorRepository demonstratorRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcDemonstratorRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public DemonstratorService demonstratorService(
+      DemonstratorRepository demonstratorRepository,
+      StudentRepository studentRepository,
+      AppUserRepository appUserRepository,
+      CourseRepository courseRepository) {
+    return new DemonstratorService(
+        demonstratorRepository, studentRepository, appUserRepository, courseRepository);
   }
 
   @Bean

@@ -1,6 +1,7 @@
 package hr.fer.zemris.ferko.webapi.bootstrap;
 
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningService;
+import hr.fer.zemris.ferko.application.usecase.demonstrator.DemonstratorService;
 import hr.fer.zemris.ferko.webapi.bootstrap.LegacyDataset.CourseCatalogEntry;
 import hr.fer.zemris.ferko.webapi.bootstrap.LegacyDataset.EnrollmentEntry;
 import hr.fer.zemris.ferko.webapi.bootstrap.LegacyDataset.ScheduleEntry;
@@ -55,6 +56,7 @@ public class AcademicDataSeeder implements ApplicationRunner {
 
   private final LegacyDatasetLoader datasetLoader;
   private final AcademicProvisioningService provisioning;
+  private final DemonstratorService demonstratorService;
   private final PasswordEncoder passwordEncoder;
   private final int maxCourses;
   private final int maxStudents;
@@ -67,10 +69,12 @@ public class AcademicDataSeeder implements ApplicationRunner {
   public AcademicDataSeeder(
       LegacyDatasetLoader datasetLoader,
       AcademicProvisioningService provisioning,
+      DemonstratorService demonstratorService,
       PasswordEncoder passwordEncoder,
       FerkoProperties properties) {
     this.datasetLoader = datasetLoader;
     this.provisioning = provisioning;
+    this.demonstratorService = demonstratorService;
     this.passwordEncoder = passwordEncoder;
     this.maxCourses = properties.getSeed().getAcademic().getMaxCourses();
     this.maxStudents = properties.getSeed().getAcademic().getMaxStudents();
@@ -134,11 +138,45 @@ public class AcademicDataSeeder implements ApplicationRunner {
           courseId, labGroup, schedulesByCode.get(code), courseHolder(entry), scheduleIndex++);
     }
 
-    int students = seedStudents(dataset, courseIdByCode, labGroupByCourse, studentPassword, now);
-    seedDemoStudentEnrollment(courseIdByCode, studentPassword, now);
+    Map<String, Long> studentIdByJmbag =
+        seedStudents(dataset, courseIdByCode, labGroupByCourse, studentPassword, now);
+    long demoStudentId = seedDemoStudentEnrollment(courseIdByCode, studentPassword, now);
+    int demonstrators = seedDemonstrators(courseIdByCode, studentIdByJmbag, demoStudentId);
 
     LOG.info(
-        "Academic seeding complete: {} courses, {} students.", courseIdByCode.size(), students);
+        "Academic seeding complete: {} courses, {} students, {} demonstrator assignments.",
+        courseIdByCode.size(),
+        studentIdByJmbag.size(),
+        demonstrators);
+  }
+
+  /**
+   * Assigns demonstrators from the legacy lab files: a demonstrator JMBAG becomes a demonstrator on
+   * a seeded course when that student is also seeded. The demo student is made a demonstrator on
+   * their course so the "my demonstratures" view is populated.
+   */
+  private int seedDemonstrators(
+      Map<String, Long> courseIdByCode, Map<String, Long> studentIdByJmbag, long demoStudentId) {
+    Map<String, Set<String>> demonstratorJmbags = datasetLoader.loadDemonstratorJmbagsByCourse();
+    int assignments = 0;
+    for (Map.Entry<String, Long> course : courseIdByCode.entrySet()) {
+      Set<String> jmbags = demonstratorJmbags.get(course.getKey());
+      if (jmbags == null) {
+        continue;
+      }
+      for (String jmbag : jmbags) {
+        Long studentId = studentIdByJmbag.get(jmbag);
+        if (studentId != null) {
+          demonstratorService.assign(course.getValue(), studentId);
+          assignments++;
+        }
+      }
+    }
+    if (demoStudentId > 0 && !courseIdByCode.isEmpty()) {
+      demonstratorService.assign(courseIdByCode.values().iterator().next(), demoStudentId);
+      assignments++;
+    }
+    return assignments;
   }
 
   /** Selects the courses with the most enrolled students; an unlimited cap seeds them all. */
@@ -160,8 +198,10 @@ public class AcademicDataSeeder implements ApplicationRunner {
     return ranked.toList();
   }
 
-  /** Seeds students and their enrollments into the active semester's courses. */
-  private int seedStudents(
+  /**
+   * Seeds students and their enrollments into the active semester's courses, returning jmbag→id.
+   */
+  private Map<String, Long> seedStudents(
       LegacyDataset dataset,
       Map<String, Long> courseIdByCode,
       Map<String, Long> labGroupByCourse,
@@ -198,17 +238,18 @@ public class AcademicDataSeeder implements ApplicationRunner {
         provisioning.assignGroup(enrollmentId, labGroup);
       }
     }
-    return studentIdByJmbag.size();
+    return studentIdByJmbag;
   }
 
   /**
    * Makes the demo STUDENT user (student.ana) a real enrolled student in the active semester so the
-   * student-facing features (calendar, group exchange, surveys) work out of the box.
+   * student-facing features (calendar, group exchange, surveys) work out of the box. Returns the
+   * demo student's id, or {@code 0} when there are no courses to enroll into.
    */
-  private void seedDemoStudentEnrollment(
+  private long seedDemoStudentEnrollment(
       Map<String, Long> courseIdByCode, String studentPassword, LocalDateTime now) {
     if (courseIdByCode.isEmpty()) {
-      return;
+      return 0L;
     }
     long demoStudentId =
         provisioning.provisionStudent(
@@ -222,6 +263,7 @@ public class AcademicDataSeeder implements ApplicationRunner {
             now);
     long currentCourseId = courseIdByCode.values().iterator().next();
     provisioning.enroll(demoStudentId, currentCourseId, now);
+    return demoStudentId;
   }
 
   /** Assigns the real course holders/lecturers plus the demo teaching accounts. */

@@ -7,6 +7,7 @@ type Dict = Record<string, string>;
 const HR: Dict = {
   'nav.home': 'Početna',
   'nav.courses': 'Kolegiji',
+  'nav.myExams': 'Moje provjere',
   'nav.calendar': 'Kalendar',
   'nav.notices': 'Obavijesti',
   'nav.rooms': 'Prostorije',
@@ -117,6 +118,7 @@ const HR: Dict = {
 const EN: Dict = {
   'nav.home': 'Home',
   'nav.courses': 'Courses',
+  'nav.myExams': 'My exams',
   'nav.calendar': 'Calendar',
   'nav.notices': 'Notices',
   'nav.rooms': 'Rooms',

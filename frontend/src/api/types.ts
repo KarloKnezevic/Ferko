@@ -101,6 +101,24 @@ export interface RoomSeating {
   seats: ExamSeat[];
 }
 
+export interface MyExam {
+  examId: number;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  title: string;
+  shortName: string;
+  kind: string;
+  startsAt: string | null;
+  durationMinutes: number;
+  maxPoints: number;
+  registered: boolean;
+  published: boolean;
+  roomCode: string | null;
+  seatNo: number | null;
+  testGroup: string | null;
+}
+
 export interface ExamAssistant {
   id: number;
   examId: number;

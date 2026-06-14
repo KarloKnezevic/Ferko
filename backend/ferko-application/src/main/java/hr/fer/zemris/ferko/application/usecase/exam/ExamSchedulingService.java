@@ -3,6 +3,7 @@ package hr.fer.zemris.ferko.application.usecase.exam;
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
+import hr.fer.zemris.ferko.application.port.MailSender;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
 import hr.fer.zemris.ferko.domain.model.AppUser;
@@ -46,18 +47,21 @@ public class ExamSchedulingService {
   private final StudentRepository studentRepository;
   private final EnrollmentRepository enrollmentRepository;
   private final AppUserRepository userRepository;
+  private final MailSender mailSender;
 
   public ExamSchedulingService(
       ExamRepository examRepository,
       RoomRepository roomRepository,
       StudentRepository studentRepository,
       EnrollmentRepository enrollmentRepository,
-      AppUserRepository userRepository) {
+      AppUserRepository userRepository,
+      MailSender mailSender) {
     this.examRepository = examRepository;
     this.roomRepository = roomRepository;
     this.studentRepository = studentRepository;
     this.enrollmentRepository = enrollmentRepository;
     this.userRepository = userRepository;
+    this.mailSender = mailSender;
   }
 
   public long createExam(
@@ -305,6 +309,37 @@ public class ExamSchedulingService {
 
   public void publish(long examId) {
     examRepository.markPublished(examId, true);
+    Exam exam = examRepository.findById(examId).orElse(null);
+    if (exam == null) {
+      return;
+    }
+    List<String> recipients = registeredStudentEmails(examId);
+    if (!recipients.isEmpty()) {
+      mailSender.send(
+          recipients,
+          "Objavljen raspored provjere: " + exam.shortName(),
+          "Raspored provjere \""
+              + exam.title()
+              + "\" je objavljen. Provjerite svoju dvoranu i mjesto u sustavu FERKO.");
+    }
+  }
+
+  private List<String> registeredStudentEmails(long examId) {
+    Map<Long, Student> studentsById = new LinkedHashMap<>();
+    for (Student student : studentRepository.findAll()) {
+      studentsById.put(student.id(), student);
+    }
+    Map<Long, String> emailByUserId =
+        userRepository.findAll().stream()
+            .filter(user -> user.email() != null && !user.email().isBlank())
+            .collect(Collectors.toMap(AppUser::id, AppUser::email, (a, b) -> a));
+    return examRepository.findRegistrations(examId).stream()
+        .map(registration -> studentsById.get(registration.studentId()))
+        .filter(student -> student != null)
+        .map(student -> emailByUserId.get(student.userId()))
+        .filter(email -> email != null && !email.isBlank())
+        .distinct()
+        .toList();
   }
 
   private SeatingSetup seatingSetup(long examId) {

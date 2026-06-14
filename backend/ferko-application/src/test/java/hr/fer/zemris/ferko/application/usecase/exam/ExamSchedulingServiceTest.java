@@ -25,6 +25,7 @@ class ExamSchedulingServiceTest {
   private InMemoryAcademicRepositories.Students students;
   private InMemoryAcademicRepositories.Enrollments enrollments;
   private InMemoryAcademicRepositories.Users users;
+  private RecordingMailSender mail;
   private ExamSchedulingService service;
 
   private long roomA;
@@ -37,7 +38,8 @@ class ExamSchedulingServiceTest {
     students = new InMemoryAcademicRepositories.Students();
     enrollments = new InMemoryAcademicRepositories.Enrollments();
     users = new InMemoryAcademicRepositories.Users();
-    service = new ExamSchedulingService(exams, rooms, students, enrollments, users);
+    mail = new RecordingMailSender();
+    service = new ExamSchedulingService(exams, rooms, students, enrollments, users, mail);
 
     roomA = rooms.save(new Room(0L, "A101", "A", 15, 2, false)).id();
     roomB = rooms.save(new Room(0L, "B1", "B", 15, 2, false)).id();
@@ -149,6 +151,29 @@ class ExamSchedulingServiceTest {
   }
 
   @Test
+  void publishNotifiesRegisteredStudentsByEmail() {
+    long examId =
+        service.createExam(
+            COURSE_ID, "Obavijest", "OB", "MEDJUISPIT", LocalDateTime.now(), 60, 10.0);
+    service.registerEnrolledStudents(examId, COURSE_ID);
+
+    service.publish(examId);
+
+    assertEquals(1, mail.calls);
+    assertEquals(20, mail.lastRecipients.size());
+    assertTrue(mail.lastRecipients.contains("s0@fer.hr"));
+    assertTrue(mail.lastSubject.contains("OB"));
+  }
+
+  @Test
+  void publishWithoutRegistrationsSendsNoMail() {
+    long examId =
+        service.createExam(COURSE_ID, "Prazna", "PR", "MEDJUISPIT", LocalDateTime.now(), 60, 10.0);
+    service.publish(examId);
+    assertEquals(0, mail.calls);
+  }
+
+  @Test
   void listExamsReportsRegistrationAndRoomCounts() {
     long examId =
         service.createExam(COURSE_ID, "Test", "T", "MEDJUISPIT", LocalDateTime.now(), 60, 10.0);
@@ -163,5 +188,20 @@ class ExamSchedulingServiceTest {
     assertEquals(20, view.registeredStudents());
     assertEquals(1, view.reservedRooms());
     assertEquals(15, view.totalRoomCapacity());
+  }
+
+  /** Captures the most recent send for assertions. */
+  private static final class RecordingMailSender
+      implements hr.fer.zemris.ferko.application.port.MailSender {
+    private int calls;
+    private java.util.List<String> lastRecipients = java.util.List.of();
+    private String lastSubject = "";
+
+    @Override
+    public void send(java.util.List<String> recipients, String subject, String body) {
+      calls++;
+      lastRecipients = recipients;
+      lastSubject = subject;
+    }
   }
 }

@@ -34,6 +34,10 @@ export function CourseDetailPage() {
     queryKey: ['course-notices', courseId],
     queryFn: () => api.courseNotices(courseId),
   });
+  const schedule = useQuery({
+    queryKey: ['schedule', courseId],
+    queryFn: () => api.courseSchedule(courseId),
+  });
 
   const [staffUser, setStaffUser] = useState('');
   const [staffRole, setStaffRole] = useState('ASISTENT');
@@ -277,6 +281,40 @@ export function CourseDetailPage() {
               </button>
             </div>
           </div>
+        )}
+      </div>
+
+      <div className="card">
+        <h2>Raspored nastave</h2>
+        {(schedule.data?.length ?? 0) === 0 ? (
+          <p className="muted">Raspored nastave još nije unesen.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Dan</th>
+                <th>Vrijeme</th>
+                <th>Vrsta</th>
+                <th>Grupa</th>
+                <th>Dvorana</th>
+                <th>Nastavnik</th>
+              </tr>
+            </thead>
+            <tbody>
+              {schedule.data?.map((s) => (
+                <tr key={s.id}>
+                  <td>{s.dayOfWeek}</td>
+                  <td>
+                    {s.startsAt}–{s.endsAt}
+                  </td>
+                  <td>{s.type === 'LAB' ? 'Laboratorij' : 'Predavanja'}</td>
+                  <td>{s.groupCode || '—'}</td>
+                  <td>{s.roomCode || '—'}</td>
+                  <td>{s.instructor || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 

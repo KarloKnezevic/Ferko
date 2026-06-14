@@ -8,6 +8,7 @@ import type {
   CourseDetail,
   CourseEnrollment,
   CourseLiterature,
+  ScheduleSlot,
   CourseSummary,
   CurrentUser,
   Exam,
@@ -165,6 +166,8 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
+  courseSchedule: (courseId: number) =>
+    request<ScheduleSlot[]>(`/api/v1/academic/courses/${courseId}/schedule`),
   courseConsultations: (courseId: number) =>
     request<Consultation[]>(`/api/v1/academic/courses/${courseId}/consultations`),
   addConsultation: (

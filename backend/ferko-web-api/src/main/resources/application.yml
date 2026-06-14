@@ -88,6 +88,11 @@ ferko:
   security:
     dev-token:
       enabled: ${FERKO_DEV_TOKEN_ENABLED:true}
+  seed:
+    academic:
+      # The runnable demo loads the entire bundled dataset (0 = no limit).
+      max-courses: ${FERKO_SEED_ACADEMIC_MAX_COURSES:0}
+      max-students: ${FERKO_SEED_ACADEMIC_MAX_STUDENTS:0}
 
 ---
 spring:

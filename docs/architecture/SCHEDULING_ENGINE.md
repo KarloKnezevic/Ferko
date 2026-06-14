@@ -6,8 +6,11 @@ Modul `ferko-scheduling` implementira formalizam iz doktorske disertacije:
 > rad, Sveučilište u Zagrebu, Fakultet elektrotehnike i računarstva.
 
 Modul je **čista Java**, bez Springa i bez ovisnosti o ostatku sustava — može se koristiti i kao
-samostalna biblioteka. Aplikacijski sloj (`ExamSchedulingService`) poziva ga kroz sučelje
-`Optimizer` u sklopu ispitnog toka.
+samostalna biblioteka. Aplikacijski sloj poziva ga kroz sučelje `Optimizer` u dva toka:
+`ExamSchedulingService` za raspoređivanje studenata po dvoranama na ispitu, te
+`LectureTimetablingService` za evolucijsko generiranje tjednog rasporeda predavanja (model
+`SimpleSchedulingProblem`: svaki se kolegij smješta u termin tako da se kolizije studenata — parovi
+kolegija koji dijele studente — svedu na najmanju mjeru).
 
 ## Apstrakcija
 

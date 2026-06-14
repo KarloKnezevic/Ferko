@@ -397,6 +397,27 @@ export interface CollisionReport {
   conflicts: TimetableConflict[];
 }
 
+export interface GeneratedCourseAssignment {
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  period: number;
+  dayOfWeek: string;
+  startsAt: string;
+}
+
+export interface GeneratedTimetable {
+  algorithm: string;
+  periods: number;
+  courses: number;
+  baselineConflicts: number;
+  resultConflicts: number;
+  feasible: boolean;
+  iterations: number;
+  convergence: number[];
+  assignments: GeneratedCourseAssignment[];
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

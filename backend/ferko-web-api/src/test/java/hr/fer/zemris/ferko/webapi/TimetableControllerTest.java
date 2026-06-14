@@ -53,4 +53,29 @@ class TimetableControllerTest {
         .perform(get("/api/v1/academic/timetable/collisions").session(login("student.ana")))
         .andExpect(status().isForbidden());
   }
+
+  @Test
+  void adminGeneratesTimetableForCourses() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/academic/timetable/generate")
+                .session(login("admin.ferko"))
+                .contentType("application/json")
+                .content("{\"courseIds\":[1,2],\"periods\":6,\"algorithm\":\"GENETIC\"}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.courses").value(2))
+        .andExpect(jsonPath("$.periods").value(6))
+        .andExpect(jsonPath("$.assignments").isArray());
+  }
+
+  @Test
+  void studentCannotGenerateTimetable() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/academic/timetable/generate")
+                .session(login("student.ana"))
+                .contentType("application/json")
+                .content("{\"courseIds\":[1,2],\"periods\":6}"))
+        .andExpect(status().isForbidden());
+  }
 }

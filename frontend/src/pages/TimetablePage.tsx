@@ -1,9 +1,37 @@
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n';
-import type { TimetableSlot } from '../api/types';
+import type { GeneratedTimetable, TimetableSlot } from '../api/types';
+
+const ALGORITHMS = [
+  'GENETIC',
+  'DIFFERENTIAL_EVOLUTION',
+  'MAX_MIN_ANT_SYSTEM',
+  'PARTICLE_SWARM',
+  'IMMUNE_ALGORITHM',
+  'CLONALG',
+];
+
+function Sparkline({ values }: { values: number[] }) {
+  if (values.length < 2) return null;
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const span = max - min || 1;
+  const points = values
+    .map((v, i) => {
+      const x = (i / (values.length - 1)) * 100;
+      const y = 24 - ((v - min) / span) * 24;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(' ');
+  return (
+    <svg viewBox="0 0 100 24" width="220" height="48" preserveAspectRatio="none">
+      <polyline points={points} fill="none" stroke="var(--fer-blue, #0a3d62)" strokeWidth="1.5" />
+    </svg>
+  );
+}
 
 const DAY_ORDER = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
 const DAY_HR: Record<string, string> = {
@@ -21,6 +49,15 @@ export function TimetablePage() {
   const { hasRole } = useAuth();
   const isAdmin = hasRole('ADMIN');
   const [filter, setFilter] = useState('');
+  const [studyYear, setStudyYear] = useState(1);
+  const [periods, setPeriods] = useState(15);
+  const [algorithm, setAlgorithm] = useState('GENETIC');
+  const [generated, setGenerated] = useState<GeneratedTimetable | null>(null);
+
+  const generate = useMutation({
+    mutationFn: () => api.generateTimetable({ studyYear, periods, algorithm }),
+    onSuccess: (data) => setGenerated(data),
+  });
 
   const timetable = useQuery({ queryKey: ['timetable'], queryFn: api.timetable });
   const collisions = useQuery({
@@ -80,6 +117,107 @@ export function TimetablePage() {
                 </li>
               ))}
             </ul>
+          )}
+        </div>
+      )}
+
+      {isAdmin && (
+        <div className="card">
+          <h2>{t('timetable.generate')}</h2>
+          <p className="muted">{t('timetable.generateNote')}</p>
+          <div className="form-row">
+            <div>
+              <label>{t('timetable.studyYear')}</label>
+              <select value={studyYear} onChange={(e) => setStudyYear(Number(e.target.value))}>
+                {[1, 2, 3, 4, 5].map((y) => (
+                  <option key={y} value={y}>
+                    {y}.
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>{t('timetable.periods')}</label>
+              <input
+                type="number"
+                min={1}
+                value={periods}
+                onChange={(e) => setPeriods(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label>{t('timetable.algorithm')}</label>
+              <select value={algorithm} onChange={(e) => setAlgorithm(e.target.value)}>
+                {ALGORITHMS.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <button
+            style={{ marginTop: 12 }}
+            disabled={generate.isPending}
+            onClick={() => generate.mutate()}
+          >
+            {generate.isPending ? t('timetable.generating') : t('timetable.runGenerate')}
+          </button>
+          {generated && (
+            <div style={{ marginTop: 16 }}>
+              <div className="card-grid">
+                <div className="stat">
+                  <div className="value">{generated.courses}</div>
+                  <div className="label">{t('timetable.course')}</div>
+                </div>
+                <div className="stat">
+                  <div className="value">
+                    {generated.baselineConflicts} → {generated.resultConflicts}
+                  </div>
+                  <div className="label">{t('timetable.conflicts')}</div>
+                </div>
+                <div className="stat">
+                  <div className="value">{generated.iterations}</div>
+                  <div className="label">{t('timetable.iterations')}</div>
+                </div>
+                <div className="stat">
+                  <div className="value">
+                    {generated.feasible ? (
+                      <span className="pill ok">{t('timetable.feasible')}</span>
+                    ) : (
+                      <span className="pill warn">{t('timetable.infeasible')}</span>
+                    )}
+                  </div>
+                  <div className="label">{generated.algorithm}</div>
+                </div>
+              </div>
+              <Sparkline values={generated.convergence} />
+              <table style={{ marginTop: 12 }}>
+                <thead>
+                  <tr>
+                    <th>{t('timetable.course')}</th>
+                    <th>{t('timetable.time')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {generated.assignments.slice(0, 50).map((a) => (
+                    <tr key={a.courseId}>
+                      <td>
+                        <strong>{a.courseCode}</strong> {a.courseName}
+                      </td>
+                      <td>
+                        {DAY_HR[a.dayOfWeek] ?? a.dayOfWeek} {a.startsAt}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {generate.isError && (
+            <div className="banner err" style={{ marginTop: 12 }}>
+              {(generate.error as Error).message}
+            </div>
           )}
         </div>
       )}

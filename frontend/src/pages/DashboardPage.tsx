@@ -6,11 +6,17 @@ import { useAuth } from '../auth/AuthContext';
 export function DashboardPage() {
   const { user, hasRole } = useAuth();
   const isStudent = hasRole('STUDENT');
+  const isInvigilator = hasRole('ASISTENT', 'ASISTENT_ORGANIZATOR', 'NASTAVNIK', 'NOSITELJ');
   const semester = useQuery({ queryKey: ['active-semester'], queryFn: api.activeSemester });
   const courses = useQuery({ queryKey: ['courses'], queryFn: api.courses });
   const rooms = useQuery({ queryKey: ['rooms'], queryFn: api.rooms });
   const calendar = useQuery({ queryKey: ['calendar'], queryFn: api.calendar });
   const notices = useQuery({ queryKey: ['notices'], queryFn: () => api.notices(5) });
+  const duties = useQuery({
+    queryKey: ['my-duties'],
+    queryFn: api.myDuties,
+    enabled: isInvigilator,
+  });
 
   const upcomingExams = (calendar.data?.exams ?? []).slice(0, 4);
   const weekly = calendar.data?.weekly ?? [];
@@ -77,6 +83,48 @@ export function DashboardPage() {
           <Link to="/obavijesti">Sve obavijesti →</Link>
         </div>
       </div>
+
+      {isStudent && (
+        <div className="card">
+          <h2>Moj studij</h2>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Link className="btn ghost" to="/moje-provjere">
+              Moje provjere
+            </Link>
+            <Link className="btn ghost" to="/moji-bodovi">
+              Moji bodovi
+            </Link>
+            <Link className="btn ghost" to="/profil">
+              Moj profil
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {isInvigilator && (
+        <div className="card">
+          <h2>Moja dežurstva</h2>
+          {(duties.data?.length ?? 0) === 0 ? (
+            <p className="muted">Trenutno niste raspoređeni ni na jedno dežurstvo.</p>
+          ) : (
+            <>
+              <p>
+                Raspoređeni ste na <strong>{duties.data?.length}</strong> dežurstvo/a.
+              </p>
+              {duties.data?.slice(0, 3).map((d) => (
+                <div key={`${d.examId}-${d.roomCode}`} style={{ marginBottom: 8 }}>
+                  <strong>{d.examShortName}</strong> — {d.courseCode}
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    {d.roomCode || '—'}
+                    {d.startsAt ? ` · ${new Date(d.startsAt).toLocaleString('hr-HR')}` : ''}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+          <Link to="/moja-dezurstva">Sva dežurstva →</Link>
+        </div>
+      )}
 
       <div className="card">
         <h2>Brzi pristup kolegijima</h2>

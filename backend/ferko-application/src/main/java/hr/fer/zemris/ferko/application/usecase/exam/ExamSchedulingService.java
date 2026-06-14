@@ -106,6 +106,73 @@ public class ExamSchedulingService {
     return added;
   }
 
+  /**
+   * Registers the signed-in student for an exam ("prijava na provjeru"). Returns {@code false} when
+   * the exam or student does not exist, or the student is not enrolled in the exam's course;
+   * idempotent when already registered. Throws {@link IllegalStateException} once the schedule is
+   * published (registration window closed).
+   */
+  public boolean registerSelf(long examId, String username) {
+    Exam exam = examRepository.findById(examId).orElse(null);
+    if (exam == null) {
+      return false;
+    }
+    if (exam.published()) {
+      throw new IllegalStateException("Prijava je zatvorena — raspored je objavljen.");
+    }
+    Long studentId = enrolledStudentId(username, exam.courseId());
+    if (studentId == null) {
+      return false;
+    }
+    boolean already =
+        examRepository.findRegistrations(examId).stream()
+            .anyMatch(reg -> reg.studentId() == studentId);
+    if (!already) {
+      examRepository.addRegistration(
+          new ExamRegistration(0L, examId, studentId, LocalDateTime.now(), "REGISTERED"));
+    }
+    return true;
+  }
+
+  /**
+   * Cancels the signed-in student's registration for an exam ("odjava"). Returns {@code false} when
+   * the exam or student does not exist; throws {@link IllegalStateException} once the schedule is
+   * published.
+   */
+  public boolean unregisterSelf(long examId, String username) {
+    Exam exam = examRepository.findById(examId).orElse(null);
+    if (exam == null) {
+      return false;
+    }
+    if (exam.published()) {
+      throw new IllegalStateException("Odjava je zatvorena — raspored je objavljen.");
+    }
+    Student student =
+        userRepository
+            .findByUsername(username)
+            .flatMap(user -> studentRepository.findByUserId(user.id()))
+            .orElse(null);
+    if (student == null) {
+      return false;
+    }
+    examRepository.removeRegistration(examId, student.id());
+    return true;
+  }
+
+  private Long enrolledStudentId(String username, long courseId) {
+    Student student =
+        userRepository
+            .findByUsername(username)
+            .flatMap(user -> studentRepository.findByUserId(user.id()))
+            .orElse(null);
+    if (student == null) {
+      return null;
+    }
+    return enrollmentRepository.findByStudentAndCourse(student.id(), courseId).isPresent()
+        ? student.id()
+        : null;
+  }
+
   public List<ExamView> listExams(long courseId) {
     return examRepository.findByCourse(courseId).stream().map(this::toExamView).toList();
   }

@@ -18,6 +18,9 @@ public interface ExamRepository {
 
   ExamRegistration addRegistration(ExamRegistration registration);
 
+  /** Removes a student's registration for an exam (no-op if absent). */
+  void removeRegistration(long examId, long studentId);
+
   List<ExamRegistration> findRegistrations(long examId);
 
   ExamRoom addRoom(ExamRoom room);

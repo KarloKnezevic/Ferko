@@ -25,6 +25,9 @@ export function Layout() {
           <NavLink to="/kolegiji">{t('nav.courses')}</NavLink>
           {hasRole('STUDENT') && <NavLink to="/moje-provjere">{t('nav.myExams')}</NavLink>}
           {hasRole('STUDENT') && <NavLink to="/moji-bodovi">{t('nav.myGrades')}</NavLink>}
+          {hasRole('ASISTENT', 'ASISTENT_ORGANIZATOR', 'NASTAVNIK', 'NOSITELJ') && (
+            <NavLink to="/moja-dezurstva">{t('nav.myDuties')}</NavLink>
+          )}
           <NavLink to="/kalendar">{t('nav.calendar')}</NavLink>
           <NavLink to="/obavijesti">{t('nav.notices')}</NavLink>
           <NavLink to="/prostorije">{t('nav.rooms')}</NavLink>

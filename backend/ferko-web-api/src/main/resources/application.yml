@@ -27,6 +27,10 @@ ferko:
       allow-hmac-decoder: ${FERKO_JWT_ALLOW_HMAC_DECODER:true}
     dev-token:
       enabled: ${FERKO_DEV_TOKEN_ENABLED:false}
+    login-rate-limit:
+      enabled: ${FERKO_LOGIN_RATE_LIMIT_ENABLED:false}
+      max-attempts: ${FERKO_LOGIN_RATE_LIMIT_MAX_ATTEMPTS:10}
+      window-seconds: ${FERKO_LOGIN_RATE_LIMIT_WINDOW_SECONDS:60}
   audit:
     repository: ${FERKO_AUDIT_REPOSITORY:jdbc}
   todo:
@@ -81,6 +85,8 @@ ferko:
       allow-hmac-decoder: false
     dev-token:
       enabled: false
+    login-rate-limit:
+      enabled: ${FERKO_LOGIN_RATE_LIMIT_ENABLED:true}
   seed:
     users:
       enabled: false

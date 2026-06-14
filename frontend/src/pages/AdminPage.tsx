@@ -10,6 +10,7 @@ export function AdminPage() {
   const users = useQuery({ queryKey: ['admin-users'], queryFn: api.adminUsers });
   const semesters = useQuery({ queryKey: ['semesters'], queryFn: api.semesters });
   const sync = useQuery({ queryKey: ['sync-status'], queryFn: api.syncStatus });
+  const audit = useQuery({ queryKey: ['audit'], queryFn: () => api.auditEvents(100) });
 
   const [code, setCode] = useState('');
   const [academicYear, setAcademicYear] = useState('2025/2026');
@@ -24,6 +25,7 @@ export function AdminPage() {
     onSuccess: () => {
       setCode('');
       queryClient.invalidateQueries({ queryKey: ['semesters'] });
+      queryClient.invalidateQueries({ queryKey: ['audit'] });
     },
   });
 
@@ -169,6 +171,42 @@ export function AdminPage() {
                 </td>
               </tr>
             ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <h2 style={{ padding: '16px 16px 0' }}>{t('admin.audit')}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>{t('admin.auditWhen')}</th>
+              <th>{t('admin.auditActor')}</th>
+              <th>{t('admin.auditAction')}</th>
+              <th>{t('admin.auditDetails')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {audit.data?.map((e) => (
+              <tr key={e.id}>
+                <td className="muted">{new Date(e.occurredAt).toLocaleString('hr-HR')}</td>
+                <td>{e.actor}</td>
+                <td>
+                  <span className="pill">{e.action}</span>
+                </td>
+                <td className="muted">
+                  {[e.entityType, e.entityId].filter(Boolean).join(' #')}
+                  {e.details ? ` · ${e.details}` : ''}
+                </td>
+              </tr>
+            ))}
+            {(audit.data?.length ?? 0) === 0 && (
+              <tr>
+                <td colSpan={4} className="muted">
+                  {t('admin.auditEmpty')}
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

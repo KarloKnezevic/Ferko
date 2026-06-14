@@ -6,12 +6,14 @@ import hr.fer.zemris.ferko.application.usecase.academic.AppUserView;
 import hr.fer.zemris.ferko.application.usecase.academic.SemesterView;
 import hr.fer.zemris.ferko.application.usecase.academic.StudentView;
 import hr.fer.zemris.ferko.application.usecase.academic.SyncStatusView;
+import hr.fer.zemris.ferko.application.usecase.audit.AuditService;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,17 +30,20 @@ public class AcademicAdminController {
 
   private final AcademicProvisioningService provisioning;
   private final AcademicQueryService query;
+  private final AuditService audit;
 
   public AcademicAdminController(
-      AcademicProvisioningService provisioning, AcademicQueryService query) {
+      AcademicProvisioningService provisioning, AcademicQueryService query, AuditService audit) {
     this.provisioning = provisioning;
     this.query = query;
+    this.audit = audit;
   }
 
   @PostMapping("/courses")
   @PreAuthorize("hasRole('ADMIN')")
   @ResponseStatus(HttpStatus.CREATED)
-  public CourseCreatedResponse createCourse(@RequestBody CreateCourseRequest request) {
+  public CourseCreatedResponse createCourse(
+      @RequestBody CreateCourseRequest request, Authentication authentication) {
     String semester =
         query
             .activeSemester()
@@ -53,13 +58,18 @@ public class AcademicAdminController {
             request.ects(),
             request.description(),
             request.literature());
+    audit.record(
+        authentication.getName(), "COURSE_CREATED", "course", String.valueOf(id), request.code());
     return new CourseCreatedResponse(id, request.code(), semester);
   }
 
   @PostMapping("/courses/{courseId}/enrollments")
   @PreAuthorize("hasAnyRole('ADMIN', 'STUSLU')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void enroll(@PathVariable long courseId, @RequestBody EnrollRequest request) {
+  public void enroll(
+      @PathVariable long courseId,
+      @RequestBody EnrollRequest request,
+      Authentication authentication) {
     long studentId =
         query
             .getStudentByJmbag(request.jmbag())
@@ -67,18 +77,33 @@ public class AcademicAdminController {
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student ne postoji."));
     provisioning.enroll(studentId, courseId, LocalDateTime.now());
+    audit.record(
+        authentication.getName(),
+        "STUDENT_ENROLLED",
+        "course",
+        String.valueOf(courseId),
+        "jmbag=" + request.jmbag());
   }
 
   @PostMapping("/courses/{courseId}/group-assignments")
   @PreAuthorize("hasAnyRole('ADMIN', 'STUSLU', 'NOSITELJ')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void assignGroup(@PathVariable long courseId, @RequestBody AssignGroupRequest request) {
+  public void assignGroup(
+      @PathVariable long courseId,
+      @RequestBody AssignGroupRequest request,
+      Authentication authentication) {
     boolean assigned =
         provisioning.assignStudentToGroup(courseId, request.jmbag(), request.groupId());
     if (!assigned) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND, "Student, upis ili grupa ne postoje.");
     }
+    audit.record(
+        authentication.getName(),
+        "GROUP_ASSIGNED",
+        "course",
+        String.valueOf(courseId),
+        "jmbag=" + request.jmbag() + ", group=" + request.groupId());
   }
 
   @GetMapping("/users")
@@ -96,18 +121,28 @@ public class AcademicAdminController {
   @PostMapping("/courses/{courseId}/staff")
   @PreAuthorize("hasAnyRole('ADMIN', 'NOSITELJ')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void assignStaff(@PathVariable long courseId, @RequestBody AssignStaffRequest request) {
+  public void assignStaff(
+      @PathVariable long courseId,
+      @RequestBody AssignStaffRequest request,
+      Authentication authentication) {
     boolean assigned =
         provisioning.assignStaffByUsername(courseId, request.username(), request.role());
     if (!assigned) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Korisnik ne postoji.");
     }
+    audit.record(
+        authentication.getName(),
+        "STAFF_ASSIGNED",
+        "course",
+        String.valueOf(courseId),
+        request.username() + " as " + request.role());
   }
 
   @PostMapping("/semesters")
   @PreAuthorize("hasRole('ADMIN')")
   @ResponseStatus(HttpStatus.CREATED)
-  public void createSemester(@RequestBody CreateSemesterRequest request) {
+  public void createSemester(
+      @RequestBody CreateSemesterRequest request, Authentication authentication) {
     provisioning.provisionSemester(
         request.code(),
         request.academicYear(),
@@ -115,6 +150,7 @@ public class AcademicAdminController {
         LocalDate.parse(request.startsOn()),
         LocalDate.parse(request.endsOn()),
         request.active());
+    audit.record(authentication.getName(), "SEMESTER_CREATED", "semester", request.code(), null);
   }
 
   /** Request to assign a teaching role on a course to a user (by username). */

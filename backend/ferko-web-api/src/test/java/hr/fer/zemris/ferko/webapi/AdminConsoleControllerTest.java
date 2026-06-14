@@ -155,6 +155,34 @@ class AdminConsoleControllerTest {
   }
 
   @Test
+  void adminCreateSemesterIsAuditedAndVisible() throws Exception {
+    MockHttpSession session = login("admin.ferko");
+    mockMvc
+        .perform(
+            post("/api/v1/academic/semesters")
+                .session(session)
+                .contentType("application/json")
+                .content(
+                    "{\"code\":\"2027Z\",\"academicYear\":\"2027/2028\",\"term\":\"ZIMSKI\","
+                        + "\"startsOn\":\"2027-10-01\",\"endsOn\":\"2028-02-15\",\"active\":false}"))
+        .andExpect(status().isCreated());
+
+    mockMvc
+        .perform(get("/api/v1/academic/audit?limit=50").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[?(@.action=='SEMESTER_CREATED' && @.entityId=='2027Z')]").exists())
+        .andExpect(jsonPath("$[?(@.entityId=='2027Z')].actor").value("admin.ferko"));
+  }
+
+  @Test
+  void studentCannotSeeAuditTrail() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(get("/api/v1/academic/audit").session(session))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void studentCannotSeeCourseRoster() throws Exception {
     MockHttpSession session = login("student.ana");
     mockMvc

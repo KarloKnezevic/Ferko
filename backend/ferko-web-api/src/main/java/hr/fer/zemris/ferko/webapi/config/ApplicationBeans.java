@@ -1,6 +1,7 @@
 package hr.fer.zemris.ferko.webapi.config;
 
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
+import hr.fer.zemris.ferko.application.port.AuditEventRepository;
 import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.ConsultationRepository;
 import hr.fer.zemris.ferko.application.port.CourseComponentRepository;
@@ -26,6 +27,7 @@ import hr.fer.zemris.ferko.application.port.ToDoTaskRepository;
 import hr.fer.zemris.ferko.application.usecase.PingUseCase;
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningService;
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
+import hr.fer.zemris.ferko.application.usecase.audit.AuditService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
@@ -53,6 +55,7 @@ import hr.fer.zemris.ferko.application.usecase.todo.ListMyOpenToDoTasksUseCase;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryAuditAdapter;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAuditEventRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcClassScheduleRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcConsultationRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseComponentRepository;
@@ -226,6 +229,16 @@ public class ApplicationBeans {
   @Bean
   public MailSender mailSender() {
     return new LoggingMailSender();
+  }
+
+  @Bean
+  public AuditEventRepository auditEventRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcAuditEventRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public AuditService auditService(AuditEventRepository auditEventRepository) {
+    return new AuditService(auditEventRepository);
   }
 
   @Bean

@@ -10,6 +10,7 @@ import type {
   Exam,
   ExamAssistant,
   ForumPost,
+  MyExam,
   GroupExchange,
   GradeComponentView,
   Notice,
@@ -108,6 +109,7 @@ export const api = {
     request<RoomSeating[]>(`/api/v1/academic/exams/${examId}/seating`),
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
+  myExams: () => request<MyExam[]>(`/api/v1/academic/my/exams`),
   examAssistants: (examId: number) =>
     request<ExamAssistant[]>(`/api/v1/academic/exams/${examId}/assistants`),
   assignAssistant: (examId: number, roomId: number, username: string) =>

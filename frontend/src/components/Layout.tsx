@@ -23,6 +23,7 @@ export function Layout() {
             {t('nav.home')}
           </NavLink>
           <NavLink to="/kolegiji">{t('nav.courses')}</NavLink>
+          {hasRole('STUDENT') && <NavLink to="/moje-provjere">{t('nav.myExams')}</NavLink>}
           <NavLink to="/kalendar">{t('nav.calendar')}</NavLink>
           <NavLink to="/obavijesti">{t('nav.notices')}</NavLink>
           <NavLink to="/prostorije">{t('nav.rooms')}</NavLink>

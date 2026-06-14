@@ -1,139 +1,436 @@
-# FERKO 2.0
+<div align="center">
 
-Modernized rewrite of the **FERKO** academic portal of the Faculty of Electrical
-Engineering and Computing (FER), University of Zagreb — historically the JCMS platform.
+# FERKO
 
-FERKO 2.0 is a full-stack system: a **React + TypeScript** single-page application served by a
-**Java 21 + Spring Boot 3** backend over **PostgreSQL**, with exam scheduling powered by an
-**evolutionary algorithm** based on Marko Čupić's doctoral thesis *"Raspoređivanje nastavnih
-aktivnosti evolucijskim računanjem"* (2011). The whole system starts with a single Docker command
-and comes pre-seeded with real FER course data.
+### Akademski portal za organizaciju nastave — moderniziran, otvoren, spreman za produkciju
 
-## 1. Quick start (Docker)
+*A faithful, modern rewrite of FER's academic portal — with an evolutionary exam-scheduling engine at its core.*
+
+[![CI](https://img.shields.io/badge/CI-quality%20gate-2ea44f)](#kvaliteta-i-testiranje)
+[![Java](https://img.shields.io/badge/Java-21-orange)](#tehnologije)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-6db33f)](#tehnologije)
+[![React](https://img.shields.io/badge/React%2018%20%2B%20TypeScript-Vite-61dafb)](#tehnologije)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)](#tehnologije)
+[![Licenca](https://img.shields.io/badge/Licenca-Apache%202.0-blue)](#licenca)
+
+**`docker compose up` → potpun, seedan akademski portal na [localhost:8080](http://localhost:8080)**
+
+</div>
+
+---
+
+## Sadržaj
+
+- [Što je FERKO](#što-je-ferko)
+- [Naslijeđe — prof. dr. sc. Marko Čupić](#naslijeđe--prof-dr-sc-marko-čupić)
+- [Ključne mogućnosti](#ključne-mogućnosti)
+- [Brzi početak](#brzi-početak)
+- [Demo korisnici](#demo-korisnici)
+- [Arhitektura](#arhitektura)
+- [Evolucijski mehanizam raspoređivanja](#evolucijski-mehanizam-raspoređivanja)
+- [Model podataka](#model-podataka)
+- [Tehnologije](#tehnologije)
+- [Razvoj](#razvoj)
+- [Kvaliteta i testiranje](#kvaliteta-i-testiranje)
+- [Struktura projekta](#struktura-projekta)
+- [Dokumentacija](#dokumentacija)
+- [Autori i zahvale](#autori-i-zahvale)
+- [Licenca](#licenca)
+
+---
+
+## Što je FERKO
+
+**FERKO** je akademski portal za organizaciju nastave na velikom tehničkom fakultetu: kolegiji i
+upisi, grupe i razmještaj studenata, provjere znanja i njihovo raspoređivanje po dvoranama,
+bodovi i ocjene, obavijesti, ankete, repozitorij materijala, forum, konzultacije i e-portfolio —
+sve kroz moderno, dvojezično (HR/EN) web-sučelje, s ulogama prilagođenim svakom sudioniku
+nastavnog procesa.
+
+Srce sustava je **evolucijski mehanizam raspoređivanja provjera znanja**: studenti se genetskim
+algoritmom (i još pet obitelji metaheuristika) raspoređuju po dvoranama tako da nijedna nije
+prekapacitirana, a raspored se objavljuje studentima zajedno s točnim mjestom sjedenja.
+
+> Cijeli sustav podiže se **jednom Docker komandom** i dolazi unaprijed napunjen stvarnim
+> FER-ovim podacima o kolegijima — spreman za isprobavanje u jednoj minuti.
+
+---
+
+## Naslijeđe — prof. dr. sc. Marko Čupić
+
+FERKO nije nova ideja. Originalni **FERKO** osmislio je i razvio **prof. dr. sc. Marko Čupić**
+s Fakulteta elektrotehnike i računarstva Sveučilišta u Zagrebu, i taj je sustav **i danas u
+aktivnoj produkcijskoj uporabi** za tisuće studenata i nastavnika:
+
+> ### 🔗 [https://ferko.fer.hr/ferko](https://ferko.fer.hr/ferko)
+
+Ovaj projekt je **modernizirani prepis (re-implementacija)** koji s poštovanjem nastavlja taj rad:
+zadržava vjernu informacijsku arhitekturu i radne tokove originala, a evolucijski mehanizam
+raspoređivanja izravno se temelji na doktorskoj disertaciji prof. Čupića:
+
+> **Marko Čupić (2011), _Raspoređivanje nastavnih aktivnosti evolucijskim računanjem_**, doktorski
+> rad, Sveučilište u Zagrebu, Fakultet elektrotehnike i računarstva.
+
+Formalni modeli problema raspoređivanja (pogl. 4), obitelji metaheuristika (pogl. 5),
+paralelizacija (pogl. 6) i model objave rasporeda (pogl. 7) iz disertacije implementirani su u
+modulu [`ferko-scheduling`](backend/ferko-scheduling). Sva zahvala za izvorni koncept, dizajn i
+dugogodišnje održavanje produkcijskog FERKA pripada prof. Čupiću.
+
+---
+
+## Ključne mogućnosti
+
+FERKO modelira **sedam uloga** (`STUDENT`, `NASTAVNIK`, `NOSITELJ`, `ASISTENT`,
+`ASISTENT_ORGANIZATOR`, `STUSLU`, `ADMIN`) i sučelje se prilagođava svakoj.
+
+| Područje | Mogućnosti |
+|----------|-----------|
+| 🎓 **Student** | Moje provjere (s dvoranom i mjestom nakon objave), samoprijava/odjava na provjeru, Moji bodovi po komponentama i ocjene, e-Portfolio, osobni profil, kalendar i obavijesti |
+| 📚 **Stranica kolegija** | O kolegiju, Obavijesti, Raspored nastave, Literatura (obavezna/preporučena), Konzultacije, KOMPONENTE, popis nastavnog osoblja, grupe |
+| 📝 **Provjere znanja** | Definiranje provjera, rezervacija dvorana, prijava studenata, **evolucijsko raspoređivanje po dvoranama**, usporedba 6 algoritama s krivuljama konvergencije, dodjela dežurnih asistenata, objava, dijagram toka |
+| 💯 **Bodovi i ocjene** | Bodovne komponente, unos bodova, preglednik bodova, automatsko ocjenjivanje skeniranih obrazaca, zastavice/preduvjeti s vlastitim sigurnim interpreterom izraza |
+| 🧑‍🏫 **Nastavno osoblje** | Dodjela uloga na kolegiju, dodjela dežurstava, Moja dežurstva, objava obavijesti i konzultacija |
+| 🗂️ **STUSLU** | Upis studenata, razmještaj u grupe, pregled upisanih |
+| 🛠️ **Administracija** | Kreiranje semestra, upravljanje korisnicima, status sinkronizacija, **zapis revizije (audit trail)** privilegiranih radnji |
+| 🔁 **Suradnja** | Burza grupa (samoposluga zamjene), forum (Pitanja i problemi), ankete (evaluacija kolegija), repozitorij datoteka |
+| 🌐 **Platforma** | Dvojezičnost HR/EN, kalendar svih aktivnosti, e-mail obavijesti, rate-limiting prijava, observability (`/actuator`) |
+
+---
+
+## Brzi početak
+
+Potreban je samo **Docker** (Desktop ili Engine + Compose).
 
 ```bash
-./scripts/dev-up.sh           # builds the image (SPA + backend) and starts app + PostgreSQL
+git clone <repo-url> ferko && cd ferko
+./scripts/dev-up.sh          # gradi SPA + backend i pokreće aplikaciju + PostgreSQL
 ```
 
-Then open:
+Skripta čeka da aplikacija postane zdrava, a zatim je dostupno:
 
-- **App (SPA):** http://localhost:8080
-- **OpenAPI / Swagger:** http://localhost:8080/swagger-ui/index.html
-- **Health:** http://localhost:8080/actuator/health
-
-Stop / reset:
+| | |
+|---|---|
+| 🖥️ **Aplikacija (SPA)** | <http://localhost:8080> |
+| ❤️ **Health** | <http://localhost:8080/actuator/health> |
+| 📘 **OpenAPI (JSON)** | <http://localhost:8080/v3/api-docs> |
+| ℹ️ **Verzija builda** | <http://localhost:8080/actuator/info> |
 
 ```bash
-./scripts/dev-down.sh         # stop
-./scripts/dev-reset.sh        # stop and drop the database volume
+./scripts/dev-down.sh        # zaustavi
+./scripts/dev-reset.sh       # zaustavi i obriši volumen baze (čisti reset)
 ```
 
-> The image is multi-arch (`linux/amd64`, `linux/arm64`) and runs natively on Apple Silicon.
+Baza se pri prvom pokretanju automatski migrira (Flyway) i puni stvarnim FER-ovim podacima
+(12 kolegija sa stvarnim upisima, dvorane, grupe, satnica).
 
-## 2. Demo accounts
+---
 
-All demo users share the password **`ferko123`**:
+## Demo korisnici
 
-| Korisnik         | Uloga                  |
-|------------------|------------------------|
-| `admin.ferko`    | ADMIN                  |
-| `lecturer.marko` | NASTAVNIK + NOSITELJ   |
-| `assistant.iva`  | ASISTENT               |
-| `stuslu.sara`    | STUSLU (stud. služba)  |
-| `student.ana`    | STUDENT                |
+Svi korisnici imaju lozinku **`ferko123`**.
 
-## 3. What you get
+| Korisničko ime | Uloga | Za isprobati |
+|----------------|-------|--------------|
+| `student.ana` | STUDENT | Moje provjere, Moji bodovi, prijava na provjeru, e-Portfolio |
+| `lecturer.marko` | NOSITELJ | Stranica kolegija, definiranje i raspoređivanje provjera, dežurstva |
+| `assistant.iva` | ASISTENT | Moja dežurstva, konzultacije |
+| `stuslu.sara` | STUSLU | Upis i razmještaj studenata u grupe |
+| `admin.ferko` | ADMIN | Admin konzola, korisnici, semestri, zapis revizije |
 
-On startup the database is seeded with a real FER course catalogue, students, enrollments,
-groups and rooms, so the application opens in a realistic, non-empty state:
+---
 
-- **Prijava** i role-aware sučelje (FER branding).
-- **Kolegiji** — katalog, detalji, nastavno osoblje, grupe, broj upisa.
-- **Administracija provjera znanja** — definiranje provjera (međuispit, završni, …),
-  rezervacija dvorana, dohvat (prijava) upisanih studenata.
-- **Generiranje rasporeda ispita** — raspoređivanje studenata po dvoranama
-  **genetskim algoritmom** ili jednom od četiri FERKO strategije
-  (sortirano/slučajno × pohlepno/proporcionalno), pregled po dvoranama i **objava**.
-- **Prostorije** i **studenti** (za ovlaštene uloge).
+## Arhitektura
 
-## 4. Exam scheduling (Čupić)
+FERKO je **Maven multimodulni** projekt građen po načelima **heksagonalne arhitekture (ports &
+adapters)**. Domena ne ovisi ni o čemu; aplikacijski sloj definira portove (sučelja);
+infrastruktura ih implementira; web sloj nikada izravno ne ovisi o domeni. Granice su strojno
+provjerene **ArchUnit** testovima.
 
-The `ferko-scheduling` module is a self-contained engine that mirrors the thesis:
+```mermaid
+graph TD
+    subgraph Klijent
+        SPA["React 18 + TypeScript SPA<br/>(TanStack Query, react-router)"]
+    end
+    subgraph "ferko-web-api (Spring Boot)"
+        REST["REST kontroleri<br/>/api/v1/**"]
+        SEC["Spring Security<br/>(session + JWT/OIDC)"]
+        SPA_SRV["Posluživanje SPA iz jara"]
+    end
+    subgraph "Aplikacijski sloj (ferko-application)"
+        UC["Use-case servisi + View DTO-i"]
+        PORT["Portovi (sučelja)"]
+    end
+    subgraph "Domena (ferko-domain)"
+        DOM["Čisti modeli (record), bez ovisnosti"]
+    end
+    subgraph "Infrastruktura (ferko-infrastructure)"
+        JDBC["JDBC adapteri"]
+        MAIL["Mail / File storage adapteri"]
+    end
+    subgraph "ferko-scheduling"
+        OPT["Optimizer + 6 metaheuristika + 8 problema"]
+    end
+    DB[("PostgreSQL")]
 
-- **Chromosome** = `int[]` (an option index per item), penalty ≥ 0 (0 = perfect).
-- **`GeneticAlgorithm`** — steady-state (elimination) GA, deterministic for a fixed seed.
-- **`SeatingProblem`** — student→room assignment minimizing non-linear over-capacity
-  `Σ max(0, load − capacity)^α`.
-- **`ExamTimetableProblem`** — exam→time-slot assignment minimizing student conflicts.
-- **`SeatingStrategies`** — the four deterministic FERKO fill modes.
+    SPA -->|HTTPS / JSON| REST
+    REST --> SEC
+    REST --> UC
+    SPA_SRV -.-> SPA
+    UC --> PORT
+    UC --> DOM
+    UC --> OPT
+    PORT -. implementira .-> JDBC
+    PORT -. implementira .-> MAIL
+    JDBC --> DB
 
-It is exposed through `/api/v1/academic/exams/{id}/seating` and driven from the
-"Administracija provjera znanja" screen.
+    classDef domain fill:#fde68a,stroke:#b45309;
+    classDef app fill:#bfdbfe,stroke:#1d4ed8;
+    classDef infra fill:#bbf7d0,stroke:#15803d;
+    class DOM domain
+    class UC,PORT app
+    class JDBC,MAIL,OPT infra
+```
 
-## 5. Modern stack
+**Moduli i smjer ovisnosti** (strelica = „ovisi o”):
 
-- Java 21, Maven multi-module build
-- Spring Boot 3.5, Spring Security (form-login/session locally, OIDC resource-server for prod)
-- PostgreSQL 16 + Flyway migrations
-- React 18 + TypeScript + Vite (built into the jar via `frontend-maven-plugin`)
-- OpenAPI (springdoc), Actuator
-- Docker multi-stage, multi-arch image
+```mermaid
+graph LR
+    web["ferko-web-api"] --> app["ferko-application"]
+    web --> sec["ferko-security"]
+    web --> infra["ferko-infrastructure"]
+    infra --> app
+    app --> dom["ferko-domain"]
+    app --> sch["ferko-scheduling"]
+    arch["ferko-architecture-tests"] -. provjerava granice .-> web
 
-## 6. Project structure
+    classDef d fill:#fde68a,stroke:#b45309;
+    class dom d
+```
+
+Pravilo koje ArchUnit čuva: **`..webapi..` nikada ne uvozi `..domain..`** — web sloj komunicira
+isključivo preko aplikacijskih view/use-case tipova. Detaljnije:
+[`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md).
+
+### Tok zahtjeva (primjer: raspoređivanje provjere)
+
+```mermaid
+sequenceDiagram
+    actor N as Nositelj
+    participant SPA as React SPA
+    participant C as ExamController
+    participant S as ExamSchedulingService
+    participant G as ferko-scheduling (GA)
+    participant R as JdbcExamRepository
+    participant DB as PostgreSQL
+
+    N->>SPA: "Napravi raspored studenata"
+    SPA->>C: POST /exams/{id}/seating?strategy=GENETIC
+    C->>S: generateSeating(examId, GENETIC)
+    S->>R: findRegistrations / findRooms
+    R->>DB: SELECT
+    S->>G: optimize(SeatingProblem)
+    G-->>S: raspored + krivulja konvergencije
+    S->>R: replaceSeats(...)
+    R->>DB: INSERT
+    S-->>C: SeatingResult (feasible, penalty, krivulja)
+    C-->>SPA: 200 OK
+```
+
+---
+
+## Evolucijski mehanizam raspoređivanja
+
+Modul [`ferko-scheduling`](backend/ferko-scheduling) je **čista Java** (bez Springa) i implementira
+formalizam iz disertacije prof. Čupića. Apstrakcija je namjerno generička: bilo koji `Problem`
+može optimirati bilo koji `Optimizer`.
+
+```mermaid
+classDiagram
+    class Optimizer {
+        <<interface>>
+        +optimize(Problem) OptimizationResult
+    }
+    class Problem {
+        <<interface>>
+        +dimension() int
+        +penalty(int[] solution) double
+    }
+    class OptimizationResult {
+        +assignment() int[]
+        +penalty() double
+        +penaltyHistory() List~Double~
+    }
+    Optimizer ..> Problem : optimira
+    Optimizer ..> OptimizationResult : vraća
+    GeneticAlgorithm ..|> Optimizer
+    DifferentialEvolution ..|> Optimizer
+    MaxMinAntSystem ..|> Optimizer
+    ParticleSwarm ..|> Optimizer
+    ImmuneAlgorithm ..|> Optimizer
+    Clonalg ..|> Optimizer
+    IslandOptimizer ..|> Optimizer
+    SeatingProblem ..|> Problem
+    ExamTimetableProblem ..|> Problem
+    SimpleSchedulingProblem ..|> Problem
+    UnscheduledStudentsProblem ..|> Problem
+    ConflictRemovalProblem ..|> Problem
+    LabSchedulingProblem ..|> Problem
+    TeamSchedulingProblem ..|> Problem
+    SeminarGroupsProblem ..|> Problem
+```
+
+**Šest obitelji metaheuristika:** genetski algoritam (GA), diferencijska evolucija (DE),
+Max-Min mravlji sustav (MMAS), optimizacija rojem čestica (PSO), jednostavni imunološki algoritam
+(SIA) i CLONALG; uz **paralelni otočni model** (`IslandOptimizer`).
+
+**Osam formalnih problema** iz disertacije (pogl. 4): jednostavno raspoređivanje, neraspoređeni
+studenti po predavanjima, uklanjanje konflikata u satnici, raspored laboratorijskih vježbi,
+raspored provjera (seating), raspored prostorija (timetable), raspoređivanje timova i prezentacijske
+grupe za seminare.
+
+Sučelje aplikacije nudi **usporedni prikaz** svih šest algoritama nad istim problemom (jednak
+budžet i sjeme) s krivuljama konvergencije, pa korisnik bira najbolji. Determinističko sjeme
+osigurava ponovljivost. Više: [`docs/architecture/SCHEDULING_ENGINE.md`](docs/architecture/SCHEDULING_ENGINE.md).
+
+### Radni tok provjere znanja
+
+```mermaid
+flowchart LR
+    A["Dohvati studente"] --> B["Uredi dvorane"]
+    B --> C["Definiranje rasporeda<br/>(GA / metaheuristike)"]
+    C --> D["Dodjela asistenata<br/>(dežurstva)"]
+    D --> E["Objava"]
+    E --> F["Student vidi dvoranu i mjesto<br/>+ e-mail obavijest"]
+```
+
+---
+
+## Model podataka
+
+Normalizirana shema (PostgreSQL u produkciji, H2 u PostgreSQL-modu za razvoj/testove), verzionirana
+**Flyway** migracijama (`V1`–`V14`). Glavni agregati:
+
+```mermaid
+erDiagram
+    APP_USER ||--o{ COURSE_STAFF : "predaje"
+    APP_USER ||--o| STUDENT : "jest"
+    SEMESTER ||--o{ COURSE : sadrži
+    COURSE ||--o{ STUDENT_GROUP : "ima grupe"
+    COURSE ||--o{ ENROLLMENT : "upisi"
+    STUDENT ||--o{ ENROLLMENT : upisuje
+    ENROLLMENT ||--o{ GROUP_MEMBERSHIP : "razmješten u"
+    STUDENT_GROUP ||--o{ GROUP_MEMBERSHIP : sadrži
+    COURSE ||--o{ EXAM : "provjere"
+    EXAM ||--o{ EXAM_REGISTRATION : prijave
+    EXAM ||--o{ EXAM_ROOM : "dvorane"
+    EXAM ||--o{ EXAM_SEAT : "razmještaj"
+    EXAM ||--o{ EXAM_ROOM_ASSISTANT : "dežurstva"
+    ROOM ||--o{ EXAM_ROOM : "rezervirana"
+    COURSE ||--o{ GRADE_COMPONENT : "bodovne komponente"
+    STUDENT ||--o{ STUDENT_POINTS : bodovi
+    STUDENT ||--o{ GRADE : ocjene
+```
+
+Uz akademsku jezgru: obavijesti, ankete, forum, komponente kolegija, literatura, konzultacije,
+repozitorij datoteka, burza grupa, satnica, e-portfolio i zapis revizije. Cijela shema:
+[`docs/architecture/DOMAIN_MODEL.md`](docs/architecture/DOMAIN_MODEL.md).
+
+---
+
+## Tehnologije
+
+| Sloj | Tehnologija |
+|------|-------------|
+| Jezik / runtime | **Java 21**, Maven (multimodul) |
+| Backend | **Spring Boot 3.5** (Web, Security, JDBC, Actuator, Flyway) |
+| Baza | **PostgreSQL** (produkcija), **H2** u PostgreSQL-modu (razvoj/test) |
+| Frontend | **React 18 + TypeScript**, Vite, TanStack Query, react-router |
+| Raspoređivanje | Vlastiti modul čiste Jave (`ferko-scheduling`) |
+| Sigurnost | Spring Security — session form-login + JWT/OIDC chain; rate-limiting |
+| Kvaliteta | JUnit 5, ArchUnit, JaCoCo, Checkstyle, Spotless |
+| Isporuka | Docker, Docker Compose, GitHub Actions (CI), Trivy (sigurnosno skeniranje) |
+
+---
+
+## Razvoj
+
+Lokalni JDK može biti bilo koji; build i testovi izvode se **u kontejneru** (projekt cilja JDK 21).
+
+```bash
+# Brza provjera frontenda (TypeScript + Vite):
+cd frontend && docker run --rm -v "$PWD":/app -w /app node:20.18.0 \
+  bash -lc 'npm ci && npm run build'
+
+# Puni quality gate (Temurin 21):
+docker run --rm -v "$PWD":/workspace -v ferko-m2:/root/.m2 -w /workspace \
+  maven:3.9.9-eclipse-temurin-21 bash -lc './mvnw -B -ntp spotless:apply && ./mvnw -B -ntp verify'
+```
+
+Nove se funkcionalnosti grade kao **vertikalni rezovi** kroz sve slojeve (domena → port → adapter →
+servis → REST → migracija → testovi → frontend). Vodič:
+[`docs/architecture/CONTRIBUTING.md`](docs/architecture/CONTRIBUTING.md).
+
+---
+
+## Kvaliteta i testiranje
+
+Svaki `verify` mora biti zelen prije mergea. Quality gate obuhvaća:
+
+- **Jedinične i integracijske testove** (JUnit 5; preko 100 testnih klasa) — aplikacijski sloj s
+  in-memory fakeovima, infrastruktura s H2 adapter testovima, web sloj s `@SpringBootTest`/MockMvc.
+- **ArchUnit** — granice modula i pravila ovisnosti.
+- **JaCoCo** — prag pokrivenosti 70% linija po modulu.
+- **Checkstyle + Spotless** — stil i formatiranje (Google Java Format).
+- **CI (GitHub Actions)** — build, testovi, container-smoke (provjera da jar poslužuje SPA),
+  multiarch build, Trivy sigurnosno skeniranje, dependency review.
+
+---
+
+## Struktura projekta
 
 ```text
-backend/
-  ferko-domain/              # domain aggregates / value objects
-  ferko-application/         # use cases, ports, view DTOs (hexagonal application layer)
-  ferko-infrastructure/      # JDBC adapters
-  ferko-security/            # security module boundary
-  ferko-scheduling/          # evolutionary scheduling engine (Čupić)
-  ferko-web-api/             # Spring Boot app, REST API, Flyway, serves the SPA
-  ferko-architecture-tests/  # ArchUnit module-boundary rules
-frontend/                    # React + TypeScript SPA (Vite)
-docs/                        # architecture, getting-started, operations, ADRs
-scripts/                     # dev-up / dev-down / dev-reset / smoke
-.github/workflows/           # CI + GHCR release
+ferko/
+├── backend/
+│   ├── ferko-domain/            # čisti domenski modeli (record), bez ovisnosti
+│   ├── ferko-application/       # use-caseovi, portovi, view DTO-i
+│   ├── ferko-infrastructure/    # JDBC / mail / file-storage adapteri
+│   ├── ferko-security/          # sigurnosna granica
+│   ├── ferko-scheduling/        # evolucijski optimizatori + problemi (čista Java)
+│   ├── ferko-web-api/           # Spring Boot app, REST, Flyway, posluživanje SPA
+│   └── ferko-architecture-tests/# ArchUnit pravila granica
+├── frontend/                    # React + TypeScript + Vite SPA
+├── docs/                        # arhitektura, ADR-ovi, API, vodiči
+├── scripts/                     # dev-up / dev-down / dev-reset
+├── docker-compose.yml
+└── README.md
 ```
 
-## 7. Build, test, develop
+---
 
-Full backend quality gate (tests, Spotless, Checkstyle, JaCoCo, ArchUnit, SPA build):
+## Dokumentacija
 
-```bash
-./mvnw -B -ntp verify
-```
+| Dokument | Sadržaj |
+|----------|---------|
+| [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) | Heksagonalna arhitektura, moduli, granice, tokovi |
+| [docs/architecture/DOMAIN_MODEL.md](docs/architecture/DOMAIN_MODEL.md) | Model podataka, agregati, uloge, ER dijagram |
+| [docs/architecture/SCHEDULING_ENGINE.md](docs/architecture/SCHEDULING_ENGINE.md) | Disertacija prof. Čupića → kod: problemi i algoritmi |
+| [docs/architecture/CONTRIBUTING.md](docs/architecture/CONTRIBUTING.md) | Razvojni ritam, vertikalni rez, konvencije |
+| [docs/adr/](docs/adr) | Architecture Decision Records |
+| [docs/api/openapi.yaml](docs/api/openapi.yaml) | OpenAPI specifikacija |
 
-Frontend with hot reload (proxies the API to `localhost:8080`):
+---
 
-```bash
-cd frontend && npm install && npm run dev      # http://localhost:5173
-```
+## Autori i zahvale
 
-## 8. Architecture & data model
+- **Karlo Knežević** — modernizirani prepis (ovaj repozitorij).
+- **prof. dr. sc. Marko Čupić** — autor originalnog FERKA ([ferko.fer.hr/ferko](https://ferko.fer.hr/ferko))
+  i doktorske disertacije na kojoj se temelji mehanizam raspoređivanja. Iskrene zahvale na izvornom
+  radu, dizajnu i dugogodišnjem održavanju produkcijskog sustava.
+- **Fakultet elektrotehnike i računarstva, Sveučilište u Zagrebu** — domena i nastavni kontekst.
 
-- Hexagonal layering enforced by ArchUnit: domain depends on nothing; the web layer never
-  imports domain types directly (it consumes application-layer views).
-- Flyway migrations define the academic schema: users/roles, semesters, courses, staff,
-  students, enrollments, groups, rooms, exams (registrations, rooms, seating), grade components,
-  points, grades, group-exchange requests and audit.
-- On startup `AcademicDataSeeder` ingests packaged FER datasets into the real tables
-  (disabled in `staging`/`prod`).
+---
 
-## 9. Security
+## Licenca
 
-- Browser sessions use Spring Security **form-login** backed by the `app_user` table (BCrypt),
-  with `ROLE_*` authorities and method-level checks on privileged actions.
-- The `staging`/`prod` profiles disable demo seeding and dev tokens, require OIDC/JWK
-  configuration, and harden session cookies.
-
-## 10. CI/CD
-
-- CI (`.github/workflows/maven-phase1.yml`): `verify` (incl. SPA build), OWASP dependency scan,
-  container build + smoke test, Trivy image scan (HIGH/CRITICAL gate), staging auth guardrail,
-  multi-arch build, SBOM/dependency inventory.
-- Release (`.github/workflows/release-image-ghcr.yml`): multi-arch GHCR publish on `v*.*.*` tags.
-
-## 11. License
-
-See `LICENSE` and `NOTICE`.
+Izdano pod **Apache License 2.0** — vidi [`LICENSE`](LICENSE). Naziv „FERKO” i pripadnost FER-u
+koriste se uz poštovanje izvornog autora; ovaj je projekt nezavisna, edukativna re-implementacija.

@@ -13,6 +13,7 @@ import hr.fer.zemris.ferko.application.port.FileStorage;
 import hr.fer.zemris.ferko.application.port.ForumRepository;
 import hr.fer.zemris.ferko.application.port.GradingRepository;
 import hr.fer.zemris.ferko.application.port.GroupExchangeRepository;
+import hr.fer.zemris.ferko.application.port.MailSender;
 import hr.fer.zemris.ferko.application.port.NoticeRepository;
 import hr.fer.zemris.ferko.application.port.PortfolioRepository;
 import hr.fer.zemris.ferko.application.port.RepositoryFileRepository;
@@ -73,6 +74,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcSurveyRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoAuditLogRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.LocalFileStorage;
+import hr.fer.zemris.ferko.infrastructure.adapter.LoggingMailSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -222,14 +224,25 @@ public class ApplicationBeans {
   }
 
   @Bean
+  public MailSender mailSender() {
+    return new LoggingMailSender();
+  }
+
+  @Bean
   public ExamSchedulingService examSchedulingService(
       ExamRepository examRepository,
       RoomRepository roomRepository,
       StudentRepository studentRepository,
       EnrollmentRepository enrollmentRepository,
-      AppUserRepository appUserRepository) {
+      AppUserRepository appUserRepository,
+      MailSender mailSender) {
     return new ExamSchedulingService(
-        examRepository, roomRepository, studentRepository, enrollmentRepository, appUserRepository);
+        examRepository,
+        roomRepository,
+        studentRepository,
+        enrollmentRepository,
+        appUserRepository,
+        mailSender);
   }
 
   @Bean

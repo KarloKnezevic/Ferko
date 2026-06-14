@@ -40,7 +40,12 @@ class ExamSelfRegistrationTest {
     users = new InMemoryAcademicRepositories.Users();
     service =
         new ExamSchedulingService(
-            exams, new InMemoryAcademicRepositories.Rooms(), students, enrollments, users);
+            exams,
+            new InMemoryAcademicRepositories.Rooms(),
+            students,
+            enrollments,
+            users,
+            (recipients, subject, body) -> {});
 
     AppUser user =
         users.save(

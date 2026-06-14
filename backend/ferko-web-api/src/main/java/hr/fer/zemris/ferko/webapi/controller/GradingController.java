@@ -61,6 +61,7 @@ public class GradingController {
   }
 
   @GetMapping("/points-overview")
+  @PreAuthorize(CAN_MANAGE)
   public List<PointsOverviewRow> pointsOverview(@PathVariable long courseId) {
     return grading.pointsOverview(courseId);
   }
@@ -75,6 +76,7 @@ public class GradingController {
   }
 
   @GetMapping("/grades")
+  @PreAuthorize(CAN_MANAGE)
   public List<GradeView> grades(@PathVariable long courseId) {
     return grading.listGrades(courseId);
   }

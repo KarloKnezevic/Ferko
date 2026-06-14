@@ -90,6 +90,24 @@ Metodne dozvole (`@PreAuthorize`) štite privilegirane radnje. Endpointi koji iz
 (npr. popis upisanih s JMBAG-om) eksplicitno zahtijevaju nastavničke uloge. Prijava je zaštićena
 rate-limitingom (produkcijski profil).
 
+### Model ovlasti (uloge + razina retka)
+
+Autorizacija ima dvije razine:
+
+1. **Grube provjere po ulozi** (`@PreAuthorize` na metodama). Pregledne, javno-osjetljive matrice:
+   - **Roster studenata** (`/students`, `/students/{jmbag}`) → sve nastavničke uloge + `STUSLU` +
+     `ADMIN`. Student ne smije pretraživati roster.
+   - **Preglednik bodova / ocjene** (`/points-overview`, `/grades`) → uloge koje ocjenjuju
+     (`ADMIN, NOSITELJ, NASTAVNIK, ASISTENT_ORGANIZATOR, ASISTENT`).
+   - **Organizacija ispita** (kreiranje, rezervacija dvorana, raspored sjedenja, dežurstva te
+     read-only prikaz sjedenja/dežurnih) → organizatorska razina (`ADMIN, NOSITELJ,
+     ASISTENT_ORGANIZATOR`) — uža od ocjenjivanja jer otkriva raspored studenata.
+   - `ADMIN` vidi i mijenja sve; student ima najužu vidljivost (vlastiti podaci preko `/my/*`).
+2. **Provjera na razini retka** (`AccessControlService` u aplikacijskom sloju, pozvana iz
+   `CourseAccessGuard` u web sloju). Za sadržaj vezan uz kolegij (npr. repozitorij datoteka) pristup
+   imaju samo `ADMIN`/`STUSLU`, nastavnici tog kolegija i upisani studenti. Tako student vidi samo
+   materijale kolegija koje pohađa, a nastavnik samo onih koje predaje.
+
 ## Posluživanje SPA
 
 `frontend-maven-plugin` gradi React SPA i `maven-resources-plugin` je kopira u jar

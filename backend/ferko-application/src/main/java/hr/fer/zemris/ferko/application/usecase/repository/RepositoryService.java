@@ -45,6 +45,11 @@ public class RepositoryService {
     return fileRepository.findByCourse(courseId).stream().map(RepositoryService::toView).toList();
   }
 
+  /** Returns the course a file belongs to, for row-level access checks. */
+  public Optional<Long> courseIdForFile(long fileId) {
+    return fileRepository.findById(fileId).map(RepositoryFile::courseId);
+  }
+
   public Optional<RepositoryViews.DownloadedFile> download(long fileId) {
     return fileRepository
         .findById(fileId)

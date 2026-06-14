@@ -31,6 +31,7 @@ export function GradingPage() {
   const overview = useQuery({
     queryKey: ['points-overview', courseId],
     queryFn: () => api.pointsOverview(courseId),
+    enabled: canManage,
   });
 
   const invalidate = () => {
@@ -103,6 +104,19 @@ export function GradingPage() {
     [overview.data],
   );
   const comps = components.data ?? [];
+
+  if (!canManage) {
+    return (
+      <div>
+        <div className="breadcrumb">
+          <Link to="/kolegiji">{t('nav.courses')}</Link> ›{' '}
+          <Link to={`/kolegiji/${courseId}`}>Kolegij</Link> › {t('grading.title')}
+        </div>
+        <h1>{t('grading.title')}</h1>
+        <div className="banner err">{t('common.noAccess')}</div>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -51,12 +51,12 @@ export function ExamSchedulingPage() {
   const examRooms = useQuery({
     queryKey: ['exam-rooms', selectedExam],
     queryFn: () => api.seating(selectedExam as number),
-    enabled: selectedExam != null,
+    enabled: selectedExam != null && canManage,
   });
   const assistants = useQuery({
     queryKey: ['exam-assistants', selectedExam],
     queryFn: () => api.examAssistants(selectedExam as number),
-    enabled: selectedExam != null,
+    enabled: selectedExam != null && canManage,
   });
   const invalidateAssistants = () =>
     queryClient.invalidateQueries({ queryKey: ['exam-assistants', selectedExam] });
@@ -115,6 +115,19 @@ export function ExamSchedulingPage() {
       invalidate();
     },
   });
+
+  if (!canManage) {
+    return (
+      <div>
+        <div className="breadcrumb">
+          <Link to="/kolegiji">Kolegiji</Link> ›{' '}
+          <Link to={`/kolegiji/${courseId}`}>Kolegij</Link> › Administracija provjera znanja
+        </div>
+        <h1>Administracija provjera znanja</h1>
+        <div className="banner err">Nemate ovlasti za pristup ovoj stranici.</div>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -33,6 +33,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/academic")
 public class ExamController {
 
+  // Exam organisation (creating exams, reserving rooms, seating, invigilator assignment and the
+  // read-only seating/invigilator views that expose student placement) is an organiser-level duty,
+  // so it is narrower than grading: only the course holder and exam organisers, plus ADMIN. Plain
+  // NASTAVNIK/ASISTENT enter points (see GradingController) but do not organise exams.
   private static final String CAN_MANAGE =
       "hasAnyRole('ADMIN', 'NOSITELJ', 'ASISTENT_ORGANIZATOR')";
 
@@ -102,6 +106,7 @@ public class ExamController {
   }
 
   @GetMapping("/exams/{examId}/seating")
+  @PreAuthorize(CAN_MANAGE)
   public List<RoomSeatingView> seating(@PathVariable long examId) {
     return scheduling.roomSeating(examId);
   }
@@ -114,6 +119,7 @@ public class ExamController {
   }
 
   @GetMapping("/exams/{examId}/assistants")
+  @PreAuthorize(CAN_MANAGE)
   public List<ExamAssistantView> assistants(@PathVariable long examId) {
     return assistants.listForExam(examId);
   }

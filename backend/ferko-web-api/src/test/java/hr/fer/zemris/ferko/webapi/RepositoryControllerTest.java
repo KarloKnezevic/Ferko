@@ -38,7 +38,7 @@ class RepositoryControllerTest {
   }
 
   @Test
-  void staffUploadsAndAnyoneDownloads() throws Exception {
+  void teachingStaffUploadsAndDownloads() throws Exception {
     MockHttpSession staff = login("lecturer.marko");
     byte[] bytes = "FERKO skripta".getBytes(StandardCharsets.UTF_8);
     MockMultipartFile file = new MockMultipartFile("file", "skripta.txt", "text/plain", bytes);
@@ -50,16 +50,37 @@ class RepositoryControllerTest {
             .andReturn();
     long id = mapper.readTree(uploaded.getResponse().getContentAsString()).get("id").asLong();
 
+    // Teaching staff (course holder) may list and download the course's files.
+    mockMvc
+        .perform(get("/api/v1/academic/courses/5/files").session(staff))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].filename").value("skripta.txt"));
+    mockMvc
+        .perform(get("/api/v1/academic/files/" + id + "/download").session(staff))
+        .andExpect(status().isOk())
+        .andExpect(content().bytes(bytes));
+  }
+
+  @Test
+  void studentNotEnrolledCannotDownloadCourseFile() throws Exception {
+    MockHttpSession staff = login("lecturer.marko");
+    MockMultipartFile file =
+        new MockMultipartFile("file", "tajna.txt", "text/plain", new byte[] {9, 8, 7});
+    MvcResult uploaded =
+        mockMvc
+            .perform(multipart("/api/v1/academic/courses/5/files").file(file).session(staff))
+            .andExpect(status().isCreated())
+            .andReturn();
+    long id = mapper.readTree(uploaded.getResponse().getContentAsString()).get("id").asLong();
+
+    // student.ana is enrolled in course 1 only, so course 5 material is off-limits.
     MockHttpSession student = login("student.ana");
     mockMvc
         .perform(get("/api/v1/academic/courses/5/files").session(student))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].filename").value("skripta.txt"));
-
+        .andExpect(status().isForbidden());
     mockMvc
         .perform(get("/api/v1/academic/files/" + id + "/download").session(student))
-        .andExpect(status().isOk())
-        .andExpect(content().bytes(bytes));
+        .andExpect(status().isForbidden());
   }
 
   @Test

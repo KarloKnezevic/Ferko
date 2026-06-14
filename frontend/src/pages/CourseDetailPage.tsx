@@ -30,6 +30,10 @@ export function CourseDetailPage() {
     queryKey: ['consultations', courseId],
     queryFn: () => api.courseConsultations(courseId),
   });
+  const notices = useQuery({
+    queryKey: ['course-notices', courseId],
+    queryFn: () => api.courseNotices(courseId),
+  });
 
   const [staffUser, setStaffUser] = useState('');
   const [staffRole, setStaffRole] = useState('ASISTENT');
@@ -56,6 +60,25 @@ export function CourseDetailPage() {
       setLitTitle('');
       setLitAuthor('');
       queryClient.invalidateQueries({ queryKey: ['literature', courseId] });
+    },
+  });
+
+  const [noticeTitle, setNoticeTitle] = useState('');
+  const [noticeBody, setNoticeBody] = useState('');
+  const [noticePinned, setNoticePinned] = useState(false);
+  const publishNotice = useMutation({
+    mutationFn: () =>
+      api.publishNotice({
+        courseId,
+        title: noticeTitle,
+        body: noticeBody,
+        pinned: noticePinned,
+      }),
+    onSuccess: () => {
+      setNoticeTitle('');
+      setNoticeBody('');
+      setNoticePinned(false);
+      queryClient.invalidateQueries({ queryKey: ['course-notices', courseId] });
     },
   });
 
@@ -142,6 +165,65 @@ export function CourseDetailPage() {
             Burza grupa
           </Link>
         </div>
+      </div>
+
+      <div className="card">
+        <h2>Obavijesti</h2>
+        {(notices.data?.length ?? 0) === 0 ? (
+          <p className="muted">Nema obavijesti za ovaj kolegij.</p>
+        ) : (
+          <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+            {notices.data?.map((n) => (
+              <li
+                key={n.id}
+                style={{ padding: '10px 0', borderBottom: '1px solid var(--border)' }}
+              >
+                <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
+                  <strong>{n.title}</strong>
+                  {n.pinned && <span className="pill warn">istaknuto</span>}
+                  <span className="muted" style={{ marginLeft: 'auto', fontSize: 13 }}>
+                    {new Date(n.createdAt).toLocaleDateString('hr-HR')}
+                  </span>
+                </div>
+                <p style={{ whiteSpace: 'pre-wrap', margin: '6px 0 0' }}>{n.body}</p>
+                {n.authorName && <span className="muted" style={{ fontSize: 13 }}>{n.authorName}</span>}
+              </li>
+            ))}
+          </ul>
+        )}
+        {canManageContent && (
+          <div style={{ marginTop: 14 }}>
+            <label>Naslov</label>
+            <input
+              value={noticeTitle}
+              onChange={(e) => setNoticeTitle(e.target.value)}
+              placeholder="Promjena termina predavanja"
+            />
+            <label>Sadržaj</label>
+            <textarea
+              rows={3}
+              value={noticeBody}
+              onChange={(e) => setNoticeBody(e.target.value)}
+              style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid var(--border)' }}
+            />
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+              <input
+                type="checkbox"
+                checked={noticePinned}
+                onChange={(e) => setNoticePinned(e.target.checked)}
+                style={{ width: 'auto' }}
+              />
+              Istakni obavijest
+            </label>
+            <button
+              style={{ marginTop: 10 }}
+              disabled={!noticeTitle || !noticeBody || publishNotice.isPending}
+              onClick={() => publishNotice.mutate()}
+            >
+              Objavi obavijest
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="card">

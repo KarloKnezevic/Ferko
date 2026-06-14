@@ -208,6 +208,16 @@ export interface CourseComponent {
   visible: boolean;
 }
 
+export interface CourseEnrollment {
+  id: number;
+  studentId: number;
+  studentJmbag: string;
+  studentFullName: string;
+  courseId: number;
+  status: string;
+  groupCodes: string[];
+}
+
 export interface CourseLiterature {
   id: number;
   courseId: number;

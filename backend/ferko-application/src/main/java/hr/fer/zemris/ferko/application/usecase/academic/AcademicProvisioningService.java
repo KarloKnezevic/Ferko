@@ -244,4 +244,27 @@ public class AcademicProvisioningService {
       enrollmentRepository.assignGroup(new GroupMembership(0L, enrollmentId, groupId));
     }
   }
+
+  /**
+   * Assigns the student with {@code jmbag} (enrolled in {@code courseId}) to a group of that
+   * course. Returns {@code false} when the student, their enrollment, or the group (within the
+   * course) does not exist; idempotent otherwise.
+   */
+  public boolean assignStudentToGroup(long courseId, String jmbag, long groupId) {
+    boolean groupBelongsToCourse =
+        courseRepository.findGroupsByCourse(courseId).stream()
+            .anyMatch(group -> group.id() == groupId);
+    if (!groupBelongsToCourse) {
+      return false;
+    }
+    return studentRepository
+        .findByJmbag(jmbag)
+        .flatMap(student -> enrollmentRepository.findByStudentAndCourse(student.id(), courseId))
+        .map(
+            enrollment -> {
+              assignGroup(enrollment.id(), groupId);
+              return true;
+            })
+        .orElse(false);
+  }
 }

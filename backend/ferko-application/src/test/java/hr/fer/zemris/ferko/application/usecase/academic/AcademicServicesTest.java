@@ -169,6 +169,30 @@ class AcademicServicesTest {
   }
 
   @Test
+  void assignsStudentToGroupByJmbagAndExposesGroupCodes() {
+    long courseId = provisioning.provisionCourse("PROG", "Programiranje", "2024Z", 6, "o", "l");
+    long groupId = provisioning.provisionGroup(courseId, "L01", "LAB", "Pon", 16);
+    long otherCourse = provisioning.provisionCourse("MAT", "Matematika", "2024Z", 5, "o", "l");
+    long studentId =
+        provisioning.provisionStudent(
+            "0036509999", "h", "Ana A", "ana@fer.hr", "0036509999", "R", 1, LocalDateTime.now());
+    provisioning.enroll(studentId, courseId, LocalDateTime.now());
+
+    // Unknown student / group outside the course are rejected.
+    assertTrue(!provisioning.assignStudentToGroup(courseId, "0000000000", groupId));
+    assertTrue(!provisioning.assignStudentToGroup(courseId, "0036509999", 99999L));
+    // Student not enrolled in the other course → rejected.
+    assertTrue(!provisioning.assignStudentToGroup(otherCourse, "0036509999", groupId));
+
+    assertTrue(provisioning.assignStudentToGroup(courseId, "0036509999", groupId));
+    // Idempotent.
+    assertTrue(provisioning.assignStudentToGroup(courseId, "0036509999", groupId));
+
+    EnrollmentView view = query.listEnrollments(courseId).get(0);
+    assertEquals(List.of("L01"), view.groupCodes());
+  }
+
+  @Test
   void provisioningIsIdempotent() {
     long firstCourse =
         provisioning.provisionCourse("UURA", "Uvod u računarstvo", "2024Z", 6, "o", "l");

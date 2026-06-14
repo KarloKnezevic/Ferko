@@ -129,4 +129,45 @@ class AdminConsoleControllerTest {
                 .content("{\"username\":\"assistant.iva\",\"role\":\"ASISTENT\"}"))
         .andExpect(status().isForbidden());
   }
+
+  @Test
+  void assigningUnknownStudentToGroupReturnsNotFound() throws Exception {
+    MockHttpSession session = login("admin.ferko");
+    mockMvc
+        .perform(
+            post("/api/v1/academic/courses/1/group-assignments")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"jmbag\":\"0000000000\",\"groupId\":1}"))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void studentCannotAssignGroups() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(
+            post("/api/v1/academic/courses/1/group-assignments")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"jmbag\":\"0036000001\",\"groupId\":1}"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void studentCannotSeeCourseRoster() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(get("/api/v1/academic/courses/1/enrollments").session(session))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void staffSeesCourseRoster() throws Exception {
+    MockHttpSession session = login("lecturer.marko");
+    mockMvc
+        .perform(get("/api/v1/academic/courses/1/enrollments").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isArray());
+  }
 }

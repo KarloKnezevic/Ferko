@@ -11,6 +11,12 @@ export function CourseDetailPage() {
   const { hasRole } = useAuth();
   const canManageStaff = hasRole('ADMIN', 'NOSITELJ');
   const canManageContent = hasRole('ADMIN', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR');
+  const canManageGroups = hasRole('ADMIN', 'NOSITELJ', 'STUSLU');
+  const enrollments = useQuery({
+    queryKey: ['enrollments', courseId],
+    queryFn: () => api.courseEnrollments(courseId),
+    enabled: canManageGroups,
+  });
   const course = useQuery({ queryKey: ['course', courseId], queryFn: () => api.course(courseId) });
   const components = useQuery({
     queryKey: ['components', courseId],
@@ -277,6 +283,93 @@ export function CourseDetailPage() {
           </tbody>
         </table>
       </div>
+
+      {canManageGroups && (
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <h2 style={{ padding: '16px 16px 0' }}>Upisani studenti i razmještaj u grupe</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>JMBAG</th>
+                <th>Student</th>
+                <th>Grupe</th>
+                <th>Razmjesti</th>
+              </tr>
+            </thead>
+            <tbody>
+              {enrollments.data?.map((e) => (
+                <RosterRow
+                  key={e.id}
+                  courseId={courseId}
+                  jmbag={e.studentJmbag}
+                  fullName={e.studentFullName}
+                  groupCodes={e.groupCodes}
+                  groups={c.groups}
+                  onAssigned={() =>
+                    queryClient.invalidateQueries({ queryKey: ['enrollments', courseId] })
+                  }
+                />
+              ))}
+              {(enrollments.data?.length ?? 0) === 0 && (
+                <tr>
+                  <td colSpan={4} className="muted">
+                    Nema upisanih studenata.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
+  );
+}
+
+function RosterRow({
+  courseId,
+  jmbag,
+  fullName,
+  groupCodes,
+  groups,
+  onAssigned,
+}: {
+  courseId: number;
+  jmbag: string;
+  fullName: string;
+  groupCodes: string[];
+  groups: { id: number; groupCode: string; type: string }[];
+  onAssigned: () => void;
+}) {
+  const [groupId, setGroupId] = useState<number | ''>('');
+  const assign = useMutation({
+    mutationFn: () => api.assignGroup(courseId, { jmbag, groupId: groupId as number }),
+    onSuccess: () => {
+      setGroupId('');
+      onAssigned();
+    },
+  });
+  return (
+    <tr>
+      <td>{jmbag}</td>
+      <td>{fullName}</td>
+      <td>{groupCodes.length > 0 ? groupCodes.join(', ') : <span className="muted">—</span>}</td>
+      <td className="row-actions">
+        <select value={groupId} onChange={(e) => setGroupId(Number(e.target.value))}>
+          <option value="">— grupa —</option>
+          {groups.map((g) => (
+            <option key={g.id} value={g.id}>
+              {g.groupCode} ({g.type === 'LAB' ? 'Lab' : 'Pred'})
+            </option>
+          ))}
+        </select>
+        <button
+          className="ghost"
+          disabled={groupId === '' || assign.isPending}
+          onClick={() => assign.mutate()}
+        >
+          Dodijeli
+        </button>
+      </td>
+    </tr>
   );
 }

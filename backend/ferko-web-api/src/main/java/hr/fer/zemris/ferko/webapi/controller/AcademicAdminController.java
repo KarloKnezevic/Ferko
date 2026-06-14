@@ -69,6 +69,18 @@ public class AcademicAdminController {
     provisioning.enroll(studentId, courseId, LocalDateTime.now());
   }
 
+  @PostMapping("/courses/{courseId}/group-assignments")
+  @PreAuthorize("hasAnyRole('ADMIN', 'STUSLU', 'NOSITELJ')")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void assignGroup(@PathVariable long courseId, @RequestBody AssignGroupRequest request) {
+    boolean assigned =
+        provisioning.assignStudentToGroup(courseId, request.jmbag(), request.groupId());
+    if (!assigned) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, "Student, upis ili grupa ne postoje.");
+    }
+  }
+
   @GetMapping("/users")
   @PreAuthorize("hasRole('ADMIN')")
   public List<AppUserView> listUsers() {
@@ -130,4 +142,7 @@ public class AcademicAdminController {
 
   /** Request to enroll a student (by JMBAG) into a course. */
   public record EnrollRequest(@NotBlank String jmbag) {}
+
+  /** Request to assign a student (by JMBAG) to a group of the course. */
+  public record AssignGroupRequest(@NotBlank String jmbag, long groupId) {}
 }

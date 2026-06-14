@@ -13,8 +13,10 @@ import hr.fer.zemris.ferko.domain.model.Role;
 import hr.fer.zemris.ferko.domain.model.Room;
 import hr.fer.zemris.ferko.domain.model.Semester;
 import hr.fer.zemris.ferko.domain.model.Student;
+import hr.fer.zemris.ferko.domain.model.StudentGroup;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -149,8 +151,11 @@ public class AcademicQueryService {
 
   public List<EnrollmentView> listEnrollments(long courseId) {
     Map<Long, String> names = userNames();
+    Map<Long, String> groupCodeById =
+        courseRepository.findGroupsByCourse(courseId).stream()
+            .collect(Collectors.toMap(StudentGroup::id, StudentGroup::groupCode, (a, b) -> a));
     return enrollmentRepository.findByCourse(courseId).stream()
-        .map(enrollment -> toEnrollmentView(enrollment, names))
+        .map(enrollment -> toEnrollmentView(enrollment, names, groupCodeById))
         .toList();
   }
 
@@ -159,7 +164,8 @@ public class AcademicQueryService {
         .collect(Collectors.toMap(AppUser::id, AppUser::fullName, (a, b) -> a));
   }
 
-  private EnrollmentView toEnrollmentView(Enrollment enrollment, Map<Long, String> names) {
+  private EnrollmentView toEnrollmentView(
+      Enrollment enrollment, Map<Long, String> names, Map<Long, String> groupCodeById) {
     String jmbag = "";
     String fullName = "";
     Optional<Student> student = studentRepository.findById(enrollment.studentId());
@@ -167,13 +173,19 @@ public class AcademicQueryService {
       jmbag = student.get().jmbag();
       fullName = names.getOrDefault(student.get().userId(), "");
     }
+    List<String> groupCodes =
+        enrollmentRepository.findMembershipsByEnrollment(enrollment.id()).stream()
+            .map(membership -> groupCodeById.get(membership.groupId()))
+            .filter(Objects::nonNull)
+            .toList();
     return new EnrollmentView(
         enrollment.id(),
         enrollment.studentId(),
         jmbag,
         fullName,
         enrollment.courseId(),
-        enrollment.status().name());
+        enrollment.status().name(),
+        groupCodes);
   }
 
   private static StudentView toStudentView(Student student, Map<Long, String> names) {

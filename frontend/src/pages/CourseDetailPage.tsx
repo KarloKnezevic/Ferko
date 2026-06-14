@@ -26,6 +26,10 @@ export function CourseDetailPage() {
     queryKey: ['literature', courseId],
     queryFn: () => api.courseLiterature(courseId),
   });
+  const consultations = useQuery({
+    queryKey: ['consultations', courseId],
+    queryFn: () => api.courseConsultations(courseId),
+  });
 
   const [staffUser, setStaffUser] = useState('');
   const [staffRole, setStaffRole] = useState('ASISTENT');
@@ -53,6 +57,30 @@ export function CourseDetailPage() {
       setLitAuthor('');
       queryClient.invalidateQueries({ queryKey: ['literature', courseId] });
     },
+  });
+
+  const [consDay, setConsDay] = useState('Ponedjeljak');
+  const [consStart, setConsStart] = useState('10:00');
+  const [consEnd, setConsEnd] = useState('11:00');
+  const [consLocation, setConsLocation] = useState('');
+  const invalidateConsultations = () =>
+    queryClient.invalidateQueries({ queryKey: ['consultations', courseId] });
+  const addConsultation = useMutation({
+    mutationFn: () =>
+      api.addConsultation(courseId, {
+        dayOfWeek: consDay,
+        startsAt: consStart,
+        endsAt: consEnd,
+        location: consLocation,
+      }),
+    onSuccess: () => {
+      setConsLocation('');
+      invalidateConsultations();
+    },
+  });
+  const removeConsultation = useMutation({
+    mutationFn: (consultationId: number) => api.removeConsultation(courseId, consultationId),
+    onSuccess: invalidateConsultations,
   });
 
   const [compTitle, setCompTitle] = useState('');
@@ -166,6 +194,90 @@ export function CourseDetailPage() {
                 Dodaj
               </button>
             </div>
+          </div>
+        )}
+      </div>
+
+      <div className="card">
+        <h2>Konzultacije</h2>
+        {(consultations.data?.length ?? 0) === 0 ? (
+          <p className="muted">Termini konzultacija još nisu objavljeni.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Dan</th>
+                <th>Vrijeme</th>
+                <th>Mjesto</th>
+                <th>Nastavnik</th>
+                {canManageContent && <th></th>}
+              </tr>
+            </thead>
+            <tbody>
+              {consultations.data?.map((cons) => (
+                <tr key={cons.id}>
+                  <td>{cons.dayOfWeek}</td>
+                  <td>
+                    {cons.startsAt}–{cons.endsAt}
+                  </td>
+                  <td>{cons.location || '—'}</td>
+                  <td>{cons.staffName}</td>
+                  {canManageContent && (
+                    <td className="row-actions">
+                      <a
+                        href="#ukloni"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          removeConsultation.mutate(cons.id);
+                        }}
+                      >
+                        Ukloni
+                      </a>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {canManageContent && (
+          <div className="form-row" style={{ marginTop: 14 }}>
+            <div>
+              <label>Dan</label>
+              <select value={consDay} onChange={(e) => setConsDay(e.target.value)}>
+                {['Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak'].map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>Početak</label>
+              <input type="time" value={consStart} onChange={(e) => setConsStart(e.target.value)} />
+            </div>
+            <div>
+              <label>Kraj</label>
+              <input type="time" value={consEnd} onChange={(e) => setConsEnd(e.target.value)} />
+            </div>
+            <div>
+              <label>Mjesto</label>
+              <input
+                value={consLocation}
+                onChange={(e) => setConsLocation(e.target.value)}
+                placeholder="C-04"
+              />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+              <button disabled={addConsultation.isPending} onClick={() => addConsultation.mutate()}>
+                Dodaj
+              </button>
+            </div>
+          </div>
+        )}
+        {addConsultation.isError && (
+          <div className="banner err" style={{ marginTop: 12 }}>
+            Provjerite unos (vrijeme u obliku HH:mm, kraj nakon početka).
           </div>
         )}
       </div>

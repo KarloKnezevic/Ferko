@@ -2,6 +2,7 @@ package hr.fer.zemris.ferko.webapi.config;
 
 import hr.fer.zemris.ferko.application.port.AppUserRepository;
 import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
+import hr.fer.zemris.ferko.application.port.ConsultationRepository;
 import hr.fer.zemris.ferko.application.port.CourseComponentRepository;
 import hr.fer.zemris.ferko.application.port.CourseLiteratureRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
@@ -27,6 +28,7 @@ import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.calendar.CalendarService;
 import hr.fer.zemris.ferko.application.usecase.component.CourseComponentService;
+import hr.fer.zemris.ferko.application.usecase.consultation.ConsultationService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamAssistantService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.exchange.GroupExchangeService;
@@ -46,6 +48,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryAuditAdapter;
 import hr.fer.zemris.ferko.infrastructure.adapter.InMemoryToDoTaskRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcAppUserRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcClassScheduleRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcConsultationRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseComponentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseLiteratureRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcCourseRepository;
@@ -308,6 +311,16 @@ public class ApplicationBeans {
   public CourseLiteratureService courseLiteratureService(
       CourseLiteratureRepository courseLiteratureRepository) {
     return new CourseLiteratureService(courseLiteratureRepository);
+  }
+
+  @Bean
+  public ConsultationRepository consultationRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcConsultationRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public ConsultationService consultationService(ConsultationRepository consultationRepository) {
+    return new ConsultationService(consultationRepository);
   }
 
   @Bean

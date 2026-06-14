@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n';
-import type { GeneratedTimetable, TimetableSlot } from '../api/types';
+import type { GeneratedExamTimetable, GeneratedTimetable, TimetableSlot } from '../api/types';
 
 const ALGORITHMS = [
   'GENETIC',
@@ -57,6 +57,13 @@ export function TimetablePage() {
   const generate = useMutation({
     mutationFn: () => api.generateTimetable({ studyYear, periods, algorithm }),
     onSuccess: (data) => setGenerated(data),
+  });
+  const [examSlots, setExamSlots] = useState(10);
+  const [examGenerated, setExamGenerated] = useState<GeneratedExamTimetable | null>(null);
+  const generateExam = useMutation({
+    mutationFn: () =>
+      api.generateExamTimetable({ studyYear, slots: examSlots, algorithm, referenceTerm: 'ZI' }),
+    onSuccess: (data) => setExamGenerated(data),
   });
 
   const timetable = useQuery({ queryKey: ['timetable'], queryFn: api.timetable });
@@ -217,6 +224,107 @@ export function TimetablePage() {
           {generate.isError && (
             <div className="banner err" style={{ marginTop: 12 }}>
               {(generate.error as Error).message}
+            </div>
+          )}
+        </div>
+      )}
+
+      {isAdmin && (
+        <div className="card">
+          <h2>{t('examtt.generate')}</h2>
+          <p className="muted">{t('examtt.generateNote')}</p>
+          <div className="form-row">
+            <div>
+              <label>{t('timetable.studyYear')}</label>
+              <select value={studyYear} onChange={(e) => setStudyYear(Number(e.target.value))}>
+                {[1, 2, 3, 4, 5].map((y) => (
+                  <option key={y} value={y}>
+                    {y}.
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>{t('examtt.slots')}</label>
+              <input
+                type="number"
+                min={1}
+                value={examSlots}
+                onChange={(e) => setExamSlots(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label>{t('timetable.algorithm')}</label>
+              <select value={algorithm} onChange={(e) => setAlgorithm(e.target.value)}>
+                {ALGORITHMS.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <button
+            style={{ marginTop: 12 }}
+            disabled={generateExam.isPending}
+            onClick={() => generateExam.mutate()}
+          >
+            {generateExam.isPending ? t('timetable.generating') : t('timetable.runGenerate')}
+          </button>
+          {examGenerated && (
+            <div style={{ marginTop: 16 }}>
+              <div className="card-grid">
+                <div className="stat">
+                  <div className="value">{examGenerated.exams}</div>
+                  <div className="label">{t('examtt.exams')}</div>
+                </div>
+                <div className="stat">
+                  <div className="value">
+                    {examGenerated.baselineConflicts} → {examGenerated.resultConflicts}
+                  </div>
+                  <div className="label">{t('timetable.conflicts')}</div>
+                </div>
+                <div className="stat">
+                  <div className="value">
+                    {examGenerated.legacyConflicts < 0 ? '—' : examGenerated.legacyConflicts}
+                  </div>
+                  <div className="label">{t('examtt.legacy')}</div>
+                </div>
+                <div className="stat">
+                  <div className="value">
+                    {examGenerated.feasible ? (
+                      <span className="pill ok">{t('timetable.feasible')}</span>
+                    ) : (
+                      <span className="pill warn">{t('timetable.infeasible')}</span>
+                    )}
+                  </div>
+                  <div className="label">{examGenerated.algorithm}</div>
+                </div>
+              </div>
+              <Sparkline values={examGenerated.convergence} />
+              <table style={{ marginTop: 12 }}>
+                <thead>
+                  <tr>
+                    <th>{t('timetable.course')}</th>
+                    <th>{t('examtt.examDate')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {examGenerated.assignments.slice(0, 50).map((a) => (
+                    <tr key={a.courseId}>
+                      <td>
+                        <strong>{a.courseCode}</strong> {a.courseName}
+                      </td>
+                      <td>{a.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {generateExam.isError && (
+            <div className="banner err" style={{ marginTop: 12 }}>
+              {(generateExam.error as Error).message}
             </div>
           )}
         </div>

@@ -5,6 +5,7 @@ import type {
   CalendarView,
   CourseComponent,
   CourseDetail,
+  CourseEnrollment,
   CourseLiterature,
   CourseSummary,
   CurrentUser,
@@ -153,6 +154,13 @@ export const api = {
     body: { title: string; content: string; ordinal: number; visible: boolean },
   ) =>
     request<{ id: number }>(`/api/v1/academic/courses/${courseId}/components`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  courseEnrollments: (courseId: number) =>
+    request<CourseEnrollment[]>(`/api/v1/academic/courses/${courseId}/enrollments`),
+  assignGroup: (courseId: number, body: { jmbag: string; groupId: number }) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/group-assignments`, {
       method: 'POST',
       body: JSON.stringify(body),
     }),

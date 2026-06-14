@@ -94,7 +94,9 @@ ferko:
       issuer-uri: ${FERKO_OIDC_ISSUER_URI:}
       jwk-set-uri: ${FERKO_OIDC_JWK_SET_URI:}
       hmac-secret: ${FERKO_JWT_HMAC_SECRET:}
-      allow-hmac-decoder: false
+      # OIDC-first in production. Self-hosted deployments without an IdP may opt into the
+      # HMAC decoder by setting FERKO_JWT_ALLOW_HMAC_DECODER=true together with a strong secret.
+      allow-hmac-decoder: ${FERKO_JWT_ALLOW_HMAC_DECODER:false}
     dev-token:
       enabled: false
     login-rate-limit:

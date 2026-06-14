@@ -1,0 +1,71 @@
+# Production deployment for FERKO.
+#
+#   docker compose -f docker-compose.prod.yml --env-file .env up -d --build
+#
+# Hardened relative to the dev compose (docker-compose.yml):
+#   - "prod" Spring profile (no seeding, no dev-token, rate-limiting on, HMAC off by default)
+#   - all secrets/config come from the environment (.env) with NO insecure defaults
+#   - PostgreSQL is NOT published to the host (reachable only on the internal network)
+#   - app healthcheck gates readiness; both services restart unless stopped
+#
+# See docs/operations/PRODUCTION_DEPLOYMENT.md and .env.example.
+services:
+  ferko-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${FERKO_IMAGE:-ferko-web-api:prod}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      FERKO_DB_URL: jdbc:postgresql://postgres:5432/${FERKO_DB_NAME:?set FERKO_DB_NAME}
+      FERKO_DB_USERNAME: ${FERKO_DB_USERNAME:?set FERKO_DB_USERNAME}
+      FERKO_DB_PASSWORD: ${FERKO_DB_PASSWORD:?set FERKO_DB_PASSWORD}
+      # Authentication: either configure OIDC (preferred) ...
+      FERKO_OIDC_ISSUER_URI: ${FERKO_OIDC_ISSUER_URI:-}
+      FERKO_OIDC_JWK_SET_URI: ${FERKO_OIDC_JWK_SET_URI:-}
+      # ... or opt into the HMAC decoder for self-hosting without an IdP.
+      FERKO_JWT_HMAC_SECRET: ${FERKO_JWT_HMAC_SECRET:-}
+      FERKO_JWT_ALLOW_HMAC_DECODER: ${FERKO_JWT_ALLOW_HMAC_DECODER:-false}
+      FERKO_LOGIN_RATE_LIMIT_ENABLED: ${FERKO_LOGIN_RATE_LIMIT_ENABLED:-true}
+      # Optional e-mail (SMTP) — leave disabled to use the logging sender.
+      FERKO_MAIL_ENABLED: ${FERKO_MAIL_ENABLED:-false}
+      FERKO_MAIL_HOST: ${FERKO_MAIL_HOST:-}
+      FERKO_MAIL_PORT: ${FERKO_MAIL_PORT:-587}
+      FERKO_MAIL_USERNAME: ${FERKO_MAIL_USERNAME:-}
+      FERKO_MAIL_PASSWORD: ${FERKO_MAIL_PASSWORD:-}
+      FERKO_MAIL_FROM: ${FERKO_MAIL_FROM:-ferko@fer.hr}
+      JAVA_OPTS: ${FERKO_JAVA_OPTS:--XX:MaxRAMPercentage=75.0 -XX:+UseStringDeduplication}
+    ports:
+      - "${FERKO_HTTP_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${FERKO_DB_NAME:?set FERKO_DB_NAME}
+      POSTGRES_USER: ${FERKO_DB_USERNAME:?set FERKO_DB_USERNAME}
+      POSTGRES_PASSWORD: ${FERKO_DB_PASSWORD:?set FERKO_DB_PASSWORD}
+    # Not published to the host: reachable only by ferko-app on the internal network.
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${FERKO_DB_USERNAME} -d ${FERKO_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - ferko-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  ferko-postgres-data:

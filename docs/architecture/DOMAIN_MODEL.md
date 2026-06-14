@@ -148,7 +148,8 @@ izvršavanja proizvoljnog koda.
 
 Uz jezgru, shema pokriva: `OBAVIJEST`, `ANKETA` (+ pitanja/odgovori), `FORUM_POST`,
 `KOMPONENTA_KOLEGIJA`, `LITERATURA_KOLEGIJA`, `KONZULTACIJE`, `REPOZITORIJ_DATOTEKA`,
-`GROUP_EXCHANGE_REQUEST` (burza grupa), `CLASS_SCHEDULE` (satnica), `EPORTFOLIO_UNOS` i
+`GROUP_EXCHANGE_REQUEST` (burza grupa), `CLASS_SCHEDULE` (satnica), `DEMONSTRATOR`
+(demonstrature — studenti koji vode laboratorijske vježbe), `EPORTFOLIO_UNOS` i
 `ACADEMIC_AUDIT_EVENT` (zapis revizije).
 
 ## Migracije
@@ -160,6 +161,7 @@ Uz jezgru, shema pokriva: `OBAVIJEST`, `ANKETA` (+ pitanja/odgovori), `FORUM_POS
 | V5 | Provjere, prijave, dvorane, razmještaj, bodovi, ocjene, satnica, burza, audit |
 | V6–V9 | Obavijesti, ankete, forum, komponente kolegija |
 | V10–V14 | Repozitorij, dežurstva, literatura, konzultacije, e-portfolio |
+| V15 | Demonstratori (demonstrature) |
 
 > Migracije su immutabilne nakon mergea; svaka nova promjena sheme dolazi kao nova `V{n}` i mora se
 > zrcaliti u `backend/ferko-infrastructure/src/test/resources/academic-schema-h2.sql`.

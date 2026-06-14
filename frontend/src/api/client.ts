@@ -15,6 +15,8 @@ import type {
   ScheduleSlot,
   CourseSummary,
   CurrentUser,
+  Demonstrator,
+  MyDemonstratorDuty,
   Exam,
   ExamAssistant,
   ForumPost,
@@ -261,6 +263,21 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
+
+  // Demonstrators (demonstrature)
+  courseDemonstrators: (courseId: number) =>
+    request<Demonstrator[]>(`/api/v1/academic/courses/${courseId}/demonstrators`),
+  assignDemonstrator: (courseId: number, jmbag: string) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/demonstrators`, {
+      method: 'POST',
+      body: JSON.stringify({ jmbag }),
+    }),
+  removeDemonstrator: (courseId: number, studentId: number) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/demonstrators/${studentId}`, {
+      method: 'DELETE',
+    }),
+  myDemonstratures: () =>
+    request<MyDemonstratorDuty[]>('/api/v1/academic/my/demonstratures'),
 
   // Calendar (kalendar)
   calendar: () => request<CalendarView>('/api/v1/academic/calendar'),

@@ -38,6 +38,22 @@ export function CourseDetailPage() {
     queryKey: ['consultations', courseId],
     queryFn: () => api.courseConsultations(courseId),
   });
+  const demonstrators = useQuery({
+    queryKey: ['demonstrators', courseId],
+    queryFn: () => api.courseDemonstrators(courseId),
+  });
+  const [demoJmbag, setDemoJmbag] = useState('');
+  const assignDemonstrator = useMutation({
+    mutationFn: () => api.assignDemonstrator(courseId, demoJmbag),
+    onSuccess: () => {
+      setDemoJmbag('');
+      queryClient.invalidateQueries({ queryKey: ['demonstrators', courseId] });
+    },
+  });
+  const removeDemonstrator = useMutation({
+    mutationFn: (studentId: number) => api.removeDemonstrator(courseId, studentId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['demonstrators', courseId] }),
+  });
   const notices = useQuery({
     queryKey: ['course-notices', courseId],
     queryFn: () => api.courseNotices(courseId),
@@ -181,6 +197,48 @@ export function CourseDetailPage() {
             Burza grupa
           </Link>
         </div>
+      </div>
+
+      <div className="card">
+        <h2>Demonstratori</h2>
+        {(demonstrators.data?.length ?? 0) === 0 ? (
+          <p className="muted">Kolegij još nema demonstratora.</p>
+        ) : (
+          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {demonstrators.data?.map((d) => (
+              <li key={d.studentId} className="role-badge" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {d.fullName} ({d.jmbag})
+                {canManageExams && (
+                  <button
+                    className="ghost"
+                    style={{ padding: '0 6px' }}
+                    onClick={() => removeDemonstrator.mutate(d.studentId)}
+                  >
+                    ×
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {canManageExams && (
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <input
+              placeholder="JMBAG studenta"
+              value={demoJmbag}
+              onChange={(e) => setDemoJmbag(e.target.value)}
+              style={{ maxWidth: 200 }}
+            />
+            <button disabled={!demoJmbag || assignDemonstrator.isPending} onClick={() => assignDemonstrator.mutate()}>
+              Dodaj demonstratora
+            </button>
+          </div>
+        )}
+        {assignDemonstrator.isError && (
+          <div className="banner err" style={{ marginTop: 8 }}>
+            {(assignDemonstrator.error as Error).message}
+          </div>
+        )}
       </div>
 
       <div className="card">

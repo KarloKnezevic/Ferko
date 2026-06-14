@@ -15,10 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -63,6 +65,37 @@ public class LegacyDatasetLoader {
         exams.size(),
         rawLines.size());
     return cachedDataset;
+  }
+
+  /**
+   * Extracts, per course code, the set of demonstrator JMBAGs from the lab schedule files ({@code
+   * rasporedC*_tl.txt}). Each pipe-delimited line is {@code courseId|LAB|date|start|end|
+   * room|DEMOSI|<demonstrator jmbags>|klasicno|<student jmbags>}; field 7 holds the demonstrators.
+   */
+  public Map<String, Set<String>> loadDemonstratorJmbagsByCourse() {
+    Map<String, Set<String>> byCourse = new LinkedHashMap<>();
+    for (Resource resource : resolve(NOVI_PODATCI_PATTERN)) {
+      if (!filename(resource).matches("rasporedC\\d+_tl\\.txt")) {
+        continue;
+      }
+      for (String line : loadLines(resource)) {
+        String[] parts = line.split("\\|", -1);
+        if (parts.length < 8) {
+          continue;
+        }
+        String courseCode = normalizeCourseCode(parts[0]);
+        if (!StringUtils.hasText(courseCode)) {
+          continue;
+        }
+        Set<String> jmbags = byCourse.computeIfAbsent(courseCode, key -> new LinkedHashSet<>());
+        for (String jmbag : parts[7].trim().split("\\s+")) {
+          if (StringUtils.hasText(jmbag)) {
+            jmbags.add(jmbag.trim());
+          }
+        }
+      }
+    }
+    return byCourse;
   }
 
   private Map<String, CourseCatalogEntry> loadCourses() {

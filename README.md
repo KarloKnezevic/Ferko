@@ -90,7 +90,7 @@ FERKO modelira **sedam uloga** (`STUDENT`, `NASTAVNIK`, `NOSITELJ`, `ASISTENT`,
 | 🗓️ **Raspored nastave** | Fakultetski tjedni raspored predavanja i vježbi (po danima, dvoranama i nastavnicima), filtriranje, administratorski izvještaj o kolizijama dvorana i nastavnika te **evolucijsko generiranje rasporeda** koje kolegije odabrane godine studija smješta u termine uz najmanje kolizija studenata (s krivuljom konvergencije) |
 | 📝 **Provjere znanja** | Definiranje provjera, rezervacija dvorana, prijava studenata, **evolucijsko raspoređivanje po dvoranama**, usporedba 6 algoritama s krivuljama konvergencije, dodjela dežurnih asistenata, objava, dijagram toka |
 | 💯 **Bodovi i ocjene** | Bodovne komponente, unos bodova, preglednik bodova, automatsko ocjenjivanje skeniranih obrazaca, zastavice/preduvjeti s vlastitim sigurnim interpreterom izraza |
-| 🧑‍🏫 **Nastavno osoblje** | Dodjela uloga na kolegiju, dodjela dežurstava, Moja dežurstva, objava obavijesti i konzultacija |
+| 🧑‍🏫 **Nastavno osoblje** | Dodjela uloga na kolegiju, dodjela dežurstava, Moja dežurstva, upravljanje demonstratorima (demonstrature), objava obavijesti i konzultacija |
 | 🗂️ **STUSLU** | Upis studenata, razmještaj u grupe, pregled upisanih |
 | 🛠️ **Administracija** | Kreiranje semestra, upravljanje korisnicima, status sinkronizacija, **zapis revizije (audit trail)** privilegiranih radnji |
 | 🔁 **Suradnja** | Burza grupa (samoposluga zamjene), forum (Pitanja i problemi), ankete (evaluacija kolegija), repozitorij datoteka |

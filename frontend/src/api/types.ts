@@ -335,6 +335,39 @@ export interface AuditEvent {
   details: string | null;
 }
 
+export interface AppSettings {
+  seed: {
+    usersEnabled: boolean;
+    academicEnabled: boolean;
+    maxCourses: number;
+    maxStudents: number;
+  };
+  grading: {
+    excellent: number;
+    veryGood: number;
+    good: number;
+    sufficient: number;
+  };
+  scheduler: {
+    defaultPopulationSize: number;
+    defaultIterations: number;
+    defaultSeed: number;
+  };
+  mail: {
+    enabled: boolean;
+    from: string;
+  };
+  security: {
+    devTokenEnabled: boolean;
+    loginRateLimitEnabled: boolean;
+    loginRateLimitMaxAttempts: number;
+    loginRateLimitWindowSeconds: number;
+    oidcIssuerConfigured: boolean;
+    jwtHmacSecretConfigured: boolean;
+    allowHmacDecoder: boolean;
+  };
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

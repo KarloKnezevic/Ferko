@@ -1,5 +1,6 @@
 import type {
   AdminUser,
+  AppSettings,
   AuditEvent,
   AlgorithmRun,
   AutoGradeResult,
@@ -265,6 +266,7 @@ export const api = {
   semesters: () => request<Semester[]>('/api/v1/academic/semesters'),
   adminUsers: () => request<AdminUser[]>('/api/v1/academic/users'),
   syncStatus: () => request<SyncStatus>('/api/v1/academic/sync/status'),
+  settings: () => request<AppSettings>('/api/v1/academic/settings'),
   auditEvents: (limit = 100) => request<AuditEvent[]>(`/api/v1/academic/audit?limit=${limit}`),
   assignCourseStaff: (courseId: number, body: { username: string; role: string }) =>
     request<void>(`/api/v1/academic/courses/${courseId}/staff`, {

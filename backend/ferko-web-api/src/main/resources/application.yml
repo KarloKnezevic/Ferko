@@ -20,6 +20,10 @@ management:
     web:
       exposure:
         include: health,info
+  health:
+    # SMTP reachability must not gate application health/readiness.
+    mail:
+      enabled: false
 
 ferko:
   mail:

@@ -37,6 +37,7 @@ export function Layout() {
           {hasRole('ASISTENT', 'ASISTENT_ORGANIZATOR', 'NASTAVNIK', 'NOSITELJ') && (
             <NavLink to="/moja-dezurstva">{t('nav.myDuties')}</NavLink>
           )}
+          <NavLink to="/raspored">{t('nav.timetable')}</NavLink>
           <NavLink to="/kalendar">{t('nav.calendar')}</NavLink>
           <NavLink to="/obavijesti">{t('nav.notices')}</NavLink>
           <NavLink to="/prostorije">{t('nav.rooms')}</NavLink>

@@ -5,6 +5,7 @@ import type {
   AlgorithmRun,
   AutoGradeResult,
   CalendarView,
+  CollisionReport,
   Consultation,
   CourseComponent,
   CourseDetail,
@@ -32,6 +33,7 @@ import type {
   SeatingResult,
   Semester,
   Student,
+  TimetableSlot,
   SurveyResult,
   SurveyView,
   SyncStatus,
@@ -261,6 +263,10 @@ export const api = {
 
   // Calendar (kalendar)
   calendar: () => request<CalendarView>('/api/v1/academic/calendar'),
+
+  // Timetable (raspored nastave)
+  timetable: () => request<TimetableSlot[]>('/api/v1/academic/timetable'),
+  timetableCollisions: () => request<CollisionReport>('/api/v1/academic/timetable/collisions'),
 
   // Admin
   semesters: () => request<Semester[]>('/api/v1/academic/semesters'),

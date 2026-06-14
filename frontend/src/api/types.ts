@@ -368,6 +368,35 @@ export interface AppSettings {
   };
 }
 
+export interface TimetableSlot {
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  type: string;
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  room: string;
+  instructor: string;
+}
+
+export interface TimetableConflict {
+  kind: string;
+  resource: string;
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  courseA: string;
+  courseB: string;
+}
+
+export interface CollisionReport {
+  totalSlots: number;
+  roomConflicts: number;
+  instructorConflicts: number;
+  conflicts: TimetableConflict[];
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

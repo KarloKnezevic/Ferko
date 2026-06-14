@@ -74,5 +74,19 @@ class JdbcClassScheduleRepositoryTest {
     assertEquals("Marko Predavač", first.instructor());
 
     assertTrue(repository.findByCourse(999L).isEmpty());
+
+    // findAll spans every course.
+    repository.save(
+        new ClassSchedule(
+            0L,
+            200L,
+            null,
+            GroupType.LECTURE,
+            null,
+            DayOfWeek.FRIDAY,
+            LocalTime.of(12, 0),
+            LocalTime.of(14, 0),
+            "Druga"));
+    assertEquals(3, repository.findAll().size());
   }
 }

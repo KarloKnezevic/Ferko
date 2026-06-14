@@ -3,6 +3,7 @@ import type {
   AlgorithmRun,
   AutoGradeResult,
   CalendarView,
+  Consultation,
   CourseComponent,
   CourseDetail,
   CourseEnrollment,
@@ -163,6 +164,20 @@ export const api = {
     request<void>(`/api/v1/academic/courses/${courseId}/group-assignments`, {
       method: 'POST',
       body: JSON.stringify(body),
+    }),
+  courseConsultations: (courseId: number) =>
+    request<Consultation[]>(`/api/v1/academic/courses/${courseId}/consultations`),
+  addConsultation: (
+    courseId: number,
+    body: { dayOfWeek: string; startsAt: string; endsAt: string; location: string },
+  ) =>
+    request<{ id: number }>(`/api/v1/academic/courses/${courseId}/consultations`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  removeConsultation: (courseId: number, consultationId: number) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/consultations/${consultationId}`, {
+      method: 'DELETE',
     }),
   courseLiterature: (courseId: number) =>
     request<CourseLiterature[]>(`/api/v1/academic/courses/${courseId}/literature`),

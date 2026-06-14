@@ -218,6 +218,16 @@ export interface CourseEnrollment {
   groupCodes: string[];
 }
 
+export interface Consultation {
+  id: number;
+  courseId: number;
+  staffName: string;
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  location: string;
+}
+
 export interface CourseLiterature {
   id: number;
   courseId: number;

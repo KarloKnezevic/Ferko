@@ -102,6 +102,11 @@ class ExamAssistantServiceTest {
     }
 
     @Override
+    public List<ExamRoomAssistant> findByUser(long userId) {
+      return data.stream().filter(a -> a.userId() == userId).toList();
+    }
+
+    @Override
     public void remove(long examId, long assignmentId) {
       data.removeIf(a -> a.examId() == examId && a.id() == assignmentId);
     }

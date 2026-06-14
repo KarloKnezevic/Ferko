@@ -218,6 +218,18 @@ export interface CourseEnrollment {
   groupCodes: string[];
 }
 
+export interface MyDuty {
+  examId: number;
+  examTitle: string;
+  examShortName: string;
+  courseId: number;
+  courseCode: string;
+  courseName: string;
+  startsAt: string | null;
+  roomCode: string;
+  published: boolean;
+}
+
 export interface MyProfile {
   username: string;
   fullName: string;

@@ -31,6 +31,7 @@ import hr.fer.zemris.ferko.application.usecase.component.CourseComponentService;
 import hr.fer.zemris.ferko.application.usecase.consultation.ConsultationService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamAssistantService;
 import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
+import hr.fer.zemris.ferko.application.usecase.exam.InvigilationService;
 import hr.fer.zemris.ferko.application.usecase.exchange.GroupExchangeService;
 import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
@@ -241,6 +242,21 @@ public class ApplicationBeans {
       AppUserRepository appUserRepository) {
     return new ExamAssistantService(
         examAssistantRepository, examRepository, roomRepository, appUserRepository);
+  }
+
+  @Bean
+  public InvigilationService invigilationService(
+      ExamAssistantRepository examAssistantRepository,
+      ExamRepository examRepository,
+      CourseRepository courseRepository,
+      RoomRepository roomRepository,
+      AppUserRepository appUserRepository) {
+    return new InvigilationService(
+        examAssistantRepository,
+        examRepository,
+        courseRepository,
+        roomRepository,
+        appUserRepository);
   }
 
   @Bean

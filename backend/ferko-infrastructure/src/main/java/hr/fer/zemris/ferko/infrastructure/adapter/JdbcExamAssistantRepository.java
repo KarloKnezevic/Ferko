@@ -42,6 +42,14 @@ public class JdbcExamAssistantRepository implements ExamAssistantRepository {
   }
 
   @Override
+  public List<ExamRoomAssistant> findByUser(long userId) {
+    return jdbcTemplate.query(
+        "select * from exam_room_assistant where app_user_id = ? order by exam_id, id",
+        MAPPER,
+        userId);
+  }
+
+  @Override
   public void remove(long examId, long assignmentId) {
     jdbcTemplate.update(
         "delete from exam_room_assistant where id = ? and exam_id = ?", assignmentId, examId);

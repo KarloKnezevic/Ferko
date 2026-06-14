@@ -15,6 +15,7 @@ import type {
   ExamAssistant,
   ForumPost,
   MyCourseGrade,
+  MyDuty,
   MyExam,
   MyProfile,
   GroupExchange,
@@ -116,6 +117,7 @@ export const api = {
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
   myProfile: () => request<MyProfile>(`/api/v1/academic/my/profile`),
+  myDuties: () => request<MyDuty[]>(`/api/v1/academic/my/duties`),
   myExams: () => request<MyExam[]>(`/api/v1/academic/my/exams`),
   registerForExam: (examId: number) =>
     request<void>(`/api/v1/academic/my/exams/${examId}/registration`, { method: 'POST' }),

@@ -19,6 +19,7 @@ import { CalendarPage } from './pages/CalendarPage';
 import { StudentExamsPage } from './pages/StudentExamsPage';
 import { StudentGradesPage } from './pages/StudentGradesPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { DutiesPage } from './pages/DutiesPage';
 import { AdminPage } from './pages/AdminPage';
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -50,6 +51,7 @@ export function App() {
         <Route path="/kolegiji/:id/burza" element={<GroupExchangePage />} />
         <Route path="/moje-provjere" element={<StudentExamsPage />} />
         <Route path="/moji-bodovi" element={<StudentGradesPage />} />
+        <Route path="/moja-dezurstva" element={<DutiesPage />} />
         <Route path="/profil" element={<ProfilePage />} />
         <Route path="/kalendar" element={<CalendarPage />} />
         <Route path="/obavijesti" element={<NoticesPage />} />

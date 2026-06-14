@@ -325,6 +325,16 @@ export interface SyncStatus {
   rooms: number;
 }
 
+export interface AuditEvent {
+  id: number;
+  occurredAt: string;
+  actor: string;
+  action: string;
+  entityType: string | null;
+  entityId: string | null;
+  details: string | null;
+}
+
 export interface WeeklySlot {
   dayOfWeek: string;
   startsAt: string;

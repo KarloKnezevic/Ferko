@@ -218,6 +218,15 @@ export interface CourseEnrollment {
   groupCodes: string[];
 }
 
+export interface PortfolioEntry {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  link: string;
+  createdAt: string;
+}
+
 export interface MyDuty {
   examId: number;
   examTitle: string;

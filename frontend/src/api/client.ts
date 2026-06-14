@@ -18,6 +18,7 @@ import type {
   MyDuty,
   MyExam,
   MyProfile,
+  PortfolioEntry,
   GroupExchange,
   GradeComponentView,
   Notice,
@@ -117,6 +118,19 @@ export const api = {
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
   myProfile: () => request<MyProfile>(`/api/v1/academic/my/profile`),
+  myPortfolio: () => request<PortfolioEntry[]>(`/api/v1/academic/my/portfolio`),
+  addPortfolioEntry: (body: {
+    title: string;
+    description: string;
+    category: string;
+    link: string;
+  }) =>
+    request<{ id: number }>(`/api/v1/academic/my/portfolio`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  removePortfolioEntry: (entryId: number) =>
+    request<void>(`/api/v1/academic/my/portfolio/${entryId}`, { method: 'DELETE' }),
   myDuties: () => request<MyDuty[]>(`/api/v1/academic/my/duties`),
   myExams: () => request<MyExam[]>(`/api/v1/academic/my/exams`),
   registerForExam: (examId: number) =>

@@ -179,6 +179,37 @@ tbody tr:hover .grade-cell { filter: brightness(0.97); }
 .slot-time { font-weight: 600; font-variant-numeric: tabular-nums; }
 .slot-course { font-weight: 600; }
 
+/* Flow diagram (raspoređivanje) */
+.flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 18px; }
+.flow-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+}
+.flow-node .flow-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #d7dee6;
+  color: var(--text);
+  font-size: 12px;
+}
+.flow-node.done { background: #e6f5ec; border-color: #bfe5cd; color: var(--ok); }
+.flow-node.done .flow-badge { background: var(--ok); color: #fff; }
+.flow-node.active { background: #e3f0fb; border-color: #b9d6f0; color: var(--fer-blue); }
+.flow-node.active .flow-badge { background: var(--fer-blue); color: #fff; }
+.flow-node.pending { color: var(--muted); }
+.flow-arrow { color: var(--muted); font-weight: 700; }
+
 /* Forum */
 .forum-reply { border-left: 3px solid var(--border); margin: 8px 0 8px 16px; padding-left: 12px; }
 

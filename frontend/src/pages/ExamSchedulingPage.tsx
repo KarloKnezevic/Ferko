@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { Sparkline } from '../components/Sparkline';
+import { FlowDiagram } from '../components/FlowDiagram';
 import type { AlgorithmRun, SeatingResult } from '../api/types';
 
 const ALGO_LABELS: Record<string, string> = {
@@ -187,6 +188,20 @@ export function ExamSchedulingPage() {
       {selectedExam != null && canManage && (
         <div className="card" id="raspored">
           <h2>Uređivanje rasporeda — provjera #{selectedExam}</h2>
+          {(() => {
+            const sel = exams.data?.find((e) => e.id === selectedExam);
+            return (
+              <FlowDiagram
+                steps={[
+                  { label: 'Dohvati studente', done: (sel?.registeredStudents ?? 0) > 0 },
+                  { label: 'Uredi dvorane', done: (sel?.reservedRooms ?? 0) > 0 },
+                  { label: 'Definiranje rasporeda', done: (sel?.seatedStudents ?? 0) > 0 },
+                  { label: 'Dodjela asistenata', done: (sel?.reservedRooms ?? 0) > 0 },
+                  { label: 'Objavi', done: sel?.published ?? false },
+                ]}
+              />
+            );
+          })()}
           <div className="form-row">
             <div>
               <label>Dvorana</label>

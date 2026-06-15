@@ -359,8 +359,9 @@ public class ApplicationBeans {
   }
 
   @Bean
-  public NoticeService noticeService(NoticeRepository noticeRepository) {
-    return new NoticeService(noticeRepository);
+  public NoticeService noticeService(
+      NoticeRepository noticeRepository, AccessControlService accessControlService) {
+    return new NoticeService(noticeRepository, accessControlService);
   }
 
   @Bean

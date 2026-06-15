@@ -523,6 +523,7 @@ export interface Notice {
   authorName: string | null;
   createdAt: string;
   pinned: boolean;
+  canDelete: boolean;
 }
 
 export interface AlgorithmRun {

@@ -366,6 +366,8 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
+  deleteNotice: (id: number) =>
+    request<void>(`/api/v1/academic/notices/${id}`, { method: 'DELETE' }),
 
   // Grading (points overview)
   gradeComponents: (courseId: number) =>

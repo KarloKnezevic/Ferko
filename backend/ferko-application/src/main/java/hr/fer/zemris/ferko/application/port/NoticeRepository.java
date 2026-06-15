@@ -2,6 +2,7 @@ package hr.fer.zemris.ferko.application.port;
 
 import hr.fer.zemris.ferko.domain.model.Notice;
 import java.util.List;
+import java.util.Optional;
 
 /** Persistence port for announcements ("obavijesti"). */
 public interface NoticeRepository {
@@ -13,4 +14,10 @@ public interface NoticeRepository {
 
   /** Notices for a course (pinned first, newest first). */
   List<Notice> findByCourse(long courseId);
+
+  /** Single notice by id, if it exists. */
+  Optional<Notice> findById(long id);
+
+  /** Deletes the notice; returns {@code true} when a row was removed. */
+  boolean deleteById(long id);
 }

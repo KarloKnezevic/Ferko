@@ -57,6 +57,23 @@ public class AccessControlService {
     return teaches(userId, courseId) || isEnrolled(userId, courseId);
   }
 
+  /**
+   * Returns {@code true} when the user may manage (not merely view) the given course's content —
+   * holders of a global role, or staff teaching the course. Unlike {@link #canAccessCourse}, an
+   * enrolled student does <em>not</em> pass, so this gates write actions such as deleting notices.
+   *
+   * @param username the authenticated principal name
+   * @param roles the user's role names without the {@code ROLE_} prefix
+   * @param courseId the course being managed
+   */
+  public boolean canManageCourse(String username, Collection<String> roles, long courseId) {
+    if (roles != null && roles.stream().anyMatch(GLOBAL_ROLES::contains)) {
+      return true;
+    }
+    Optional<AppUser> user = users.findByUsername(username);
+    return user.isPresent() && teaches(user.get().id(), courseId);
+  }
+
   private boolean teaches(long userId, long courseId) {
     return courses.findStaffByCourse(courseId).stream().anyMatch(staff -> staff.userId() == userId);
   }

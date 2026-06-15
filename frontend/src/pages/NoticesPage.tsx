@@ -26,6 +26,11 @@ export function NoticesPage() {
     },
   });
 
+  const remove = useMutation({
+    mutationFn: (id: number) => api.deleteNotice(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notices'] }),
+  });
+
   return (
     <div>
       <h1>{t('nav.notices')}</h1>
@@ -74,7 +79,20 @@ export function NoticesPage() {
               {n.pinned && <span className="pill warn" style={{ marginRight: 8 }}>📌</span>}
               {n.title}
             </h2>
-            <span className="muted">{new Date(n.createdAt).toLocaleString('hr-HR')}</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span className="muted">{new Date(n.createdAt).toLocaleString('hr-HR')}</span>
+              {n.canDelete && (
+                <button
+                  className="ghost"
+                  disabled={remove.isPending}
+                  onClick={() => {
+                    if (window.confirm('Obrisati ovu obavijest?')) remove.mutate(n.id);
+                  }}
+                >
+                  {t('common.delete')}
+                </button>
+              )}
+            </span>
           </div>
           <p style={{ whiteSpace: 'pre-wrap', margin: '8px 0 0' }}>{n.body}</p>
           {n.authorName && <div className="muted" style={{ marginTop: 8 }}>— {n.authorName}</div>}

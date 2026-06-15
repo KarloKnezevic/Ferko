@@ -137,6 +137,8 @@ additionally teach or be enrolled in the course (global roles bypass that check)
 | Student roster, single student, course enrollments | `AcademicController` (`STAFF`) | no | yes | yes | yes | yes | yes | yes |
 | Gradebook: components, points, points-overview, grades | `GradingController` (grading-manage) | no | yes | yes | yes | yes | no | yes |
 | Auto-grade exam submissions | `ExamGradingController` (grading-manage) | no | yes | yes | yes | yes | no | yes |
+| Notices: publish | `NoticeController` (`CAN_PUBLISH`) | no | yes | yes | no | yes | yes | yes |
+| Notices: delete | `NoticeController` (`CAN_PUBLISH` + row-level) | no | yes\* | yes\* | no | yes\* | yes | yes |
 | Exam organisation: create exam, reserve rooms, register, seating, publish, invigilators, seating/invigilator views | `ExamController` (exam-organiser) | no | no | yes | no | yes | no | yes |
 | Course files: upload | `RepositoryController` (grading-manage + row-level) | no | yes\* | yes\* | yes\* | yes\* | no | yes |
 | Course files: list, download | `RepositoryController` (row-level) | yes\* | yes\* | yes\* | yes\* | yes\* | yes | yes |
@@ -159,6 +161,12 @@ a student sees only the courses they attend ("own"), teaching staff see only the
 
 `/my/**` endpoints resolve data from the authenticated principal (`authentication.getName()`), so
 every authenticated user sees only their own exams, registrations, and demonstrator duties.
+
+Notice deletion is row-level via `AccessControlService.canManageCourse` (teaching staff or a global
+role, never an enrolled student): a course notice may be deleted by `ADMIN`/`STUSLU` or staff
+teaching that course, while a faculty-wide notice (no course) may be deleted only by `ADMIN`/`STUSLU`.
+Each `NoticeView` carries a per-user `canDelete` flag so the UI shows the delete action only where
+the request would succeed.
 
 ## Why exam organisation is narrower than grading
 

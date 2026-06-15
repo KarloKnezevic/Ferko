@@ -64,4 +64,19 @@ class JdbcNoticeRepositoryTest {
     }
     assertEquals(2, repository.findRecent(2).size());
   }
+
+  @Test
+  void findsByIdAndDeletes() {
+    Notice saved =
+        repository.save(
+            new Notice(0L, null, "Za brisanje", "tekst", "admin", LocalDateTime.now(), false));
+
+    assertTrue(repository.findById(saved.id()).isPresent());
+    assertTrue(repository.findById(9999L).isEmpty());
+
+    assertTrue(repository.deleteById(saved.id()));
+    assertTrue(repository.findById(saved.id()).isEmpty());
+    // Deleting a missing row reports no change.
+    assertEquals(false, repository.deleteById(saved.id()));
+  }
 }

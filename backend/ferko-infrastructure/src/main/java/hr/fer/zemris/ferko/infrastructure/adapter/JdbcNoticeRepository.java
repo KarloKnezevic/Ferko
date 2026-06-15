@@ -3,6 +3,7 @@ package hr.fer.zemris.ferko.infrastructure.adapter;
 import hr.fer.zemris.ferko.application.port.NoticeRepository;
 import hr.fer.zemris.ferko.domain.model.Notice;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -61,5 +62,16 @@ public class JdbcNoticeRepository implements NoticeRepository {
         "select * from obavijest where course_id = ? order by pinned desc, created_at desc",
         MAPPER,
         courseId);
+  }
+
+  @Override
+  public Optional<Notice> findById(long id) {
+    return jdbcTemplate.query("select * from obavijest where id = ?", MAPPER, id).stream()
+        .findFirst();
+  }
+
+  @Override
+  public boolean deleteById(long id) {
+    return jdbcTemplate.update("delete from obavijest where id = ?", id) > 0;
   }
 }

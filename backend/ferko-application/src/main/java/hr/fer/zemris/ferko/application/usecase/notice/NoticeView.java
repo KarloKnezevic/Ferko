@@ -10,4 +10,5 @@ public record NoticeView(
     String body,
     String authorName,
     LocalDateTime createdAt,
-    boolean pinned) {}
+    boolean pinned,
+    boolean canDelete) {}

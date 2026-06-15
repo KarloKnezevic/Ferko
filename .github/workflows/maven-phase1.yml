@@ -231,7 +231,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Ferko API image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: Dockerfile
@@ -361,7 +361,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Validate multi-arch image build (amd64 + arm64)
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: Dockerfile

@@ -147,7 +147,7 @@ jobs:
 
     steps:
       - name: Dependency Review
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5
 
   container-smoke:
     runs-on: ubuntu-latest

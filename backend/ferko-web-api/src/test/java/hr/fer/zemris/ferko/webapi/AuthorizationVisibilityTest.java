@@ -2,6 +2,7 @@ package hr.fer.zemris.ferko.webapi;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -73,6 +74,32 @@ class AuthorizationVisibilityTest {
         .andExpect(status().isForbidden());
     mockMvc
         .perform(get("/api/v1/academic/exams/1/assistants").session(session))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void studentSeesOnlyEnrolledCoursesInListing() throws Exception {
+    // Seeded: student.ana is enrolled in course 1 only.
+    mockMvc
+        .perform(get("/api/v1/academic/courses").session(login("student.ana")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[?(@.id == 1)]").exists())
+        .andExpect(jsonPath("$[?(@.id == 2)]").doesNotExist());
+  }
+
+  @Test
+  void studentCannotListRooms() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/rooms").session(login("student.ana")))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void studentReachesDetailOfEnrolledCourseButNotOthers() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc.perform(get("/api/v1/academic/courses/1").session(session)).andExpect(status().isOk());
+    mockMvc
+        .perform(get("/api/v1/academic/courses/2").session(session))
         .andExpect(status().isForbidden());
   }
 

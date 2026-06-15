@@ -31,6 +31,22 @@ function RequireAuth({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+const STAFF_ROLES = [
+  'ADMIN',
+  'STUSLU',
+  'NOSITELJ',
+  'NASTAVNIK',
+  'ASISTENT_ORGANIZATOR',
+  'ASISTENT',
+];
+
+function RequireRole({ roles, children }: { roles: string[]; children: ReactNode }) {
+  const { hasRole, loading } = useAuth();
+  if (loading) return <div className="page-loading">Učitavanje…</div>;
+  if (!hasRole(...roles)) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 export function App() {
   return (
     <Routes>
@@ -56,12 +72,40 @@ export function App() {
         <Route path="/moja-dezurstva" element={<DutiesPage />} />
         <Route path="/profil" element={<ProfilePage />} />
         <Route path="/e-portfolio" element={<PortfolioPage />} />
-        <Route path="/raspored" element={<TimetablePage />} />
+        <Route
+          path="/raspored"
+          element={
+            <RequireRole roles={STAFF_ROLES}>
+              <TimetablePage />
+            </RequireRole>
+          }
+        />
         <Route path="/kalendar" element={<CalendarPage />} />
         <Route path="/obavijesti" element={<NoticesPage />} />
-        <Route path="/prostorije" element={<RoomsPage />} />
-        <Route path="/studenti" element={<StudentsPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route
+          path="/prostorije"
+          element={
+            <RequireRole roles={STAFF_ROLES}>
+              <RoomsPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/studenti"
+          element={
+            <RequireRole roles={['ADMIN', 'STUSLU']}>
+              <StudentsPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <RequireRole roles={['ADMIN']}>
+              <AdminPage />
+            </RequireRole>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

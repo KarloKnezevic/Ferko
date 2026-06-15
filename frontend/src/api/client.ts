@@ -89,7 +89,12 @@ export const api = {
 
   // Academic
   activeSemester: () => request<Semester>('/api/v1/academic/semesters/active'),
-  courses: () => request<CourseSummary[]>('/api/v1/academic/courses'),
+  courses: (semester?: string) =>
+    request<CourseSummary[]>(
+      semester
+        ? `/api/v1/academic/courses?semester=${encodeURIComponent(semester)}`
+        : '/api/v1/academic/courses',
+    ),
   course: (id: number) => request<CourseDetail>(`/api/v1/academic/courses/${id}`),
   students: () => request<Student[]>('/api/v1/academic/students'),
   rooms: () => request<Room[]>('/api/v1/academic/rooms'),

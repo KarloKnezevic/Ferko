@@ -131,7 +131,9 @@ additionally teach or be enrolled in the course (global roles bypass that check)
 
 | Capability / endpoint group | Controller | STUDENT | NASTAVNIK | NOSITELJ | ASISTENT | ASISTENT_ORGANIZATOR | STUSLU | ADMIN |
 | --- | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Public catalogue: semesters, courses, rooms, weekly timetable | Academic/Timetable | yes | yes | yes | yes | yes | yes | yes |
+| Semesters, weekly timetable | Academic/Timetable | yes | yes | yes | yes | yes | yes | yes |
+| Course listing + course detail | `AcademicController` (scoped + row-level) | own\* | teach\* | teach\* | teach\* | teach\* | yes | yes |
+| Room catalogue | `AcademicController` (`STAFF`) | no | yes | yes | yes | yes | yes | yes |
 | Student roster, single student, course enrollments | `AcademicController` (`STAFF`) | no | yes | yes | yes | yes | yes | yes |
 | Gradebook: components, points, points-overview, grades | `GradingController` (grading-manage) | no | yes | yes | yes | yes | no | yes |
 | Auto-grade exam submissions | `ExamGradingController` (grading-manage) | no | yes | yes | yes | yes | no | yes |
@@ -151,7 +153,9 @@ additionally teach or be enrolled in the course (global roles bypass that check)
 
 \* Row-level: subject to `CourseAccessGuard` — the role is necessary but the user must also teach or
 be enrolled in the specific course. `ADMIN` and `STUSLU` bypass the row-level check via the global
-roles.
+roles. The course listing is scoped the same way by `AcademicQueryService.listCoursesForPrincipal`:
+a student sees only the courses they attend ("own"), teaching staff see only the courses they teach
+("teach"), and global roles see the full catalogue, so a student never enumerates every course.
 
 `/my/**` endpoints resolve data from the authenticated principal (`authentication.getName()`), so
 every authenticated user sees only their own exams, registrations, and demonstrator duties.

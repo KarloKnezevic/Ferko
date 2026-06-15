@@ -160,6 +160,44 @@ class AcademicServicesTest {
   }
 
   @Test
+  void scopesCourseListingToEnrolmentTeachingAndGlobalRole() {
+    long attended = provisioning.provisionCourse("PROG", "Programiranje", "2024Z", 6, "o", "l");
+    long taught = provisioning.provisionCourse("ALG", "Algoritmi", "2024Z", 5, "o", "l");
+    long unrelated = provisioning.provisionCourse("FIZ", "Fizika", "2024Z", 4, "o", "l");
+
+    long lecturerId =
+        provisioning.provisionStaffUser(
+            "lecturer.marko", "h", "Marko P", "m@fer.hr", Set.of("NOSITELJ"), LocalDateTime.now());
+    provisioning.assignStaff(taught, lecturerId, "NOSITELJ");
+
+    long studentId =
+        provisioning.provisionStudent(
+            "0036501010", "h", "Ana A", "ana@fer.hr", "0036501010", "R", 1, LocalDateTime.now());
+    provisioning.enroll(studentId, attended, LocalDateTime.now());
+
+    // Student sees only the course they are enrolled in.
+    List<CourseSummaryView> studentCourses =
+        query.listCoursesForPrincipal("0036501010", Set.of("STUDENT"), null);
+    assertEquals(1, studentCourses.size());
+    assertEquals("PROG", studentCourses.get(0).code());
+
+    // Teaching staff see only the course they teach.
+    List<CourseSummaryView> staffCourses =
+        query.listCoursesForPrincipal("lecturer.marko", Set.of("NOSITELJ"), null);
+    assertEquals(1, staffCourses.size());
+    assertEquals("ALG", staffCourses.get(0).code());
+
+    // Global roles see every course; the unrelated one is only visible to them.
+    List<CourseSummaryView> adminCourses =
+        query.listCoursesForPrincipal("admin", Set.of("ADMIN"), null);
+    assertEquals(3, adminCourses.size());
+    assertTrue(adminCourses.stream().anyMatch(c -> c.id() == unrelated));
+
+    // Unknown principal sees nothing.
+    assertTrue(query.listCoursesForPrincipal("nobody", Set.of("STUDENT"), null).isEmpty());
+  }
+
+  @Test
   void assignsStaffByUsernameAndReportsMissingUser() {
     long courseId =
         provisioning.provisionCourse("RASPORED", "Raspoređivanje", "2024Z", 5, "o", "l");

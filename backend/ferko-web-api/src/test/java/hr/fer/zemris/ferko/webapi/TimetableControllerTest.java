@@ -134,4 +134,28 @@ class TimetableControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.roomUtilization").isArray());
   }
+
+  @Test
+  void adminSeesResolutionReport() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/timetable/resolution").session(login("admin.ferko")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.totalSlots").isNumber())
+        .andExpect(jsonPath("$.conflictFree").isBoolean())
+        .andExpect(jsonPath("$.collisions").isArray());
+  }
+
+  @Test
+  void studentCannotSeeResolutionReport() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/timetable/resolution").session(login("student.ana")))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void studentCannotAutoResolve() throws Exception {
+    mockMvc
+        .perform(post("/api/v1/academic/timetable/resolution/auto").session(login("student.ana")))
+        .andExpect(status().isForbidden());
+  }
 }

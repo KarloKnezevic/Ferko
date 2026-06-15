@@ -94,4 +94,39 @@ class JdbcClassScheduleRepositoryTest {
     assertEquals(1, repository.findAll().size());
     assertTrue(repository.findByCourse(100L).isEmpty());
   }
+
+  @Test
+  void findsByIdAndRepositionsASlot() {
+    ClassSchedule saved =
+        repository.save(
+            new ClassSchedule(
+                0L,
+                100L,
+                null,
+                GroupType.LECTURE,
+                5L,
+                DayOfWeek.MONDAY,
+                LocalTime.of(8, 0),
+                LocalTime.of(10, 0),
+                "Prof"));
+
+    assertTrue(repository.findById(saved.id()).isPresent());
+    assertTrue(repository.findById(9999L).isEmpty());
+
+    assertTrue(
+        repository.updatePlacement(
+            saved.id(), DayOfWeek.THURSDAY, LocalTime.of(12, 0), LocalTime.of(14, 0), 8L));
+    ClassSchedule moved = repository.findById(saved.id()).orElseThrow();
+    assertEquals(DayOfWeek.THURSDAY, moved.dayOfWeek());
+    assertEquals(LocalTime.of(12, 0), moved.startsAt());
+    assertEquals(LocalTime.of(14, 0), moved.endsAt());
+    assertEquals(8L, moved.roomId());
+    // Course and group are untouched by a placement move.
+    assertEquals(100L, moved.courseId());
+
+    assertEquals(
+        false,
+        repository.updatePlacement(
+            9999L, DayOfWeek.MONDAY, LocalTime.of(8, 0), LocalTime.of(10, 0), null));
+  }
 }

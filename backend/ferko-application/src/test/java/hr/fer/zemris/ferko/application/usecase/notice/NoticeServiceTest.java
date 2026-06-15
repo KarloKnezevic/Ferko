@@ -88,6 +88,21 @@ class NoticeServiceTest {
     }
 
     @Override
+    public java.util.Optional<ClassSchedule> findById(long id) {
+      return java.util.Optional.empty();
+    }
+
+    @Override
+    public boolean updatePlacement(
+        long id,
+        java.time.DayOfWeek dayOfWeek,
+        java.time.LocalTime startsAt,
+        java.time.LocalTime endsAt,
+        Long roomId) {
+      return false;
+    }
+
+    @Override
     public int deleteByCourse(long courseId) {
       return 0;
     }

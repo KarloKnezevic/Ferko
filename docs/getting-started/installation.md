@@ -64,4 +64,3 @@ Supported directly. Multi-arch images and docker configuration include ARM64.
 
 If you need the historical Ant/Tomcat deployment flow, see:
 
-- `docs/legacy/HOW_TO_INSTALL_EN.md`

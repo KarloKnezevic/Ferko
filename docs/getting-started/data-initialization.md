@@ -60,5 +60,3 @@ In `staging` and `prod`, bootstrap is disabled by default.
 
 For historical manual data-loading instructions (old monolith UI), see:
 
-- `docs/legacy/INITIALIZE_ALL_DATA_EN.md`
-- `docs/legacy/LOAD_DATA_EN.md`

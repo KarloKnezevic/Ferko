@@ -8,7 +8,7 @@
 #   - PostgreSQL is NOT published to the host (reachable only on the internal network)
 #   - app healthcheck gates readiness; both services restart unless stopped
 #
-# See docs/operations/PRODUCTION_DEPLOYMENT.md and .env.example.
+# See docs/operations/production-deployment.md and .env.example.
 services:
   ferko-app:
     build:

@@ -1,53 +1,43 @@
-# FERKO Documentation Index
+# FERKO documentation
 
-This documentation is split into modern runtime guides and historical legacy references.
+Documentation for the modernized FER academic portal. Start with the root
+[README](../README.md) for an overview, then dive into the guides below.
 
-## Start Here
+## Getting started
 
-- [Quick Start](./getting-started/QUICKSTART.md)
-- [Installation](./getting-started/INSTALLATION.md)
-- [Data Initialization](./getting-started/DATA_INITIALIZATION.md)
+- [Quick start](./getting-started/quickstart.md) — run the fully seeded portal with one command
+- [Installation](./getting-started/installation.md) — prerequisites and setup
+- [Data initialization](./getting-started/data-initialization.md) — how the demo dataset is seeded
 
-## Architecture and Engineering (current)
+## Using FERKO
 
-- [Architecture](./architecture/ARCHITECTURE.md) — hexagonal layers, modules, boundaries, request flow
-- [Domain Model](./architecture/DOMAIN_MODEL.md) — aggregates, roles, ER diagrams, migrations
-- [Scheduling Engine](./architecture/SCHEDULING_ENGINE.md) — Čupić thesis models → optimizers & problems
-- [Contributing](./architecture/CONTRIBUTING.md) — vertical-slice recipe, verification, conventions
+- [User guide](./user-guide.md) — every feature, organized by role
 
-### Engineering rules and history
+## Architecture and engineering
 
-- [Legacy Architecture Map](./architecture/LEGACY_ARCHITECTURE_MAP.md)
-- [Module Dependency Rules](./architecture/MODULE_DEPENDENCY_RULES.md)
-- [ToDo Reference Slice](./architecture/TODO_REFERENCE_SLICE.md)
-
-## Modernization and Migration Tracking
-
-- [Transformation Plan](./modernization/FERKO_TRANSFORMATION_PLAN.md)
-- [Migration Backlog](./modernization/MIGRATION_BACKLOG.md)
-- [Legacy Baseline Audit](./modernization/LEGACY_BASELINE_AUDIT.md)
-- [Dependency CVE Triage](./modernization/DEPENDENCY_VULNERABILITY_TRIAGE_LOG.md)
-- [Dependency Inventory Triage](./modernization/DEPENDENCY_INVENTORY_CVE_TRIAGE.md)
+- [Architecture](./architecture/architecture.md) — hexagonal layers, modules, boundaries, request flow
+- [Domain model](./architecture/domain-model.md) — entities, ER diagram, Flyway migrations
+- [Scheduling engine](./architecture/scheduling-engine.md) — Čupić's evolutionary models, optimizers, problems
+- [Security model](./architecture/security-model.md) — authentication chains, roles, row-level access
+- [Contributing](./architecture/contributing.md) — the vertical-slice recipe, verification, conventions
 
 ## Operations
 
-- [Production Deployment](./operations/PRODUCTION_DEPLOYMENT.md) — prod compose, prod profile, env, topology
-- [Containerization Baseline](./operations/CONTAINERIZATION_BASELINE.md)
+- [Production deployment](./operations/production-deployment.md) — production compose, profile, environment, topology
+- [Containerization](./operations/containerization-baseline.md)
 
-## API Contracts
+## API contracts
 
 - [OpenAPI YAML](./api/openapi.yaml)
 - [OpenAPI JSON](./api/openapi.json)
 
-## ADR (Architecture Decision Records)
+## Decision records
 
-- [ADR-001 Strangler Modernization Strategy](./adr/ADR-001-strangler-modernization-strategy.md)
-- [ADR-002 Authentication Target OIDC-first](./adr/ADR-002-authentication-target-oidc-first.md)
-- [ADR-003 Database Policy PostgreSQL/Flyway](./adr/ADR-003-database-migration-policy-postgresql-flyway.md)
+- [ADR-001 — modernization strategy](./adr/adr-001-strangler-modernization-strategy.md)
+- [ADR-002 — authentication, OIDC-first](./adr/adr-002-authentication-target-oidc-first.md)
+- [ADR-003 — database policy, PostgreSQL and Flyway](./adr/adr-003-database-migration-policy-postgresql-flyway.md)
 
-## Legacy References (Translated)
+## Project history
 
-- [Legacy Install Guide](./legacy/HOW_TO_INSTALL_EN.md)
-- [Legacy Full Data Initialization](./legacy/INITIALIZE_ALL_DATA_EN.md)
-- [Legacy Data Loading Workflow](./legacy/LOAD_DATA_EN.md)
-- [Legacy Source Index](./legacy/source/README.md)
+The [modernization](./modernization/) folder keeps the transformation plan, baseline audit,
+migration backlog and dependency triage logs from the modernization effort.

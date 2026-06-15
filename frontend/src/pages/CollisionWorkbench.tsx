@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import type { ResolutionCollision } from '../api/types';
+import { Modal } from '../components/Modal';
+import { CourseConflictMatrix } from '../components/CourseConflictMatrix';
 
 const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 const DAY_HR: Record<string, string> = {
@@ -32,6 +34,12 @@ export function CollisionWorkbench() {
   const [kindFilter, setKindFilter] = useState<'ALL' | 'ROOM' | 'INSTRUCTOR' | 'GROUP' | 'CAPACITY'>(
     'ALL',
   );
+  const [showMatrix, setShowMatrix] = useState(false);
+  const matrix = useQuery({
+    queryKey: ['course-conflict-matrix'],
+    queryFn: () => api.courseConflictMatrix(),
+    enabled: showMatrix,
+  });
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['timetable-resolution'] });
@@ -132,6 +140,13 @@ export function CollisionWorkbench() {
             onClick={() => resolveAll.mutate()}
           >
             {resolveAll.isPending ? 'Rješavam…' : 'Riješi sve'}
+          </button>
+          <button
+            className="ghost"
+            title="Prikaži matricu preklapanja studenata po parovima kolegija"
+            onClick={() => setShowMatrix(true)}
+          >
+            Matrica preklapanja
           </button>
         </div>
       </div>
@@ -292,6 +307,24 @@ export function CollisionWorkbench() {
           )}
         </>
       )}
+
+      <Modal
+        open={showMatrix}
+        onClose={() => setShowMatrix(false)}
+        title="Matrica preklapanja kolegija (dijeljeni studenti)"
+        wide
+      >
+        <p className="muted" style={{ marginTop: 0 }}>
+          Svaki redak i stupac je jedan kolegij. Što je ćelija crvenija, to više studenata sluša oba
+          kolegija — pa njihovi ispiti ne smiju biti u istom terminu i trebaju biti što više udaljeni.
+          Bijelo znači da par nema zajedničkih studenata.
+        </p>
+        {matrix.isLoading && <p className="muted">Učitavanje matrice…</p>}
+        {matrix.isError && (
+          <div className="banner err">{(matrix.error as Error).message}</div>
+        )}
+        {matrix.data && <CourseConflictMatrix matrix={matrix.data} />}
+      </Modal>
     </div>
   );
 }

@@ -37,6 +37,7 @@ import type {
   Room,
   RepoFile,
   ResolutionReport,
+  CourseConflictMatrix,
   StudentStudySummary,
   TeachingLoad,
   RoomSeating,
@@ -313,6 +314,12 @@ export const api = {
   timetable: () => request<TimetableSlot[]>('/api/v1/academic/timetable'),
   timetableCollisions: () => request<CollisionReport>('/api/v1/academic/timetable/collisions'),
   timetableResolution: () => request<ResolutionReport>('/api/v1/academic/timetable/resolution'),
+  courseConflictMatrix: (semester?: string) =>
+    request<CourseConflictMatrix>(
+      semester
+        ? `/api/v1/academic/timetable/conflict-matrix?semester=${encodeURIComponent(semester)}`
+        : '/api/v1/academic/timetable/conflict-matrix',
+    ),
   resolveMove: (body: { slotId: number; dayOfWeek: string; startsAt: string; roomId: number | null }) =>
     request<ResolutionReport>('/api/v1/academic/timetable/resolution/move', {
       method: 'POST',

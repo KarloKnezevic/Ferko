@@ -153,6 +153,23 @@ class TimetableControllerTest {
   }
 
   @Test
+  void adminSeesConflictMatrix() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/timetable/conflict-matrix").session(login("admin.ferko")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.axis").isArray())
+        .andExpect(jsonPath("$.cells").isArray())
+        .andExpect(jsonPath("$.maxShared").isNumber());
+  }
+
+  @Test
+  void studentCannotSeeConflictMatrix() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/timetable/conflict-matrix").session(login("student.ana")))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void studentCannotAutoResolve() throws Exception {
     mockMvc
         .perform(post("/api/v1/academic/timetable/resolution/auto").session(login("student.ana")))

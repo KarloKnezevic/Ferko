@@ -5,6 +5,7 @@ import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { Sparkline } from '../components/Sparkline';
 import { FlowDiagram } from '../components/FlowDiagram';
+import { fmtNum } from '../util/format';
 import type { AlgorithmRun, SeatingResult } from '../api/types';
 
 const ALGO_LABELS: Record<string, string> = {
@@ -461,7 +462,7 @@ export function ExamSchedulingPage() {
                 Strategija: {result.strategy} · Raspoređeno: {result.seatedStudents} ·{' '}
                 {result.feasible
                   ? 'Svi studenti smješteni unutar kapaciteta.'
-                  : `Prekapacitiranost (kazna ${result.overCapacityPenalty}).`}
+                  : `Prekapacitiranost (kazna ${fmtNum(result.overCapacityPenalty)}).`}
               </div>
               {result.rooms.map((room) => (
                 <div key={room.roomId} className="card" style={{ marginTop: 12 }}>

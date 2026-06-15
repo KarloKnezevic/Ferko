@@ -158,4 +158,12 @@ class TimetableControllerTest {
         .perform(post("/api/v1/academic/timetable/resolution/auto").session(login("student.ana")))
         .andExpect(status().isForbidden());
   }
+
+  @Test
+  void studentCannotGenerateFacultyTimetable() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/academic/timetable/resolution/generate").session(login("student.ana")))
+        .andExpect(status().isForbidden());
+  }
 }

@@ -47,6 +47,14 @@ export function CollisionWorkbench() {
     onSuccess: invalidate,
   });
   const resolveAll = useMutation({ mutationFn: api.resolveAuto, onSuccess: invalidate });
+  const generateAll = useMutation({
+    mutationFn: api.generateFacultyTimetable,
+    onSuccess: () => {
+      setSelected(null);
+      invalidate();
+    },
+  });
+  const busy = resolveAll.isPending || generateAll.isPending;
 
   const collisions = report.data?.collisions ?? [];
 
@@ -94,14 +102,29 @@ export function CollisionWorkbench() {
             </span>
           )}
           <button
+            disabled={busy}
+            title="Generira raspored za sve studente, sve godine i razrješava kolizije"
+            onClick={() => {
+              if (window.confirm('Generirati cijeli raspored fakulteta? Postojeći raspored bit će preraspoređen.'))
+                generateAll.mutate();
+            }}
+          >
+            {generateAll.isPending ? 'Generiram…' : 'Generiraj cijeli raspored'}
+          </button>
+          <button
             className="ghost"
-            disabled={resolveAll.isPending || data.conflictFree}
+            disabled={busy || data.conflictFree}
             onClick={() => resolveAll.mutate()}
           >
             {resolveAll.isPending ? 'Rješavam…' : 'Riješi sve'}
           </button>
         </div>
       </div>
+      {generateAll.isError && (
+        <div className="banner err" style={{ marginTop: 10 }}>
+          {(generateAll.error as Error).message}
+        </div>
+      )}
 
       <div className="card-grid" style={{ marginTop: 12 }}>
         <div className="stat">

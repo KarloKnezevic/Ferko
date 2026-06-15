@@ -320,6 +320,8 @@ export const api = {
     }),
   resolveAuto: () =>
     request<ResolutionReport>('/api/v1/academic/timetable/resolution/auto', { method: 'POST' }),
+  generateFacultyTimetable: () =>
+    request<ResolutionReport>('/api/v1/academic/timetable/resolution/generate', { method: 'POST' }),
   compareTimetable: (body: { studyYear?: number; courseIds?: number[]; periods: number }) =>
     request<TimetableComparison>('/api/v1/academic/timetable/compare', {
       method: 'POST',

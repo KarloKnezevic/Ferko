@@ -81,4 +81,28 @@ public final class ScheduleResolutionViews {
       double score,
       boolean current,
       List<String> reasons) {}
+
+  /**
+   * A room's weekly occupancy for the drag-and-drop board: the rooms the admin can pick from and
+   * the sessions currently placed in the selected one (each carrying its {@code slotId} so a drop
+   * can move it). {@code selectedRoomId} echoes the room the sessions belong to ({@code null} =
+   * none).
+   */
+  public record BoardView(
+      List<BoardRoom> rooms, Long selectedRoomId, List<BoardSession> sessions) {}
+
+  /** A room the board can display, with its capacity. */
+  public record BoardRoom(long id, String code, int capacity) {}
+
+  /**
+   * One placed session in the board's selected room; {@code overCapacity} flags a capacity breach.
+   */
+  public record BoardSession(
+      long slotId,
+      String dayOfWeek,
+      String startsAt,
+      String endsAt,
+      String label,
+      int enrolled,
+      boolean overCapacity) {}
 }

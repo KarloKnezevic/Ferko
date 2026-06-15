@@ -189,6 +189,22 @@ class TimetableControllerTest {
   }
 
   @Test
+  void adminSeesDragDropBoard() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/timetable/resolution/board").session(login("admin.ferko")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.rooms").isArray())
+        .andExpect(jsonPath("$.sessions").isArray());
+  }
+
+  @Test
+  void studentCannotSeeDragDropBoard() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/timetable/resolution/board").session(login("student.ana")))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void studentCannotAutoResolve() throws Exception {
     mockMvc
         .perform(post("/api/v1/academic/timetable/resolution/auto").session(login("student.ana")))

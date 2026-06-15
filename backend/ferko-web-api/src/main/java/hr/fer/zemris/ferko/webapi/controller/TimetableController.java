@@ -133,6 +133,15 @@ public class TimetableController {
     return resolution.candidates(slotId, Math.min(Math.max(limit, 1), 25));
   }
 
+  /** Drag-and-drop board: rooms and the weekly sessions of one room (with slot ids to move). */
+  @GetMapping("/timetable/resolution/board")
+  @PreAuthorize("hasRole('ADMIN')")
+  public hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.BoardView board(
+      @org.springframework.web.bind.annotation.RequestParam(value = "roomId", required = false)
+          Long roomId) {
+    return resolution.board(roomId);
+  }
+
   @PostMapping("/timetable/resolution/move")
   @PreAuthorize("hasRole('ADMIN')")
   @org.springframework.transaction.annotation.Transactional

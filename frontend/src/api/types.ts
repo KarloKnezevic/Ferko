@@ -436,6 +436,15 @@ export interface GeneratedCourseAssignment {
   startsAt: string;
 }
 
+export interface AppliedTimetable {
+  algorithm: string;
+  courses: number;
+  slotsWritten: number;
+  baselineConflicts: number;
+  resultConflicts: number;
+  feasible: boolean;
+}
+
 export interface GeneratedTimetable {
   algorithm: string;
   periods: number;

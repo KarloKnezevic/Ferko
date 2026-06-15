@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n';
@@ -52,6 +52,7 @@ const DAY_HR: Record<string, string> = {
 export function TimetablePage() {
   const { t } = useI18n();
   const { hasRole } = useAuth();
+  const queryClient = useQueryClient();
   const isAdmin = hasRole('ADMIN');
   const [filter, setFilter] = useState('');
   const [studyYear, setStudyYear] = useState(1);
@@ -63,6 +64,18 @@ export function TimetablePage() {
     mutationFn: () => api.generateTimetable({ studyYear, periods, algorithm }),
     onSuccess: (data) => setGenerated(data),
   });
+  const apply = useMutation({
+    mutationFn: () => api.applyTimetable({ studyYear, periods, algorithm }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['timetable'] });
+      queryClient.invalidateQueries({ queryKey: ['timetable-collisions'] });
+    },
+  });
+  // Clear the previewed result when the scope changes, so Apply never persists a stale assignment.
+  useEffect(() => {
+    setGenerated(null);
+    apply.reset();
+  }, [studyYear, periods, algorithm]);
   const [examSlots, setExamSlots] = useState(10);
   const [examGenerated, setExamGenerated] = useState<GeneratedExamTimetable | null>(null);
   const generateExam = useMutation({
@@ -221,6 +234,27 @@ export function TimetablePage() {
                 </div>
               </div>
               <Sparkline values={generated.convergence} />
+              <div style={{ marginTop: 8 }}>
+                <button
+                  className="ghost"
+                  disabled={apply.isPending}
+                  onClick={() => {
+                    if (window.confirm(t('timetable.applyConfirm'))) apply.mutate();
+                  }}
+                >
+                  {apply.isPending ? t('timetable.applying') : t('timetable.apply')}
+                </button>
+                {apply.data && (
+                  <span className="pill ok" style={{ marginLeft: 8 }}>
+                    {t('timetable.applied')}: {apply.data.slotsWritten}
+                  </span>
+                )}
+                {apply.isError && (
+                  <span className="pill warn" style={{ marginLeft: 8 }}>
+                    {(apply.error as Error).message}
+                  </span>
+                )}
+              </div>
               <table style={{ marginTop: 12 }}>
                 <thead>
                   <tr>

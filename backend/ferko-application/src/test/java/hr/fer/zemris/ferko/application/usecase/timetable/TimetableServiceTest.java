@@ -135,5 +135,12 @@ class TimetableServiceTest {
     public List<ClassSchedule> findAll() {
       return List.copyOf(store);
     }
+
+    @Override
+    public int deleteByCourse(long courseId) {
+      int before = store.size();
+      store.removeIf(s -> s.courseId() == courseId);
+      return before - store.size();
+    }
   }
 }

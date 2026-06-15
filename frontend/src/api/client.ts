@@ -4,6 +4,7 @@ import type {
   AuditEvent,
   AlgorithmRun,
   AutoGradeResult,
+  AppliedTimetable,
   CalendarView,
   CollisionReport,
   Consultation,
@@ -302,6 +303,16 @@ export const api = {
   timetableCollisions: () => request<CollisionReport>('/api/v1/academic/timetable/collisions'),
   compareTimetable: (body: { studyYear?: number; courseIds?: number[]; periods: number }) =>
     request<TimetableComparison>('/api/v1/academic/timetable/compare', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  applyTimetable: (body: {
+    studyYear?: number;
+    courseIds?: number[];
+    periods: number;
+    algorithm: string;
+  }) =>
+    request<AppliedTimetable>('/api/v1/academic/timetable/apply', {
       method: 'POST',
       body: JSON.stringify(body),
     }),

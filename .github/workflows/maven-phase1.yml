@@ -164,7 +164,9 @@ jobs:
       - name: Wait for API readiness
         run: |
           mkdir -p target/container-smoke
-          for attempt in $(seq 1 60); do
+          # The demo seeds the full faculty dataset (courses, ~3500 students, timetable,
+          # demonstrators and simulated grades) before readiness flips, so allow ample time.
+          for attempt in $(seq 1 210); do
             if curl -fsS http://localhost:8080/actuator/health > target/container-smoke/health.json; then
               exit 0
             fi

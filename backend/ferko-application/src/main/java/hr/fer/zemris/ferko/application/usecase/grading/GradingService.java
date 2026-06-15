@@ -58,6 +58,20 @@ public class GradingService {
             .map(GradeComponent::maxPoints)
             .findFirst()
             .orElse(0.0);
+    enterPoints(courseId, studentId, componentId, points, maxPoints, enteredBy);
+  }
+
+  /**
+   * Enters points with an already-known component maximum, avoiding the component lookup. Used by
+   * bulk seeding to keep the number of queries down.
+   */
+  public void enterPoints(
+      long courseId,
+      long studentId,
+      long componentId,
+      double points,
+      double maxPoints,
+      String enteredBy) {
     gradingRepository.savePoints(
         new StudentPoints(
             0L,
@@ -128,6 +142,15 @@ public class GradingService {
             .filter(points -> points.studentId() == studentId && points.componentId() != null)
             .mapToDouble(StudentPoints::points)
             .sum();
+    recordGrade(courseId, studentId, finalGrade, total, decidedBy);
+  }
+
+  /**
+   * Records a final grade with an already-computed total, without re-summing the student's points.
+   * Used by bulk seeding where the total is known.
+   */
+  public void recordGrade(
+      long courseId, long studentId, int finalGrade, double total, String decidedBy) {
     gradingRepository.saveGrade(
         new Grade(0L, courseId, studentId, finalGrade, total, decidedBy, LocalDateTime.now()));
   }

@@ -123,8 +123,10 @@ Skripta čeka da aplikacija postane zdrava, a zatim je dostupno:
 
 Baza se pri prvom pokretanju automatski migrira (Flyway) i puni stvarnim FER-ovim podacima:
 aktivni ljetni semestar 2026. s cijelim skupom kolegija i stvarnim upisima studenata, nositeljima
-i izvođačima iz ISVU kataloga, dvoranama izvedenim iz rasporeda te prošlim zimskim semestrom
-2025/2026. za povijest. Opseg punjenja podesiv je preko `FERKO_SEED_ACADEMIC_MAX_COURSES` i
+i izvođačima iz ISVU kataloga, dvoranama izvedenim iz rasporeda, demonstratorima te prošlim zimskim
+semestrom 2025/2026. za povijest. Svi upisani studenti dolaze sa simuliranim bodovima po
+komponentama i izračunatom završnom ocjenom (pragovi se konfiguriraju, vidi `FERKO_GRADING_*`).
+Opseg punjenja podesiv je preko `FERKO_SEED_ACADEMIC_MAX_COURSES` i
 `FERKO_SEED_ACADEMIC_MAX_STUDENTS` (0 = bez ograničenja).
 
 ---

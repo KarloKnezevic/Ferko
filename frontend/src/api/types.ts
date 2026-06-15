@@ -622,6 +622,29 @@ export interface TeachingCourse {
   weeklyHours: number;
 }
 
+/** Administrative view of a user's full profile (ADMIN-only). */
+export interface AdminStudentProfile {
+  userId: number;
+  username: string;
+  fullName: string;
+  email: string | null;
+  active: boolean;
+  roles: string[];
+  student: boolean;
+  jmbag: string | null;
+  studyProgram: string | null;
+  yearOfStudy: number;
+  summary: StudentStudySummary | null;
+  courses: MyCourseGrade[];
+  weekly: WeeklySlot[];
+}
+
+/** One-time password produced by an admin reset, shown to the admin once. */
+export interface PasswordResetResult {
+  username: string;
+  temporaryPassword: string;
+}
+
 export interface TeachingLoad {
   courseCount: number;
   totalStudents: number;

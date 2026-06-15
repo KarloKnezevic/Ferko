@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +19,23 @@ import org.springframework.test.web.servlet.MockMvc;
 class AdminConsoleControllerTest {
 
   @Autowired private MockMvc mockMvc;
+  private final ObjectMapper json = new ObjectMapper();
+
+  private long userId(MockHttpSession adminSession, String username) throws Exception {
+    String body =
+        mockMvc
+            .perform(get("/api/v1/academic/users").session(adminSession))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    for (JsonNode user : json.readTree(body)) {
+      if (username.equals(user.get("username").asText())) {
+        return user.get("id").asLong();
+      }
+    }
+    throw new IllegalStateException("Seeded user not found: " + username);
+  }
 
   private MockHttpSession login(String username) throws Exception {
     MockHttpSession session = new MockHttpSession();
@@ -201,6 +220,62 @@ class AdminConsoleControllerTest {
     MockHttpSession session = login("student.ana");
     mockMvc
         .perform(get("/api/v1/academic/audit").session(session))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void adminSeesStudentProfileWithCoursesAndSchedule() throws Exception {
+    MockHttpSession session = login("admin.ferko");
+    long id = userId(session, "student.ana");
+    mockMvc
+        .perform(get("/api/v1/academic/users/" + id + "/profile").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.username").value("student.ana"))
+        .andExpect(jsonPath("$.student").value(true))
+        .andExpect(jsonPath("$.roles").isArray())
+        .andExpect(jsonPath("$.courses").isArray())
+        .andExpect(jsonPath("$.weekly").isArray());
+  }
+
+  @Test
+  void studentCannotSeeUserProfile() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(get("/api/v1/academic/users/1/profile").session(session))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void adminResetsPasswordAndUserCanLogInWithTheNewOne() throws Exception {
+    MockHttpSession admin = login("admin.ferko");
+    // stuslu.sara is not used to log in by any other test, so resetting her password is isolated.
+    long id = userId(admin, "stuslu.sara");
+    String body =
+        mockMvc
+            .perform(post("/api/v1/academic/users/" + id + "/reset-password").session(admin))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.username").value("stuslu.sara"))
+            .andExpect(jsonPath("$.temporaryPassword").isString())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    String temporary = json.readTree(body).get("temporaryPassword").asText();
+
+    // The reset truly took effect: the user can authenticate with the new one-time password.
+    mockMvc
+        .perform(
+            post("/api/v1/auth/login")
+                .session(new MockHttpSession())
+                .contentType("application/json")
+                .content("{\"username\":\"stuslu.sara\",\"password\":\"" + temporary + "\"}"))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void studentCannotResetPasswords() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(post("/api/v1/academic/users/1/reset-password").session(session))
         .andExpect(status().isForbidden());
   }
 

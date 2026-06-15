@@ -6,7 +6,11 @@ import hr.fer.zemris.ferko.application.usecase.academic.AppUserView;
 import hr.fer.zemris.ferko.application.usecase.academic.SemesterView;
 import hr.fer.zemris.ferko.application.usecase.academic.StudentView;
 import hr.fer.zemris.ferko.application.usecase.academic.SyncStatusView;
+import hr.fer.zemris.ferko.application.usecase.admin.AdminStudentService;
+import hr.fer.zemris.ferko.application.usecase.admin.AdminStudentViews.AdminStudentProfileView;
+import hr.fer.zemris.ferko.application.usecase.admin.AdminStudentViews.PasswordResetView;
 import hr.fer.zemris.ferko.application.usecase.audit.AuditService;
+import hr.fer.zemris.ferko.webapi.support.TemporaryPasswords;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,12 +34,17 @@ public class AcademicAdminController {
 
   private final AcademicProvisioningService provisioning;
   private final AcademicQueryService query;
+  private final AdminStudentService adminStudent;
   private final AuditService audit;
 
   public AcademicAdminController(
-      AcademicProvisioningService provisioning, AcademicQueryService query, AuditService audit) {
+      AcademicProvisioningService provisioning,
+      AcademicQueryService query,
+      AdminStudentService adminStudent,
+      AuditService audit) {
     this.provisioning = provisioning;
     this.query = query;
+    this.adminStudent = adminStudent;
     this.audit = audit;
   }
 
@@ -110,6 +119,33 @@ public class AcademicAdminController {
   @PreAuthorize("hasRole('ADMIN')")
   public List<AppUserView> listUsers() {
     return query.listUsers();
+  }
+
+  @GetMapping("/users/{userId}/profile")
+  @PreAuthorize("hasRole('ADMIN')")
+  public AdminStudentProfileView userProfile(@PathVariable long userId) {
+    return adminStudent
+        .profile(userId)
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Korisnik ne postoji."));
+  }
+
+  @PostMapping("/users/{userId}/reset-password")
+  @PreAuthorize("hasRole('ADMIN')")
+  public PasswordResetView resetUserPassword(
+      @PathVariable long userId, Authentication authentication) {
+    PasswordResetView result =
+        adminStudent
+            .resetPassword(userId, TemporaryPasswords.generate())
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Korisnik ne postoji."));
+    audit.record(
+        authentication.getName(),
+        "USER_PASSWORD_RESET",
+        "app_user",
+        String.valueOf(userId),
+        "reset by admin");
+    return result;
   }
 
   @GetMapping("/sync/status")

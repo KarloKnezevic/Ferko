@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useI18n } from '../i18n';
+import { StudentProfileModal } from '../components/StudentProfileModal';
 
 export function AdminPage() {
   const { t } = useI18n();
   const queryClient = useQueryClient();
+  const [profileUserId, setProfileUserId] = useState<number | null>(null);
 
   const users = useQuery({ queryKey: ['admin-users'], queryFn: api.adminUsers });
   const semesters = useQuery({ queryKey: ['semesters'], queryFn: api.semesters });
@@ -215,8 +217,23 @@ export function AdminPage() {
           </thead>
           <tbody>
             {users.data?.map((u) => (
-              <tr key={u.id}>
-                <td>{u.fullName}</td>
+              <tr
+                key={u.id}
+                style={{ cursor: 'pointer' }}
+                title="Otvori profil korisnika"
+                onClick={() => setProfileUserId(u.id)}
+              >
+                <td>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setProfileUserId(u.id);
+                    }}
+                    href="#"
+                  >
+                    {u.fullName}
+                  </a>
+                </td>
                 <td>{u.username}</td>
                 <td className="muted">{u.email}</td>
                 <td>
@@ -238,6 +255,10 @@ export function AdminPage() {
           </tbody>
         </table>
       </div>
+
+      {profileUserId !== null && (
+        <StudentProfileModal userId={profileUserId} onClose={() => setProfileUserId(null)} />
+      )}
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <h2 style={{ padding: '16px 16px 0' }}>{t('admin.audit')}</h2>

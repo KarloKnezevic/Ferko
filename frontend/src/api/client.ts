@@ -1,5 +1,7 @@
 import type {
   AdminUser,
+  AdminStudentProfile,
+  PasswordResetResult,
   AppSettings,
   AuditEvent,
   AlgorithmRun,
@@ -358,6 +360,12 @@ export const api = {
   // Admin
   semesters: () => request<Semester[]>('/api/v1/academic/semesters'),
   adminUsers: () => request<AdminUser[]>('/api/v1/academic/users'),
+  adminUserProfile: (userId: number) =>
+    request<AdminStudentProfile>(`/api/v1/academic/users/${userId}/profile`),
+  adminResetPassword: (userId: number) =>
+    request<PasswordResetResult>(`/api/v1/academic/users/${userId}/reset-password`, {
+      method: 'POST',
+    }),
   syncStatus: () => request<SyncStatus>('/api/v1/academic/sync/status'),
   settings: () => request<AppSettings>('/api/v1/academic/settings'),
   auditEvents: (limit = 100) => request<AuditEvent[]>(`/api/v1/academic/audit?limit=${limit}`),

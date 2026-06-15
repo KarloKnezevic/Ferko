@@ -9,7 +9,8 @@ export function ProfilePage() {
   const { t } = useI18n();
   const { hasRole } = useAuth();
   const isStudent = hasRole('STUDENT');
-  const isStaff = hasRole('ADMIN', 'STUSLU', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT');
+  // Teaching roles only — ADMIN/STUSLU administer the system but never teach courses.
+  const isTeaching = hasRole('NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT');
 
   const profile = useQuery({ queryKey: ['my-profile'], queryFn: api.myProfile });
   const study = useQuery({
@@ -20,7 +21,7 @@ export function ProfilePage() {
   const teaching = useQuery({
     queryKey: ['my-teaching-load'],
     queryFn: api.myTeachingLoad,
-    enabled: isStaff && !isStudent,
+    enabled: isTeaching,
   });
 
   if (profile.isLoading) return <p className="muted">Učitavanje…</p>;
@@ -108,7 +109,7 @@ export function ProfilePage() {
         </div>
       )}
 
-      {isStaff && !isStudent && teaching.data && (
+      {isTeaching && teaching.data && (
         <div className="card">
           <h2>Nastavno opterećenje</h2>
           <div className="card-grid">

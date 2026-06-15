@@ -40,7 +40,7 @@ export function LoginPage() {
         <div className="brand">
           FER<span>KO</span>
         </div>
-        <div className="subtitle">Fakultet elektrotehnike i računarstva</div>
+        <div className="subtitle">Sveučilišni fakultet</div>
         {error && <div className="banner err">{error}</div>}
         <label htmlFor="username">Korisničko ime</label>
         <input

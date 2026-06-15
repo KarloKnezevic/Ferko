@@ -1,7 +1,7 @@
 # Architecture
 
-FERKO is a modernized academic portal for the Faculty of Electrical Engineering and Computing
-(FER), University of Zagreb. The backend is a Maven multi-module project built around
+FERKO is a modernized academic portal for a university faculty. The backend is a Maven
+multi-module project built around
 **hexagonal architecture** (ports and adapters) and clean-architecture dependency rules:
 business logic never depends on the framework, database, or transport. All dependencies point
 **inward**, toward the domain.

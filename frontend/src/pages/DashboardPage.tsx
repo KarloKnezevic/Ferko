@@ -32,7 +32,16 @@ export function DashboardPage() {
   const { user, hasRole } = useAuth();
   const isStudent = hasRole('STUDENT');
   const isStaff = hasRole('ADMIN', 'STUSLU', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT');
+  // Teaching roles only — ADMIN/STUSLU administer the system but never teach courses.
+  const isTeaching = hasRole('NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT');
   const isInvigilator = hasRole('ASISTENT', 'ASISTENT_ORGANIZATOR', 'NASTAVNIK', 'NOSITELJ');
+  // For ADMIN/STUSLU the course list is the full catalogue (an administrative overview), not
+  // a teaching load — they do not teach.
+  const coursesCardTitle = isStudent
+    ? 'Kolegiji koje slušam'
+    : isTeaching
+      ? 'Kolegiji koje predajem'
+      : 'Svi kolegiji';
 
   const semester = useQuery({ queryKey: ['active-semester'], queryFn: api.activeSemester });
   const semesterCode = semester.data?.code;
@@ -115,7 +124,7 @@ export function DashboardPage() {
 
   const quickAccessCard = (
     <div className="card">
-      <h2>{isStudent ? 'Kolegiji koje slušam' : 'Kolegiji koje predajem'}</h2>
+      <h2>{coursesCardTitle}</h2>
       {quickCourses.length === 0 && <p className="muted">Nema kolegija u tekućem semestru.</p>}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         {quickCourses.map((c) => (

@@ -23,14 +23,27 @@ class SpaRoutingTest {
 
   @Test
   void clientRoutesFallBackToIndex() throws Exception {
-    mockMvc
-        .perform(get("/kolegiji/5"))
-        .andExpect(status().isOk())
-        .andExpect(forwardedUrl("/index.html"));
-    mockMvc
-        .perform(get("/prostorije"))
-        .andExpect(status().isOk())
-        .andExpect(forwardedUrl("/index.html"));
+    // Every top-level SPA route must resolve on a deep link / browser refresh.
+    for (String route :
+        new String[] {
+          "/login",
+          "/kolegiji",
+          "/kolegiji/5",
+          "/kolegiji/5/bodovi",
+          "/prostorije",
+          "/studenti",
+          "/raspored",
+          "/kalendar",
+          "/obavijesti",
+          "/moje-provjere",
+          "/moji-bodovi",
+          "/moja-dezurstva",
+          "/profil",
+          "/e-portfolio",
+          "/admin"
+        }) {
+      mockMvc.perform(get(route)).andExpect(status().isOk()).andExpect(forwardedUrl("/index.html"));
+    }
   }
 
   @Test

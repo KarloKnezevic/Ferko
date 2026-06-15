@@ -36,6 +36,7 @@ import type {
   PointsOverviewRow,
   Room,
   RepoFile,
+  ResolutionReport,
   StudentStudySummary,
   TeachingLoad,
   RoomSeating,
@@ -311,6 +312,14 @@ export const api = {
   // Timetable (raspored nastave)
   timetable: () => request<TimetableSlot[]>('/api/v1/academic/timetable'),
   timetableCollisions: () => request<CollisionReport>('/api/v1/academic/timetable/collisions'),
+  timetableResolution: () => request<ResolutionReport>('/api/v1/academic/timetable/resolution'),
+  resolveMove: (body: { slotId: number; dayOfWeek: string; startsAt: string; roomId: number | null }) =>
+    request<ResolutionReport>('/api/v1/academic/timetable/resolution/move', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  resolveAuto: () =>
+    request<ResolutionReport>('/api/v1/academic/timetable/resolution/auto', { method: 'POST' }),
   compareTimetable: (body: { studyYear?: number; courseIds?: number[]; periods: number }) =>
     request<TimetableComparison>('/api/v1/academic/timetable/compare', {
       method: 'POST',

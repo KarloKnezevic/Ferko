@@ -64,8 +64,8 @@ with their exact seat.
 ## Heritage — prof. dr. sc. Marko Čupić
 
 FERKO is not a new idea. The original **FERKO** was conceived and built by **prof. dr. sc. Marko
-Čupić** of the Faculty of Electrical Engineering and Computing (FER), University of Zagreb, and that
-system is **still in active production use today** by thousands of students and teachers:
+Čupić**, and that system is **still in active production use today** by thousands of students and
+teachers:
 
 > ### [https://ferko.fer.hr/ferko](https://ferko.fer.hr/ferko)
 
@@ -74,7 +74,7 @@ the faithful information architecture and workflows of the original, while the e
 scheduling engine is taken directly from prof. Čupić's doctoral thesis:
 
 > **Marko Čupić (2011), _Scheduling of Teaching Activities Using Evolutionary Computation_**,
-> doctoral thesis, University of Zagreb, Faculty of Electrical Engineering and Computing.
+> doctoral thesis.
 
 The formal scheduling problem models (ch. 4), the families of metaheuristics (ch. 5), the
 parallelization (ch. 6) and the timetable-publication model (ch. 7) from the thesis are implemented
@@ -526,8 +526,7 @@ See [docs/operations/releases.md](docs/operations/releases.md) for the full proc
   ([ferko.fer.hr/ferko](https://ferko.fer.hr/ferko)) and of the doctoral thesis on which the
   scheduling engine is based. Sincere thanks for the original work, design and long-running
   maintenance of the production system.
-- **Faculty of Electrical Engineering and Computing, University of Zagreb** — the domain and
-  teaching context.
+- **The university faculty** that provides the domain and teaching context.
 
 ---
 

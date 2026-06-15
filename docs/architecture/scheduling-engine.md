@@ -4,8 +4,7 @@ The `ferko-scheduling` module is FERKO's evolutionary scheduling engine. It impl
 formalism from the doctoral thesis:
 
 > **Marko Čupić (2011)**, _Raspoređivanje nastavnih aktivnosti evolucijskim računanjem_
-> (Scheduling of teaching activities by evolutionary computation), doctoral thesis,
-> Faculty of Electrical Engineering and Computing (FER), University of Zagreb.
+> (Scheduling of teaching activities by evolutionary computation), doctoral thesis.
 
 The module is **pure Java** — no Spring, no dependency on the rest of the system — and can be used
 as a **standalone library**. The application layer consumes it only through the small `Optimizer`

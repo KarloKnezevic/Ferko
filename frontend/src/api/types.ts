@@ -419,6 +419,14 @@ export interface TimetableComparison {
   runs: AlgorithmComparison[];
 }
 
+export interface GradeThresholds {
+  excellent: number;
+  veryGood: number;
+  good: number;
+  sufficient: number;
+  custom: boolean;
+}
+
 export interface GeneratedCourseAssignment {
   courseId: number;
   courseCode: string;

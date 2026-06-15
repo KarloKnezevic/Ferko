@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client';
@@ -38,6 +38,32 @@ export function GradingPage() {
     queryClient.invalidateQueries({ queryKey: ['points-overview', courseId] });
     queryClient.invalidateQueries({ queryKey: ['grade-components', courseId] });
   };
+
+  // Per-course grade thresholds
+  const thresholds = useQuery({
+    queryKey: ['grade-thresholds', courseId],
+    queryFn: () => api.gradeThresholds(courseId),
+    enabled: canManage,
+  });
+  const [thr, setThr] = useState({ excellent: 88, veryGood: 75, good: 62, sufficient: 50 });
+  useEffect(() => {
+    if (thresholds.data) {
+      setThr({
+        excellent: thresholds.data.excellent,
+        veryGood: thresholds.data.veryGood,
+        good: thresholds.data.good,
+        sufficient: thresholds.data.sufficient,
+      });
+    }
+  }, [thresholds.data]);
+  const saveThresholds = useMutation({
+    mutationFn: () => api.setGradeThresholds(courseId, thr),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['grade-thresholds', courseId] }),
+  });
+  const computeGrades = useMutation({
+    mutationFn: () => api.computeFinalGrades(courseId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['points-overview', courseId] }),
+  });
 
   // Add component
   const [cName, setCName] = useState('');
@@ -126,6 +152,72 @@ export function GradingPage() {
       </div>
       <h1>{t('grading.title')}</h1>
       <p className="muted">{t('grading.subtitle')}</p>
+
+      {canManage && (
+        <div className="card">
+          <h2>{t('grading.thresholds')}</h2>
+          <p className="muted">
+            {t('grading.thresholdsNote')}
+            {thresholds.data && !thresholds.data.custom ? ` (${t('grading.thresholdsDefault')})` : ''}
+          </p>
+          <div className="form-row">
+            <div>
+              <label>{t('admin.gradeExcellent')}</label>
+              <input
+                type="number"
+                value={thr.excellent}
+                onChange={(e) => setThr({ ...thr, excellent: Number(e.target.value) })}
+              />
+            </div>
+            <div>
+              <label>{t('admin.gradeVeryGood')}</label>
+              <input
+                type="number"
+                value={thr.veryGood}
+                onChange={(e) => setThr({ ...thr, veryGood: Number(e.target.value) })}
+              />
+            </div>
+            <div>
+              <label>{t('admin.gradeGood')}</label>
+              <input
+                type="number"
+                value={thr.good}
+                onChange={(e) => setThr({ ...thr, good: Number(e.target.value) })}
+              />
+            </div>
+            <div>
+              <label>{t('admin.gradeSufficient')}</label>
+              <input
+                type="number"
+                value={thr.sufficient}
+                onChange={(e) => setThr({ ...thr, sufficient: Number(e.target.value) })}
+              />
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <button disabled={saveThresholds.isPending} onClick={() => saveThresholds.mutate()}>
+              {t('common.save')}
+            </button>
+            <button
+              className="ghost"
+              disabled={computeGrades.isPending}
+              onClick={() => computeGrades.mutate()}
+            >
+              {t('grading.recompute')}
+            </button>
+          </div>
+          {saveThresholds.isError && (
+            <div className="banner err" style={{ marginTop: 8 }}>
+              {(saveThresholds.error as Error).message}
+            </div>
+          )}
+          {computeGrades.data && (
+            <div className="banner ok" style={{ marginTop: 8 }}>
+              {t('grading.recomputed')}: {computeGrades.data.graded}
+            </div>
+          )}
+        </div>
+      )}
 
       {canManage && (
         <div className="card">

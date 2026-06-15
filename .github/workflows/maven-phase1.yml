@@ -244,7 +244,7 @@ jobs:
         run: mkdir -p target/container-security
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ferko-web-api:ci-${{ github.sha }}
           format: sarif

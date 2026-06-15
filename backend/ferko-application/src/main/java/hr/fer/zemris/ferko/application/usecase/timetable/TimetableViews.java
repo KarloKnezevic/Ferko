@@ -25,7 +25,14 @@ public final class TimetableViews {
    * courses.
    */
   public record CollisionReportView(
-      int totalSlots, int roomConflicts, int instructorConflicts, List<ConflictView> conflicts) {}
+      int totalSlots,
+      int roomConflicts,
+      int instructorConflicts,
+      List<ConflictView> conflicts,
+      List<RoomUsageView> roomUtilization) {}
+
+  /** Weekly slot count for a room (busiest rooms first). */
+  public record RoomUsageView(String room, int slots) {}
 
   /** A single detected conflict. {@code kind} is {@code ROOM} or {@code INSTRUCTOR}. */
   public record ConflictView(

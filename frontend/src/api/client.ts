@@ -9,6 +9,7 @@ import type {
   Consultation,
   GeneratedExamTimetable,
   GeneratedTimetable,
+  TimetableComparison,
   CourseComponent,
   CourseDetail,
   CourseEnrollment,
@@ -298,6 +299,11 @@ export const api = {
   // Timetable (raspored nastave)
   timetable: () => request<TimetableSlot[]>('/api/v1/academic/timetable'),
   timetableCollisions: () => request<CollisionReport>('/api/v1/academic/timetable/collisions'),
+  compareTimetable: (body: { studyYear?: number; courseIds?: number[]; periods: number }) =>
+    request<TimetableComparison>('/api/v1/academic/timetable/compare', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
   generateTimetable: (body: {
     studyYear?: number;
     courseIds?: number[];

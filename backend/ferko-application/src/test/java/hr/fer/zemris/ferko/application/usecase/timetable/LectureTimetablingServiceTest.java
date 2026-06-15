@@ -68,6 +68,31 @@ class LectureTimetablingServiceTest {
     assertTrue(result.feasible());
   }
 
+  @Test
+  void comparesAllMetaheuristics() {
+    long a = courses.save(course("A", "Algebra")).id();
+    long b = courses.save(course("B", "Baze")).id();
+    long s1 = students.save(student("0001", 1)).id();
+    enroll(s1, a);
+    enroll(s1, b);
+
+    var comparison = service.compare(List.of(a, b), 5);
+    assertEquals(2, comparison.courses());
+    assertEquals(1, comparison.baselineConflicts());
+    // One run per metaheuristic, sorted best-first (fewest conflicts).
+    assertEquals(6, comparison.runs().size());
+    assertTrue(comparison.runs().get(0).conflicts() <= comparison.runs().get(5).conflicts());
+    assertFalse(comparison.runs().get(0).convergence().isEmpty());
+  }
+
+  @Test
+  void compareWithEmptyScopeHasNoRuns() {
+    var comparison = service.compare(List.of(), 5);
+    assertEquals(0, comparison.courses());
+    assertEquals(0, comparison.baselineConflicts());
+    assertTrue(comparison.runs().isEmpty());
+  }
+
   private static Course course(String code, String name) {
     return new Course(0L, code, name, "2026LJ", 5, "", "");
   }

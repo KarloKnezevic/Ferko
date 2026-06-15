@@ -78,4 +78,36 @@ class TimetableControllerTest {
                 .content("{\"courseIds\":[1,2],\"periods\":6}"))
         .andExpect(status().isForbidden());
   }
+
+  @Test
+  void adminComparesAlgorithms() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/academic/timetable/compare")
+                .session(login("admin.ferko"))
+                .contentType("application/json")
+                .content("{\"courseIds\":[1,2,3],\"periods\":6}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.runs").isArray())
+        .andExpect(jsonPath("$.runs[0].algorithm").exists());
+  }
+
+  @Test
+  void studentCannotCompareAlgorithms() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/academic/timetable/compare")
+                .session(login("student.ana"))
+                .contentType("application/json")
+                .content("{\"courseIds\":[1,2],\"periods\":6}"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void collisionReportIncludesRoomUtilization() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/academic/timetable/collisions").session(login("admin.ferko")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.roomUtilization").isArray());
+  }
 }

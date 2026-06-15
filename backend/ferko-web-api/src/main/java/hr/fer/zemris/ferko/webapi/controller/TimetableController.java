@@ -1,6 +1,7 @@
 package hr.fer.zemris.ferko.webapi.controller;
 
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingService;
+import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.ComparisonView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.GeneratedTimetableView;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableService;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableViews.CollisionReportView;
@@ -51,6 +52,17 @@ public class TimetableController {
     int periods = request.periods() == null || request.periods() < 1 ? 15 : request.periods();
     return lectureTimetabling.generate(
         courseIds == null ? List.of() : courseIds, periods, request.algorithm());
+  }
+
+  @PostMapping("/timetable/compare")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ComparisonView compare(@RequestBody GenerateRequest request) {
+    List<Long> courseIds = request.courseIds();
+    if ((courseIds == null || courseIds.isEmpty()) && request.studyYear() != null) {
+      courseIds = lectureTimetabling.coursesForStudyYear(request.studyYear());
+    }
+    int periods = request.periods() == null || request.periods() < 1 ? 15 : request.periods();
+    return lectureTimetabling.compare(courseIds == null ? List.of() : courseIds, periods);
   }
 
   /**

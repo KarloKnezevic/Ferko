@@ -55,6 +55,13 @@ public class AcademicDataSeeder implements ApplicationRunner {
   /** Past semester kept on record so the semester list shows a completed prior term. */
   private static final String WINTER_CODE = "2025Z";
 
+  /**
+   * How many of the (enrolment-ranked) courses the demo teaching accounts are attached to. Keeps
+   * the demo {@code lecturer.marko}/{@code assistant.iva} logins realistic (a handful of courses,
+   * not the whole faculty) while covering the demo student's course and the seeded test fixtures.
+   */
+  private static final int DEMO_STAFF_COURSE_LIMIT = 5;
+
   private final LegacyDatasetLoader datasetLoader;
   private final AcademicProvisioningService provisioning;
   private final DemonstratorService demonstratorService;
@@ -133,7 +140,7 @@ public class AcademicDataSeeder implements ApplicationRunner {
               workload.ects(),
               description(entry, workload),
               entry != null ? entry.literature() : null);
-      assignCourseStaff(courseId, entry, demoLecturerId, demoAssistantId, now);
+      assignCourseStaff(courseId, entry, demoLecturerId, demoAssistantId, scheduleIndex, now);
       provisioning.provisionGroup(courseId, "P1", "LECTURE", "Predavanja", 400);
       long labGroup = provisioning.provisionGroup(courseId, "L1", "LAB", "Laboratorij", 400);
       courseIdByCode.put(code, courseId);
@@ -293,15 +300,24 @@ public class AcademicDataSeeder implements ApplicationRunner {
     return demoStudentId;
   }
 
-  /** Assigns the real course holders/lecturers plus the demo teaching accounts. */
+  /**
+   * Assigns every course its real holders/lecturers, and additionally attaches the demo teaching
+   * accounts (so the seeded {@code lecturer.marko}/{@code assistant.iva} logins have something to
+   * manage) to only the first few courses. Attaching the demo accounts to <em>every</em> course
+   * would make those logins appear to teach the whole faculty — their calendar and "my courses"
+   * would list everything.
+   */
   private void assignCourseStaff(
       long courseId,
       CourseCatalogEntry entry,
       long demoLecturerId,
       long demoAssistantId,
+      int courseIndex,
       LocalDateTime now) {
-    provisioning.assignStaff(courseId, demoLecturerId, "NOSITELJ");
-    provisioning.assignStaff(courseId, demoAssistantId, "ASISTENT");
+    if (courseIndex < DEMO_STAFF_COURSE_LIMIT) {
+      provisioning.assignStaff(courseId, demoLecturerId, "NOSITELJ");
+      provisioning.assignStaff(courseId, demoAssistantId, "ASISTENT");
+    }
     if (entry == null) {
       return;
     }

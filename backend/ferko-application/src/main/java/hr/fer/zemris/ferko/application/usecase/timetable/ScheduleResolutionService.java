@@ -342,6 +342,7 @@ public class ScheduleResolutionService {
         slot.startsAt().format(HM),
         slot.endsAt().format(HM),
         resourceLabel(collision, slot, context),
+        context.roomCode(slot.roomId()),
         slot.id(),
         label(slot, context),
         collision.otherSlotId(),

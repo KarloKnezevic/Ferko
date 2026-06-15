@@ -4,6 +4,7 @@ import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n';
 import { fmtNum } from '../util/format';
+import { CollisionWorkbench } from './CollisionWorkbench';
 import type {
   GeneratedExamTimetable,
   GeneratedTimetable,
@@ -239,6 +240,8 @@ export function TimetablePage() {
           )}
         </div>
       )}
+
+      {isAdmin && <CollisionWorkbench />}
 
       {isAdmin && (
         <div className="card">

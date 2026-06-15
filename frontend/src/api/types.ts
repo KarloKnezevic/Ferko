@@ -424,6 +424,40 @@ export interface CollisionReport {
   heatmap: RoomHeat[];
 }
 
+export interface MoveSuggestion {
+  feasible: boolean;
+  dayOfWeek: string | null;
+  startsAt: string | null;
+  endsAt: string | null;
+  roomId: number | null;
+  roomCode: string | null;
+  note: string;
+}
+
+export interface ResolutionCollision {
+  kind: string;
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  resource: string;
+  room: string;
+  slotId: number;
+  slotLabel: string;
+  otherSlotId: number | null;
+  otherLabel: string | null;
+  suggestion: MoveSuggestion;
+}
+
+export interface ResolutionReport {
+  totalSlots: number;
+  roomCollisions: number;
+  instructorCollisions: number;
+  groupCollisions: number;
+  capacityViolations: number;
+  conflictFree: boolean;
+  collisions: ResolutionCollision[];
+}
+
 export interface AlgorithmComparison {
   algorithm: string;
   conflicts: number;

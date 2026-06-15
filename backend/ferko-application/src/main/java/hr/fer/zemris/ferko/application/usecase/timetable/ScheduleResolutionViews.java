@@ -30,6 +30,7 @@ public final class ScheduleResolutionViews {
       String startsAt,
       String endsAt,
       String resource,
+      String room,
       long slotId,
       String slotLabel,
       Long otherSlotId,

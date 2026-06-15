@@ -508,8 +508,10 @@ public class ApplicationBeans {
   public LectureTimetablingService lectureTimetablingService(
       CourseRepository courseRepository,
       EnrollmentRepository enrollmentRepository,
-      StudentRepository studentRepository) {
-    return new LectureTimetablingService(courseRepository, enrollmentRepository, studentRepository);
+      StudentRepository studentRepository,
+      ClassScheduleRepository classScheduleRepository) {
+    return new LectureTimetablingService(
+        courseRepository, enrollmentRepository, studentRepository, classScheduleRepository);
   }
 
   @Bean

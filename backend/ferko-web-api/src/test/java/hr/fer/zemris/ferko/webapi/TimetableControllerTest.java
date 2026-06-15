@@ -93,6 +93,30 @@ class TimetableControllerTest {
   }
 
   @Test
+  void adminAppliesGeneratedTimetable() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/academic/timetable/apply")
+                .session(login("admin.ferko"))
+                .contentType("application/json")
+                .content("{\"courseIds\":[1,2],\"periods\":6,\"algorithm\":\"GENETIC\"}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.courses").value(2))
+        .andExpect(jsonPath("$.slotsWritten").value(2));
+  }
+
+  @Test
+  void studentCannotApplyTimetable() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/academic/timetable/apply")
+                .session(login("student.ana"))
+                .contentType("application/json")
+                .content("{\"courseIds\":[1,2],\"periods\":6}"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void studentCannotCompareAlgorithms() throws Exception {
     mockMvc
         .perform(

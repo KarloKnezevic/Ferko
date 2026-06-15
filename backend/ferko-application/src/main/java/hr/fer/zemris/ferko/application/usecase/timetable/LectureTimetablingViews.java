@@ -44,4 +44,13 @@ public final class LectureTimetablingViews {
   /** Comparison of all metaheuristics on one timetabling scope. */
   public record ComparisonView(
       int courses, int periods, int baselineConflicts, List<AlgorithmComparisonView> runs) {}
+
+  /** Outcome of persisting a generated timetable into the weekly schedule. */
+  public record AppliedTimetableView(
+      String algorithm,
+      int courses,
+      int slotsWritten,
+      int baselineConflicts,
+      int resultConflicts,
+      boolean feasible) {}
 }

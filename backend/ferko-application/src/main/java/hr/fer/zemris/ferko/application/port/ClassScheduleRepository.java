@@ -12,4 +12,7 @@ public interface ClassScheduleRepository {
 
   /** All timetable slots across every course (used for faculty-wide views and collision checks). */
   List<ClassSchedule> findAll();
+
+  /** Removes every slot of a course (used when replacing it with a generated timetable). */
+  int deleteByCourse(long courseId);
 }

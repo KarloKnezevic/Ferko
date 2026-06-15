@@ -319,7 +319,8 @@ The application puts the engine to three end-user uses:
 1. **Exam seating into rooms** — assign registered students to seats across reserved rooms, with an
    all-six-algorithm comparison and convergence curves.
 2. **Evolutionary lecture-timetable generation** — place the courses of a study year into time slots
-   so that student collisions are minimised, with the convergence curve shown.
+   so that student collisions are minimised, with the convergence curve shown, and apply the result
+   to persist it as the courses' actual weekly schedule.
 3. **Exam-timetable generation** — produce a collision-free exam schedule and compare it against the
    historical schedule.
 

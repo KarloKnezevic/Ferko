@@ -75,6 +75,11 @@ const HR: Dict = {
   'timetable.runCompare': 'Usporedi algoritme',
   'timetable.convergence': 'Konvergencija',
   'timetable.conflictsCol': 'Kolizije',
+  'timetable.apply': 'Primijeni na raspored',
+  'timetable.applying': 'Primjena…',
+  'timetable.applyConfirm':
+    'Primijeniti generirani raspored? Postojeći termini odabranih kolegija bit će zamijenjeni.',
+  'timetable.applied': 'Primijenjeno termina',
   'grading.title': 'Preglednik bodova',
   'grading.subtitle': 'Bodovne komponente, unos bodova, ocjene i auto-ocjenjivanje',
   'grading.thresholds': 'Bodovni pragovi kolegija',
@@ -270,6 +275,11 @@ const EN: Dict = {
   'timetable.runCompare': 'Compare algorithms',
   'timetable.convergence': 'Convergence',
   'timetable.conflictsCol': 'Conflicts',
+  'timetable.apply': 'Apply to timetable',
+  'timetable.applying': 'Applying…',
+  'timetable.applyConfirm':
+    'Apply the generated timetable? Existing slots for the selected courses will be replaced.',
+  'timetable.applied': 'Slots applied',
   'grading.title': 'Points overview',
   'grading.subtitle': 'Grade components, points entry, grades and auto-grading',
   'grading.thresholds': 'Course grade thresholds',

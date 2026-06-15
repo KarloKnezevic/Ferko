@@ -1,14 +1,18 @@
 package hr.fer.zemris.ferko.application.usecase.timetable;
 
+import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.AlgorithmComparisonView;
+import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.AppliedTimetableView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.ComparisonView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.CourseAssignmentView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.GeneratedTimetableView;
+import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import hr.fer.zemris.ferko.domain.model.Course;
 import hr.fer.zemris.ferko.domain.model.Enrollment;
+import hr.fer.zemris.ferko.domain.model.GroupType;
 import hr.fer.zemris.ferko.scheduling.OptimizationResult;
 import hr.fer.zemris.ferko.scheduling.Optimizer;
 import hr.fer.zemris.ferko.scheduling.Optimizers;
@@ -45,14 +49,17 @@ public class LectureTimetablingService {
   private final CourseRepository courseRepository;
   private final EnrollmentRepository enrollmentRepository;
   private final StudentRepository studentRepository;
+  private final ClassScheduleRepository classScheduleRepository;
 
   public LectureTimetablingService(
       CourseRepository courseRepository,
       EnrollmentRepository enrollmentRepository,
-      StudentRepository studentRepository) {
+      StudentRepository studentRepository,
+      ClassScheduleRepository classScheduleRepository) {
     this.courseRepository = courseRepository;
     this.enrollmentRepository = enrollmentRepository;
     this.studentRepository = studentRepository;
+    this.classScheduleRepository = classScheduleRepository;
   }
 
   /** Course ids taken by at least one student in the given study year. */
@@ -145,6 +152,49 @@ public class LectureTimetablingService {
       runs.sort((a, b) -> Integer.compare(a.conflicts(), b.conflicts()));
     }
     return new ComparisonView(n, slots, scope.baseline(), runs);
+  }
+
+  /**
+   * Generates a timetable and persists it: each course's existing slots are replaced by its
+   * generated weekly lecture slot. This makes the engine's proposal the course's actual timetable.
+   */
+  public AppliedTimetableView apply(List<Long> courseIds, int periods, String algorithm) {
+    int slots = Math.min(MAX_PERIODS, Math.max(1, periods));
+    Scope scope = buildScope(courseIds);
+    int n = scope.courses().size();
+    if (n == 0) {
+      return new AppliedTimetableView(resolveName(algorithm), 0, 0, 0, 0, true);
+    }
+
+    SimpleSchedulingProblem problem = new SimpleSchedulingProblem(slots, scope.conflict());
+    OptimizationResult result = resolveOptimizer(algorithm).optimize(problem);
+
+    int written = 0;
+    for (int i = 0; i < n; i++) {
+      long courseId = scope.courses().get(i).id();
+      int period = result.assignment()[i];
+      classScheduleRepository.deleteByCourse(courseId);
+      classScheduleRepository.save(
+          new ClassSchedule(
+              0L,
+              courseId,
+              null,
+              GroupType.LECTURE,
+              null,
+              dayOf(period),
+              startOf(period),
+              startOf(period).plusHours(SLOT_HOURS),
+              ""));
+      written++;
+    }
+
+    return new AppliedTimetableView(
+        resolveName(algorithm),
+        n,
+        written,
+        scope.baseline(),
+        (int) Math.round(result.penalty()),
+        result.isPerfect());
   }
 
   /** Resolved courses plus their student-sharing conflict matrix and all-in-one-slot baseline. */

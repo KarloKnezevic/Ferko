@@ -71,4 +71,9 @@ public class JdbcClassScheduleRepository implements ClassScheduleRepository {
     return jdbcTemplate.query(
         "select * from class_schedule order by day_of_week, starts_at", MAPPER);
   }
+
+  @Override
+  public int deleteByCourse(long courseId) {
+    return jdbcTemplate.update("delete from class_schedule where course_id = ?", courseId);
+  }
 }

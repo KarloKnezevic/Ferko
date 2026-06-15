@@ -4,13 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.support.InMemoryAcademicRepositories;
+import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.AppliedTimetableView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.GeneratedTimetableView;
+import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import hr.fer.zemris.ferko.domain.model.Course;
 import hr.fer.zemris.ferko.domain.model.Enrollment;
 import hr.fer.zemris.ferko.domain.model.EnrollmentStatus;
 import hr.fer.zemris.ferko.domain.model.Student;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -22,8 +26,9 @@ class LectureTimetablingServiceTest {
       new InMemoryAcademicRepositories.Enrollments();
   private final InMemoryAcademicRepositories.Students students =
       new InMemoryAcademicRepositories.Students();
+  private final FakeSchedule schedule = new FakeSchedule();
   private final LectureTimetablingService service =
-      new LectureTimetablingService(courses, enrollments, students);
+      new LectureTimetablingService(courses, enrollments, students, schedule);
 
   @Test
   void generatesConflictMinimisingAssignment() {
@@ -104,5 +109,76 @@ class LectureTimetablingServiceTest {
   private void enroll(long studentId, long courseId) {
     enrollments.save(
         new Enrollment(0L, studentId, courseId, LocalDateTime.now(), EnrollmentStatus.ACTIVE));
+  }
+
+  @Test
+  void applyReplacesEachCourseScheduleWithOneGeneratedSlot() {
+    long a = courses.save(course("A", "Algebra")).id();
+    long b = courses.save(course("B", "Baze")).id();
+    long s1 = students.save(student("0001", 1)).id();
+    enroll(s1, a);
+    enroll(s1, b);
+    // Pre-existing (legacy) slots that apply should replace.
+    schedule.save(slot(a));
+    schedule.save(slot(a));
+
+    AppliedTimetableView result = service.apply(List.of(a, b), 5, "GENETIC");
+    assertEquals(2, result.courses());
+    assertEquals(2, result.slotsWritten());
+    // Each course ends with exactly one generated slot.
+    assertEquals(1, schedule.findByCourse(a).size());
+    assertEquals(1, schedule.findByCourse(b).size());
+  }
+
+  private static ClassSchedule slot(long courseId) {
+    return new ClassSchedule(
+        0L,
+        courseId,
+        null,
+        hr.fer.zemris.ferko.domain.model.GroupType.LECTURE,
+        null,
+        java.time.DayOfWeek.MONDAY,
+        java.time.LocalTime.of(8, 0),
+        java.time.LocalTime.of(10, 0),
+        "");
+  }
+
+  private static final class FakeSchedule implements ClassScheduleRepository {
+    private final List<ClassSchedule> store = new ArrayList<>();
+    private long seq = 0;
+
+    @Override
+    public ClassSchedule save(ClassSchedule entry) {
+      ClassSchedule saved =
+          new ClassSchedule(
+              ++seq,
+              entry.courseId(),
+              entry.groupId(),
+              entry.type(),
+              entry.roomId(),
+              entry.dayOfWeek(),
+              entry.startsAt(),
+              entry.endsAt(),
+              entry.instructor());
+      store.add(saved);
+      return saved;
+    }
+
+    @Override
+    public List<ClassSchedule> findByCourse(long courseId) {
+      return store.stream().filter(s -> s.courseId() == courseId).toList();
+    }
+
+    @Override
+    public List<ClassSchedule> findAll() {
+      return List.copyOf(store);
+    }
+
+    @Override
+    public int deleteByCourse(long courseId) {
+      int before = store.size();
+      store.removeIf(s -> s.courseId() == courseId);
+      return before - store.size();
+    }
   }
 }

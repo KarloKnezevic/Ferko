@@ -1,6 +1,8 @@
 package hr.fer.zemris.ferko.webapi.controller;
 
+import hr.fer.zemris.ferko.application.usecase.audit.AuditService;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingService;
+import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.AppliedTimetableView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.ComparisonView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.GeneratedTimetableView;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableService;
@@ -8,6 +10,7 @@ import hr.fer.zemris.ferko.application.usecase.timetable.TimetableViews.Collisio
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableViews.TimetableSlotView;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +27,15 @@ public class TimetableController {
 
   private final TimetableService timetable;
   private final LectureTimetablingService lectureTimetabling;
+  private final AuditService audit;
 
   public TimetableController(
-      TimetableService timetable, LectureTimetablingService lectureTimetabling) {
+      TimetableService timetable,
+      LectureTimetablingService lectureTimetabling,
+      AuditService audit) {
     this.timetable = timetable;
     this.lectureTimetabling = lectureTimetabling;
+    this.audit = audit;
   }
 
   @GetMapping("/timetable")
@@ -63,6 +70,28 @@ public class TimetableController {
     }
     int periods = request.periods() == null || request.periods() < 1 ? 15 : request.periods();
     return lectureTimetabling.compare(courseIds == null ? List.of() : courseIds, periods);
+  }
+
+  @PostMapping("/timetable/apply")
+  @PreAuthorize("hasRole('ADMIN')")
+  @org.springframework.transaction.annotation.Transactional
+  public AppliedTimetableView apply(
+      @RequestBody GenerateRequest request, Authentication authentication) {
+    List<Long> courseIds = request.courseIds();
+    if ((courseIds == null || courseIds.isEmpty()) && request.studyYear() != null) {
+      courseIds = lectureTimetabling.coursesForStudyYear(request.studyYear());
+    }
+    int periods = request.periods() == null || request.periods() < 1 ? 15 : request.periods();
+    AppliedTimetableView result =
+        lectureTimetabling.apply(
+            courseIds == null ? List.of() : courseIds, periods, request.algorithm());
+    audit.record(
+        authentication.getName(),
+        "TIMETABLE_APPLIED",
+        "timetable",
+        null,
+        result.courses() + " courses, " + result.slotsWritten() + " slots, " + result.algorithm());
+    return result;
   }
 
   /**

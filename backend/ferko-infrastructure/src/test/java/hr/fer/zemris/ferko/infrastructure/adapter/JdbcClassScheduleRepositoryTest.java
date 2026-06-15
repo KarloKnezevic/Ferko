@@ -88,5 +88,10 @@ class JdbcClassScheduleRepositoryTest {
             LocalTime.of(14, 0),
             "Druga"));
     assertEquals(3, repository.findAll().size());
+
+    // deleteByCourse removes only that course's slots and reports the count.
+    assertEquals(2, repository.deleteByCourse(100L));
+    assertEquals(1, repository.findAll().size());
+    assertTrue(repository.findByCourse(100L).isEmpty());
   }
 }

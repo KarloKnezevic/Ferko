@@ -57,6 +57,7 @@ class GradingControllerTest {
     MockHttpSession session = login("lecturer.marko");
     long courseId = topEnrolledCourse(session);
 
+    // Distinct from the seeded MI/ZI/LAB components (unique course_id + short_name).
     String comp =
         mockMvc
             .perform(
@@ -64,7 +65,7 @@ class GradingControllerTest {
                     .session(session)
                     .contentType("application/json")
                     .content(
-                        "{\"name\":\"Međuispit\",\"shortName\":\"MI\",\"maxPoints\":20,\"ordinal\":1}"))
+                        "{\"name\":\"Kviz\",\"shortName\":\"KV\",\"maxPoints\":20,\"ordinal\":9}"))
             .andExpect(status().isCreated())
             .andReturn()
             .getResponse()
@@ -108,7 +109,10 @@ class GradingControllerTest {
     mockMvc
         .perform(get("/api/v1/academic/courses/" + courseId + "/grades").session(session))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].finalGrade").value(4));
+        // Other students may already be graded by the seeder; assert this student's grade.
+        .andExpect(
+            jsonPath("$[?(@.studentId==" + studentId + ")].finalGrade")
+                .value(org.hamcrest.Matchers.hasItem(4)));
   }
 
   @Test

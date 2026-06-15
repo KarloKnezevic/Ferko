@@ -248,13 +248,15 @@ class AdminConsoleControllerTest {
   @Test
   void adminResetsPasswordAndUserCanLogInWithTheNewOne() throws Exception {
     MockHttpSession admin = login("admin.ferko");
-    // stuslu.sara is not used to log in by any other test, so resetting her password is isolated.
-    long id = userId(admin, "stuslu.sara");
+    // Reset an enrolled student (username = JMBAG, all digits). No test ever logs in as one of
+    // these, so mutating its password cannot contaminate other tests sharing the seeded database.
+    EnrolledStudent target = anEnrolledStudent(admin);
     String body =
         mockMvc
-            .perform(post("/api/v1/academic/users/" + id + "/reset-password").session(admin))
+            .perform(
+                post("/api/v1/academic/users/" + target.id() + "/reset-password").session(admin))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.username").value("stuslu.sara"))
+            .andExpect(jsonPath("$.username").value(target.username()))
             .andExpect(jsonPath("$.temporaryPassword").isString())
             .andReturn()
             .getResponse()
@@ -267,8 +269,32 @@ class AdminConsoleControllerTest {
             post("/api/v1/auth/login")
                 .session(new MockHttpSession())
                 .contentType("application/json")
-                .content("{\"username\":\"stuslu.sara\",\"password\":\"" + temporary + "\"}"))
+                .content(
+                    "{\"username\":\""
+                        + target.username()
+                        + "\",\"password\":\""
+                        + temporary
+                        + "\"}"))
         .andExpect(status().isOk());
+  }
+
+  private record EnrolledStudent(long id, String username) {}
+
+  private EnrolledStudent anEnrolledStudent(MockHttpSession adminSession) throws Exception {
+    String body =
+        mockMvc
+            .perform(get("/api/v1/academic/users").session(adminSession))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    for (JsonNode user : json.readTree(body)) {
+      String username = user.get("username").asText();
+      if (username.matches("\\d+")) {
+        return new EnrolledStudent(user.get("id").asLong(), username);
+      }
+    }
+    throw new IllegalStateException("No enrolled (JMBAG) student found in seeded data");
   }
 
   @Test

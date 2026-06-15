@@ -58,6 +58,20 @@ public class GradingService {
             .map(GradeComponent::maxPoints)
             .findFirst()
             .orElse(0.0);
+    enterPoints(courseId, studentId, componentId, points, maxPoints, enteredBy);
+  }
+
+  /**
+   * Enters points with an already-known component maximum, avoiding the component lookup. Used by
+   * bulk seeding to keep the number of queries down.
+   */
+  public void enterPoints(
+      long courseId,
+      long studentId,
+      long componentId,
+      double points,
+      double maxPoints,
+      String enteredBy) {
     gradingRepository.savePoints(
         new StudentPoints(
             0L,

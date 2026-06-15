@@ -101,7 +101,8 @@ public class GradeSeeder implements ApplicationRunner {
         double fraction = Math.max(0.0, Math.min(1.0, 0.30 + 0.65 * random.nextDouble()));
         double points = Math.round(maxPoints[i] * fraction * 10.0) / 10.0;
         total += points;
-        grading.enterPoints(courseId, enrollment.studentId(), componentIds[i], points, DECIDED_BY);
+        grading.enterPoints(
+            courseId, enrollment.studentId(), componentIds[i], points, maxPoints[i], DECIDED_BY);
       }
       int grade = scale.gradeForScore(total, maxTotal);
       grading.recordGrade(courseId, enrollment.studentId(), grade, total, DECIDED_BY);

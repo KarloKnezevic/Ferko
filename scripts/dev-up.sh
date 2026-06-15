@@ -18,12 +18,13 @@ echo "Starting Ferko modernized stack (ferko-app + postgres)..."
 docker compose up -d --build ferko-app postgres
 
 echo "Waiting for API readiness at http://localhost:8080/actuator/health ..."
-for attempt in $(seq 1 90); do
+echo "(first run seeds the full demo dataset — courses, students, timetable, grades — please be patient)"
+for attempt in $(seq 1 210); do
   if curl -fsS http://localhost:8080/actuator/health >/dev/null 2>&1; then
     echo "Ferko is ready."
     break
   fi
-  if [[ "${attempt}" -eq 90 ]]; then
+  if [[ "${attempt}" -eq 210 ]]; then
     echo "Ferko did not become ready in time. Showing logs:" >&2
     docker compose logs --tail=200 ferko-app postgres >&2 || true
     exit 1

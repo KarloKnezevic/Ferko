@@ -10,6 +10,16 @@ updates:
     labels:
       - "dependencies"
       - "java"
+    # Collapse routine version churn into a single PR instead of one per artifact.
+    groups:
+      maven-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Spring Boot major upgrades (e.g. 4.x) are adopted deliberately, not via automated bumps.
+      - dependency-name: "org.springframework.boot:*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -21,3 +31,8 @@ updates:
     labels:
       - "dependencies"
       - "ci"
+    # One grouped PR for routine action updates.
+    groups:
+      github-actions:
+        patterns:
+          - "*"

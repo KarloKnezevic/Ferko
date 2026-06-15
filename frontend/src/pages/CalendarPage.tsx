@@ -12,6 +12,20 @@ const DAY_LABELS: Record<string, string> = {
   FRIDAY: 'Petak',
 };
 
+function relativeDay(iso: string): string {
+  const now = new Date();
+  const then = new Date(iso);
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startThen = new Date(then.getFullYear(), then.getMonth(), then.getDate());
+  const days = Math.round((startThen.getTime() - startToday.getTime()) / 86_400_000);
+  if (days < 0) return 'prošlo';
+  if (days === 0) return 'danas';
+  if (days === 1) return 'sutra';
+  if (days < 7) return `za ${days} dana`;
+  if (days < 14) return 'za tjedan dana';
+  return `za ${Math.round(days / 7)} tj.`;
+}
+
 export function CalendarPage() {
   const { t } = useI18n();
   const calendar = useQuery({ queryKey: ['calendar'], queryFn: api.calendar });
@@ -19,10 +33,16 @@ export function CalendarPage() {
   if (calendar.isLoading) return <p className="muted">{t('common.loading')}</p>;
 
   const weekly = calendar.data?.weekly ?? [];
-  const exams = calendar.data?.exams ?? [];
+  const exams = (calendar.data?.exams ?? [])
+    .filter((e) => e.startsAt)
+    .slice()
+    .sort((a, b) => (a.startsAt! < b.startsAt! ? -1 : 1));
   const byDay: Record<string, WeeklySlot[]> = {};
   for (const slot of weekly) {
     (byDay[slot.dayOfWeek] ??= []).push(slot);
+  }
+  for (const day of DAYS) {
+    byDay[day]?.sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   }
 
   return (
@@ -31,27 +51,44 @@ export function CalendarPage() {
       <p className="muted">{t('calendar.subtitle')}</p>
 
       <div className="card">
-        <h2>{t('calendar.weekly')}</h2>
-        {weekly.length === 0 && <p className="muted">{t('calendar.emptyWeekly')}</p>}
-        <div className="week-grid">
-          {DAYS.filter((d) => byDay[d]?.length).map((day) => (
-            <div key={day} className="week-day">
-              <div className="week-day-name">{DAY_LABELS[day] ?? day}</div>
-              {byDay[day].map((s, i) => (
-                <div key={i} className={`slot ${s.type === 'LAB' ? 'lab' : 'lecture'}`}>
-                  <div className="slot-time">
-                    {s.startsAt}–{s.endsAt}
-                  </div>
-                  <div className="slot-course">{s.courseCode}</div>
-                  <div className="muted">
-                    {s.type === 'LAB' ? 'Laboratorij' : 'Predavanje'}
-                    {s.room ? ` · ${s.room}` : ''}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
+        <div className="cal-head">
+          <h2 style={{ margin: 0 }}>{t('calendar.weekly')}</h2>
+          <div className="cal-legend">
+            <span className="legend-item">
+              <span className="legend-dot lecture" /> Predavanje
+            </span>
+            <span className="legend-item">
+              <span className="legend-dot lab" /> Laboratorij
+            </span>
+          </div>
         </div>
+        {weekly.length === 0 && (
+          <p className="muted" style={{ marginTop: 12 }}>
+            {t('calendar.emptyWeekly')}
+          </p>
+        )}
+        {weekly.length > 0 && (
+          <div className="week-board">
+            {DAYS.map((day) => (
+              <div key={day} className="week-col">
+                <div className="week-day-name">{DAY_LABELS[day] ?? day}</div>
+                {(byDay[day] ?? []).length === 0 && <div className="week-empty">—</div>}
+                {(byDay[day] ?? []).map((s, i) => (
+                  <div key={i} className={`slot ${s.type === 'LAB' ? 'lab' : 'lecture'}`}>
+                    <div className="slot-time">
+                      {s.startsAt}–{s.endsAt}
+                    </div>
+                    <div className="slot-course">{s.courseName}</div>
+                    <div className="slot-meta">
+                      <span className="pill">{s.courseCode}</span>
+                      {s.room && <span className="muted">{s.room}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="card">
@@ -70,12 +107,22 @@ export function CalendarPage() {
             <tbody>
               {exams.map((e, i) => (
                 <tr key={i}>
-                  <td>{new Date(e.startsAt).toLocaleString('hr-HR')}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>
+                    {new Date(e.startsAt!).toLocaleString('hr-HR', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                    <span className="pill" style={{ marginLeft: 8 }}>
+                      {relativeDay(e.startsAt!)}
+                    </span>
+                  </td>
                   <td>
                     <strong>{e.shortName}</strong> — {e.title}
                   </td>
                   <td>
-                    {e.courseCode} · {e.courseName}
+                    <strong>{e.courseCode}</strong> {e.courseName}
                   </td>
                   <td>{e.durationMinutes} min</td>
                 </tr>

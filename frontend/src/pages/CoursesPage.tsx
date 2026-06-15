@@ -2,8 +2,31 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
+import { DataTable, type Column } from '../components/DataTable';
+import type { CourseSummary } from '../api/types';
 
 const ALL = '__all__';
+
+const COLUMNS: Column<CourseSummary>[] = [
+  { key: 'code', header: 'Šifra', value: (c) => c.code },
+  { key: 'name', header: 'Naziv', value: (c) => c.name },
+  { key: 'semesterCode', header: 'Semestar', value: (c) => c.semesterCode },
+  { key: 'ects', header: 'ECTS', value: (c) => c.ects },
+  { key: 'enrolledStudents', header: 'Upisani', value: (c) => c.enrolledStudents },
+  {
+    key: 'actions',
+    header: '',
+    sortable: false,
+    value: () => '',
+    className: 'row-actions',
+    render: (c) => (
+      <>
+        <Link to={`/kolegiji/${c.id}`}>Detalji</Link>
+        <Link to={`/kolegiji/${c.id}/ispiti`}>Provjere znanja</Link>
+      </>
+    ),
+  },
+];
 
 export function CoursesPage() {
   const semesters = useQuery({ queryKey: ['semesters'], queryFn: api.semesters });
@@ -46,39 +69,14 @@ export function CoursesPage() {
         </select>
       </div>
 
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        <table>
-          <thead>
-            <tr>
-              <th>Šifra</th>
-              <th>Naziv</th>
-              <th>Semestar</th>
-              <th>ECTS</th>
-              <th>Upisani</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.data?.map((course) => (
-              <tr key={course.id}>
-                <td>{course.code}</td>
-                <td>{course.name}</td>
-                <td>{course.semesterCode}</td>
-                <td>{course.ects}</td>
-                <td>{course.enrolledStudents}</td>
-                <td className="row-actions">
-                  <Link to={`/kolegiji/${course.id}`}>Detalji</Link>
-                  <Link to={`/kolegiji/${course.id}/ispiti`}>Provjere znanja</Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {courses.isLoading && <p className="muted">Učitavanje…</p>}
-      {courses.data?.length === 0 && (
-        <p className="muted">Nema kolegija za odabrani semestar.</p>
-      )}
+      <DataTable
+        rows={courses.data ?? []}
+        columns={COLUMNS}
+        rowKey={(c) => c.id}
+        searchPlaceholder="Pretraži po šifri ili nazivu…"
+        emptyText="Nema kolegija za odabrani semestar."
+        loading={courses.isLoading}
+      />
     </div>
   );
 }

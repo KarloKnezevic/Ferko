@@ -1,5 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
+import { DataTable, type Column } from '../components/DataTable';
+import type { Room } from '../api/types';
+
+const COLUMNS: Column<Room>[] = [
+  { key: 'code', header: 'Oznaka', value: (r) => r.code },
+  { key: 'building', header: 'Zgrada', value: (r) => r.building ?? '—' },
+  { key: 'capacity', header: 'Kapacitet', value: (r) => r.capacity },
+  { key: 'requiredAssistants', header: 'Potrebno asistenata', value: (r) => r.requiredAssistants },
+  {
+    key: 'hasComputers',
+    header: 'Računala',
+    value: (r) => (r.hasComputers ? 'Da' : 'Ne'),
+  },
+];
 
 export function RoomsPage() {
   const rooms = useQuery({ queryKey: ['rooms'], queryFn: api.rooms });
@@ -8,30 +22,14 @@ export function RoomsPage() {
     <div>
       <div className="breadcrumb">Početna › Prostorije</div>
       <h1>Prostorije</h1>
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        <table>
-          <thead>
-            <tr>
-              <th>Oznaka</th>
-              <th>Zgrada</th>
-              <th>Kapacitet</th>
-              <th>Potrebno asistenata</th>
-              <th>Računala</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rooms.data?.map((room) => (
-              <tr key={room.id}>
-                <td>{room.code}</td>
-                <td>{room.building ?? '—'}</td>
-                <td>{room.capacity}</td>
-                <td>{room.requiredAssistants}</td>
-                <td>{room.hasComputers ? 'Da' : 'Ne'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        rows={rooms.data ?? []}
+        columns={COLUMNS}
+        rowKey={(r) => r.id}
+        searchPlaceholder="Pretraži po oznaci ili zgradi…"
+        emptyText="Nema prostorija."
+        loading={rooms.isLoading}
+      />
     </div>
   );
 }

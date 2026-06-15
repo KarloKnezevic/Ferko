@@ -3,7 +3,12 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n';
-import type { GeneratedExamTimetable, GeneratedTimetable, TimetableSlot } from '../api/types';
+import type {
+  GeneratedExamTimetable,
+  GeneratedTimetable,
+  TimetableComparison,
+  TimetableSlot,
+} from '../api/types';
 
 const ALGORITHMS = [
   'GENETIC',
@@ -65,6 +70,11 @@ export function TimetablePage() {
       api.generateExamTimetable({ studyYear, slots: examSlots, algorithm, referenceTerm: 'ZI' }),
     onSuccess: (data) => setExamGenerated(data),
   });
+  const [comparison, setComparison] = useState<TimetableComparison | null>(null);
+  const compare = useMutation({
+    mutationFn: () => api.compareTimetable({ studyYear, periods }),
+    onSuccess: (data) => setComparison(data),
+  });
 
   const timetable = useQuery({ queryKey: ['timetable'], queryFn: api.timetable });
   const collisions = useQuery({
@@ -124,6 +134,18 @@ export function TimetablePage() {
                 </li>
               ))}
             </ul>
+          )}
+          {(collisions.data.roomUtilization?.length ?? 0) > 0 && (
+            <>
+              <h3 style={{ marginTop: 16 }}>{t('timetable.roomUsage')}</h3>
+              <ul className="conflict-list">
+                {collisions.data.roomUtilization.slice(0, 10).map((r) => (
+                  <li key={r.room}>
+                    <strong>{r.room}</strong>: {r.slots} {t('timetable.slots').toLowerCase()}
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
       )}
@@ -325,6 +347,52 @@ export function TimetablePage() {
           {generateExam.isError && (
             <div className="banner err" style={{ marginTop: 12 }}>
               {(generateExam.error as Error).message}
+            </div>
+          )}
+        </div>
+      )}
+
+      {isAdmin && (
+        <div className="card">
+          <h2>{t('timetable.compare')}</h2>
+          <p className="muted">{t('timetable.compareNote')}</p>
+          <button disabled={compare.isPending} onClick={() => compare.mutate()}>
+            {compare.isPending ? t('timetable.generating') : t('timetable.runCompare')}
+          </button>
+          {comparison && (
+            <table style={{ marginTop: 12 }}>
+              <thead>
+                <tr>
+                  <th>{t('timetable.algorithm')}</th>
+                  <th>{t('timetable.conflictsCol')}</th>
+                  <th>{t('timetable.iterations')}</th>
+                  <th>ms</th>
+                  <th>{t('timetable.convergence')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparison.runs.map((r) => (
+                  <tr key={r.algorithm}>
+                    <td>
+                      <strong>{r.algorithm}</strong>
+                    </td>
+                    <td>
+                      {r.conflicts}
+                      {r.feasible && <span className="pill ok" style={{ marginLeft: 6 }}>0</span>}
+                    </td>
+                    <td>{r.iterations}</td>
+                    <td className="muted">{r.durationMillis}</td>
+                    <td>
+                      <Sparkline values={r.convergence} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {compare.isError && (
+            <div className="banner err" style={{ marginTop: 12 }}>
+              {(compare.error as Error).message}
             </div>
           )}
         </div>

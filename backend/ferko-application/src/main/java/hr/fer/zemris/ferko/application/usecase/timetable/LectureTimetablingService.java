@@ -3,6 +3,8 @@ package hr.fer.zemris.ferko.application.usecase.timetable;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.StudentRepository;
+import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.AlgorithmComparisonView;
+import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.ComparisonView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.CourseAssignmentView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.GeneratedTimetableView;
 import hr.fer.zemris.ferko.domain.model.Course;
@@ -75,14 +77,87 @@ public class LectureTimetablingService {
    * optimizer ({@link Optimizers#names()}); a blank algorithm uses the default genetic algorithm.
    */
   public GeneratedTimetableView generate(List<Long> courseIds, int periods, String algorithm) {
+    int slots = Math.min(MAX_PERIODS, Math.max(1, periods));
+    Scope scope = buildScope(courseIds);
+    int n = scope.courses().size();
+
+    if (n == 0) {
+      return new GeneratedTimetableView(
+          resolveName(algorithm), slots, 0, 0, 0, true, 0, List.of(), List.of());
+    }
+
+    SimpleSchedulingProblem problem = new SimpleSchedulingProblem(slots, scope.conflict());
+    Optimizer optimizer = resolveOptimizer(algorithm);
+    OptimizationResult result = optimizer.optimize(problem);
+
+    List<CourseAssignmentView> assignments = new ArrayList<>(n);
+    for (int i = 0; i < n; i++) {
+      int period = result.assignment()[i];
+      assignments.add(
+          new CourseAssignmentView(
+              scope.courses().get(i).id(),
+              scope.courses().get(i).code(),
+              scope.courses().get(i).name(),
+              period,
+              dayOf(period).name(),
+              startOf(period).toString()));
+    }
+
+    return new GeneratedTimetableView(
+        result.algorithm(),
+        slots,
+        n,
+        scope.baseline(),
+        (int) Math.round(result.penalty()),
+        result.isPerfect(),
+        result.iterations(),
+        result.penaltyHistory(),
+        assignments);
+  }
+
+  /**
+   * Runs every metaheuristic on the same lecture-timetabling problem and returns each one's result
+   * and convergence, sorted best (fewest conflicts) first — a fair comparison of the engine's
+   * algorithm families on identical input.
+   */
+  public ComparisonView compare(List<Long> courseIds, int periods) {
+    int slots = Math.min(MAX_PERIODS, Math.max(1, periods));
+    Scope scope = buildScope(courseIds);
+    int n = scope.courses().size();
+
+    List<AlgorithmComparisonView> runs = new ArrayList<>();
+    if (n > 0) {
+      SimpleSchedulingProblem problem = new SimpleSchedulingProblem(slots, scope.conflict());
+      for (String name : Optimizers.names()) {
+        Optimizer optimizer = Optimizers.createDefault(name, DEFAULT_SEED);
+        long start = System.nanoTime();
+        OptimizationResult result = optimizer.optimize(problem);
+        long millis = (System.nanoTime() - start) / 1_000_000L;
+        runs.add(
+            new AlgorithmComparisonView(
+                name,
+                (int) Math.round(result.penalty()),
+                result.iterations(),
+                result.isPerfect(),
+                millis,
+                result.penaltyHistory()));
+      }
+      runs.sort((a, b) -> Integer.compare(a.conflicts(), b.conflicts()));
+    }
+    return new ComparisonView(n, slots, scope.baseline(), runs);
+  }
+
+  /** Resolved courses plus their student-sharing conflict matrix and all-in-one-slot baseline. */
+  private record Scope(List<Course> courses, boolean[][] conflict, int baseline) {}
+
+  /** Builds the conflict matrix for a course set (pair conflicts when courses share a student). */
+  private Scope buildScope(List<Long> courseIds) {
     List<Course> courses =
         courseIds.stream()
             .map(id -> courseRepository.findById(id).orElse(null))
             .filter(c -> c != null)
             .toList();
     int n = courses.size();
-    int slots = Math.min(MAX_PERIODS, Math.max(1, periods));
-
     List<Set<Long>> students = new ArrayList<>(n);
     for (Course course : courses) {
       students.add(
@@ -90,7 +165,6 @@ public class LectureTimetablingService {
               .map(Enrollment::studentId)
               .collect(Collectors.toCollection(HashSet::new)));
     }
-
     boolean[][] conflict = new boolean[n][n];
     int baseline = 0;
     for (int i = 0; i < n; i++) {
@@ -102,39 +176,7 @@ public class LectureTimetablingService {
         }
       }
     }
-
-    if (n == 0) {
-      return new GeneratedTimetableView(
-          resolveName(algorithm), slots, 0, 0, 0, true, 0, List.of(), List.of());
-    }
-
-    SimpleSchedulingProblem problem = new SimpleSchedulingProblem(slots, conflict);
-    Optimizer optimizer = resolveOptimizer(algorithm);
-    OptimizationResult result = optimizer.optimize(problem);
-
-    List<CourseAssignmentView> assignments = new ArrayList<>(n);
-    for (int i = 0; i < n; i++) {
-      int period = result.assignment()[i];
-      assignments.add(
-          new CourseAssignmentView(
-              courses.get(i).id(),
-              courses.get(i).code(),
-              courses.get(i).name(),
-              period,
-              dayOf(period).name(),
-              startOf(period).toString()));
-    }
-
-    return new GeneratedTimetableView(
-        result.algorithm(),
-        slots,
-        n,
-        baseline,
-        (int) Math.round(result.penalty()),
-        result.isPerfect(),
-        result.iterations(),
-        result.penaltyHistory(),
-        assignments);
+    return new Scope(courses, conflict, baseline);
   }
 
   private Optimizer resolveOptimizer(String algorithm) {

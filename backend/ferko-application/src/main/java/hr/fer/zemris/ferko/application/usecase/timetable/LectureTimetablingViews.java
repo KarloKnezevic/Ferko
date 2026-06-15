@@ -31,4 +31,17 @@ public final class LectureTimetablingViews {
       int period,
       String dayOfWeek,
       String startsAt) {}
+
+  /** One metaheuristic's result when comparing algorithms on the same problem. */
+  public record AlgorithmComparisonView(
+      String algorithm,
+      int conflicts,
+      int iterations,
+      boolean feasible,
+      long durationMillis,
+      List<Double> convergence) {}
+
+  /** Comparison of all metaheuristics on one timetabling scope. */
+  public record ComparisonView(
+      int courses, int periods, int baselineConflicts, List<AlgorithmComparisonView> runs) {}
 }

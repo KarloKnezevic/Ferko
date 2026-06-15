@@ -71,7 +71,30 @@ public class TimetableService {
             slot -> slot.instructor() == null ? "" : slot.instructor(),
             courses,
             conflicts);
-    return new CollisionReportView(slots.size(), roomConflicts, instructorConflicts, conflicts);
+    return new CollisionReportView(
+        slots.size(),
+        roomConflicts,
+        instructorConflicts,
+        conflicts,
+        roomUtilization(slots, roomCodes));
+  }
+
+  /** Busiest rooms first: weekly slot count per room. */
+  private static List<TimetableViews.RoomUsageView> roomUtilization(
+      List<ClassSchedule> slots, Map<Long, String> roomCodes) {
+    Map<Long, Integer> countByRoom = new java.util.HashMap<>();
+    for (ClassSchedule slot : slots) {
+      if (slot.roomId() != null) {
+        countByRoom.merge(slot.roomId(), 1, Integer::sum);
+      }
+    }
+    return countByRoom.entrySet().stream()
+        .map(
+            entry ->
+                new TimetableViews.RoomUsageView(
+                    roomCodes.getOrDefault(entry.getKey(), ""), entry.getValue()))
+        .sorted((a, b) -> Integer.compare(b.slots(), a.slots()))
+        .toList();
   }
 
   private int collectConflicts(

@@ -390,11 +390,33 @@ export interface TimetableConflict {
   courseB: string;
 }
 
+export interface RoomUsage {
+  room: string;
+  slots: number;
+}
+
 export interface CollisionReport {
   totalSlots: number;
   roomConflicts: number;
   instructorConflicts: number;
   conflicts: TimetableConflict[];
+  roomUtilization: RoomUsage[];
+}
+
+export interface AlgorithmComparison {
+  algorithm: string;
+  conflicts: number;
+  iterations: number;
+  feasible: boolean;
+  durationMillis: number;
+  convergence: number[];
+}
+
+export interface TimetableComparison {
+  courses: number;
+  periods: number;
+  baselineConflicts: number;
+  runs: AlgorithmComparison[];
 }
 
 export interface GeneratedCourseAssignment {

@@ -4,7 +4,9 @@ import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import hr.fer.zemris.ferko.domain.model.GroupType;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -70,6 +72,26 @@ public class JdbcClassScheduleRepository implements ClassScheduleRepository {
   public List<ClassSchedule> findAll() {
     return jdbcTemplate.query(
         "select * from class_schedule order by day_of_week, starts_at", MAPPER);
+  }
+
+  @Override
+  public Optional<ClassSchedule> findById(long id) {
+    return jdbcTemplate.query("select * from class_schedule where id = ?", MAPPER, id).stream()
+        .findFirst();
+  }
+
+  @Override
+  public boolean updatePlacement(
+      long id, DayOfWeek dayOfWeek, LocalTime startsAt, LocalTime endsAt, Long roomId) {
+    return jdbcTemplate.update(
+            "update class_schedule set day_of_week = ?, starts_at = ?, ends_at = ?, room_id = ?"
+                + " where id = ?",
+            dayOfWeek.name(),
+            java.sql.Time.valueOf(startsAt),
+            java.sql.Time.valueOf(endsAt),
+            roomId,
+            id)
+        > 0;
   }
 
   @Override

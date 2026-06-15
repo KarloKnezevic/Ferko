@@ -56,6 +56,7 @@ import hr.fer.zemris.ferko.application.usecase.student.StudentGradesService;
 import hr.fer.zemris.ferko.application.usecase.survey.SurveyService;
 import hr.fer.zemris.ferko.application.usecase.timetable.ExamTimetablingService;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingService;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionService;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableService;
 import hr.fer.zemris.ferko.application.usecase.todo.CloseToDoTaskUseCase;
 import hr.fer.zemris.ferko.application.usecase.todo.CreateToDoTaskUseCase;
@@ -505,6 +506,16 @@ public class ApplicationBeans {
       RoomRepository roomRepository,
       EnrollmentRepository enrollmentRepository) {
     return new TimetableService(
+        classScheduleRepository, courseRepository, roomRepository, enrollmentRepository);
+  }
+
+  @Bean
+  public ScheduleResolutionService scheduleResolutionService(
+      ClassScheduleRepository classScheduleRepository,
+      CourseRepository courseRepository,
+      RoomRepository roomRepository,
+      EnrollmentRepository enrollmentRepository) {
+    return new ScheduleResolutionService(
         classScheduleRepository, courseRepository, roomRepository, enrollmentRepository);
   }
 

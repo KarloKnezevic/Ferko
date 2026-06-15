@@ -170,6 +170,39 @@ class TimetableServiceTest {
     }
 
     @Override
+    public java.util.Optional<ClassSchedule> findById(long id) {
+      return store.stream().filter(s -> s.id() == id).findFirst();
+    }
+
+    @Override
+    public boolean updatePlacement(
+        long id,
+        java.time.DayOfWeek dayOfWeek,
+        java.time.LocalTime startsAt,
+        java.time.LocalTime endsAt,
+        Long roomId) {
+      for (int i = 0; i < store.size(); i++) {
+        ClassSchedule s = store.get(i);
+        if (s.id() == id) {
+          store.set(
+              i,
+              new ClassSchedule(
+                  s.id(),
+                  s.courseId(),
+                  s.groupId(),
+                  s.type(),
+                  roomId,
+                  dayOfWeek,
+                  startsAt,
+                  endsAt,
+                  s.instructor()));
+          return true;
+        }
+      }
+      return false;
+    }
+
+    @Override
     public int deleteByCourse(long courseId) {
       int before = store.size();
       store.removeIf(s -> s.courseId() == courseId);

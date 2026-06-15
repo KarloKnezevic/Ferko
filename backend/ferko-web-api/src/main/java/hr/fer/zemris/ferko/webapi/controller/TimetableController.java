@@ -5,6 +5,8 @@ import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingServi
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.AppliedTimetableView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.ComparisonView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.GeneratedTimetableView;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionService;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.ResolutionReportView;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableService;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableViews.CollisionReportView;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableViews.TimetableSlotView;
@@ -27,14 +29,17 @@ public class TimetableController {
 
   private final TimetableService timetable;
   private final LectureTimetablingService lectureTimetabling;
+  private final ScheduleResolutionService resolution;
   private final AuditService audit;
 
   public TimetableController(
       TimetableService timetable,
       LectureTimetablingService lectureTimetabling,
+      ScheduleResolutionService resolution,
       AuditService audit) {
     this.timetable = timetable;
     this.lectureTimetabling = lectureTimetabling;
+    this.resolution = resolution;
     this.audit = audit;
   }
 
@@ -94,10 +99,50 @@ public class TimetableController {
     return result;
   }
 
+  @GetMapping("/timetable/resolution")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResolutionReportView resolutionReport() {
+    return resolution.report();
+  }
+
+  @PostMapping("/timetable/resolution/move")
+  @PreAuthorize("hasRole('ADMIN')")
+  @org.springframework.transaction.annotation.Transactional
+  public ResolutionReportView move(
+      @RequestBody MoveRequest request, Authentication authentication) {
+    ResolutionReportView report =
+        resolution.move(
+            request.slotId(), request.dayOfWeek(), request.startsAt(), request.roomId());
+    audit.record(
+        authentication.getName(),
+        "TIMETABLE_SLOT_MOVED",
+        "class_schedule",
+        String.valueOf(request.slotId()),
+        request.dayOfWeek() + " " + request.startsAt() + " room " + request.roomId());
+    return report;
+  }
+
+  @PostMapping("/timetable/resolution/auto")
+  @PreAuthorize("hasRole('ADMIN')")
+  @org.springframework.transaction.annotation.Transactional
+  public ResolutionReportView autoResolve(Authentication authentication) {
+    ResolutionReportView report = resolution.autoResolve();
+    audit.record(
+        authentication.getName(),
+        "TIMETABLE_AUTO_RESOLVED",
+        "timetable",
+        null,
+        "conflictFree=" + report.conflictFree());
+    return report;
+  }
+
   /**
    * Generation request: scope is either an explicit {@code courseIds} list or a {@code studyYear};
    * {@code periods} weekly slots (default 15 = 5 days x 3 blocks); {@code algorithm} optional.
    */
   public record GenerateRequest(
       List<Long> courseIds, Integer studyYear, Integer periods, String algorithm) {}
+
+  /** Move a single timetable slot to a new weekday/time/room (duration preserved). */
+  public record MoveRequest(long slotId, String dayOfWeek, String startsAt, Long roomId) {}
 }

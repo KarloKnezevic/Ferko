@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -117,6 +118,9 @@ public class AcademicDataSeeder implements ApplicationRunner {
 
     Map<String, Long> courseIdByCode = new LinkedHashMap<>();
     Map<String, Long> labGroupByCourse = new LinkedHashMap<>();
+    // Per-course student-group registry keyed "courseId|groupCode" (e.g. "12|Grupa 1"), so the
+    // timetable slots and the student enrolments agree on the same group ids.
+    Map<String, Long> groupIdByCourseGroup = new LinkedHashMap<>();
     int scheduleIndex = 0;
     for (String code : selectedCodes) {
       CourseCatalogEntry entry = dataset.courses().get(code);
@@ -135,12 +139,19 @@ public class AcademicDataSeeder implements ApplicationRunner {
       courseIdByCode.put(code, courseId);
       labGroupByCourse.put(code, labGroup);
       seedTimetable(
-          courseId, labGroup, schedulesByCode.get(code), courseHolder(entry), scheduleIndex++);
+          courseId,
+          labGroup,
+          schedulesByCode.get(code),
+          courseHolder(entry),
+          scheduleIndex++,
+          groupIdByCourseGroup);
     }
 
     Map<String, Long> studentIdByJmbag =
-        seedStudents(dataset, courseIdByCode, labGroupByCourse, studentPassword, now);
-    long demoStudentId = seedDemoStudentEnrollment(courseIdByCode, studentPassword, now);
+        seedStudents(
+            dataset, courseIdByCode, labGroupByCourse, groupIdByCourseGroup, studentPassword, now);
+    long demoStudentId =
+        seedDemoStudentEnrollment(courseIdByCode, groupIdByCourseGroup, studentPassword, now);
     int demonstrators = seedDemonstrators(courseIdByCode, studentIdByJmbag, demoStudentId);
 
     LOG.info(
@@ -205,6 +216,7 @@ public class AcademicDataSeeder implements ApplicationRunner {
       LegacyDataset dataset,
       Map<String, Long> courseIdByCode,
       Map<String, Long> labGroupByCourse,
+      Map<String, Long> groupIdByCourseGroup,
       String studentPassword,
       LocalDateTime now) {
     Map<String, Long> studentIdByJmbag = new LinkedHashMap<>();
@@ -233,9 +245,17 @@ public class AcademicDataSeeder implements ApplicationRunner {
                       Math.max(1, enrollment.yearOfStudy()),
                       now));
       long enrollmentId = provisioning.enroll(studentId, courseId, now);
-      Long labGroup = labGroupByCourse.get(enrollment.courseCode());
-      if (labGroup != null) {
-        provisioning.assignGroup(enrollmentId, labGroup);
+      // Assign the student to their real group (from ISVU) so their calendar shows only that
+      // group's sessions; fall back to the generic lab group when no group is recorded.
+      String groupCode = enrollment.groupCode();
+      if (groupCode != null && !groupCode.isBlank()) {
+        provisioning.assignGroup(
+            enrollmentId, ensureGroup(courseId, groupCode, groupIdByCourseGroup));
+      } else {
+        Long labGroup = labGroupByCourse.get(enrollment.courseCode());
+        if (labGroup != null) {
+          provisioning.assignGroup(enrollmentId, labGroup);
+        }
       }
     }
     return studentIdByJmbag;
@@ -247,7 +267,10 @@ public class AcademicDataSeeder implements ApplicationRunner {
    * demo student's id, or {@code 0} when there are no courses to enroll into.
    */
   private long seedDemoStudentEnrollment(
-      Map<String, Long> courseIdByCode, String studentPassword, LocalDateTime now) {
+      Map<String, Long> courseIdByCode,
+      Map<String, Long> groupIdByCourseGroup,
+      String studentPassword,
+      LocalDateTime now) {
     if (courseIdByCode.isEmpty()) {
       return 0L;
     }
@@ -262,7 +285,11 @@ public class AcademicDataSeeder implements ApplicationRunner {
             1,
             now);
     long currentCourseId = courseIdByCode.values().iterator().next();
-    provisioning.enroll(demoStudentId, currentCourseId, now);
+    long enrollmentId = provisioning.enroll(demoStudentId, currentCourseId, now);
+    // Place the demo student in a concrete group so her calendar shows one group's sessions, not
+    // every parallel section of the course.
+    provisioning.assignGroup(
+        enrollmentId, ensureGroup(currentCourseId, "Grupa 1", groupIdByCourseGroup));
     return demoStudentId;
   }
 
@@ -343,7 +370,12 @@ public class AcademicDataSeeder implements ApplicationRunner {
    * synthetic slot when the course has no timetable data so the calendar is never empty.
    */
   private void seedTimetable(
-      long courseId, long labGroupId, List<ScheduleEntry> schedules, String instructor, int index) {
+      long courseId,
+      long labGroupId,
+      List<ScheduleEntry> schedules,
+      String instructor,
+      int index,
+      Map<String, Long> groupIdByCourseGroup) {
     if (schedules == null || schedules.isEmpty()) {
       seedWeeklySchedule(courseId, labGroupId, index);
       return;
@@ -357,14 +389,40 @@ public class AcademicDataSeeder implements ApplicationRunner {
       LocalTime start = schedule.startsAt();
       LocalTime end = start.plus(Duration.ofMinutes(Math.max(60, schedule.durationMinutes())));
       String room = schedule.room() == null ? "" : schedule.room().trim();
-      String key = day + "|" + start + "|" + end + "|" + room;
+      // A slot serving exactly one student group is tied to that group, so a student only sees the
+      // sessions of their own group. Slots serving many groups (or none) stay course-wide.
+      List<String> groupCodes = parseGroups(schedule.groupsText());
+      Long groupId =
+          groupCodes.size() == 1
+              ? ensureGroup(courseId, groupCodes.get(0), groupIdByCourseGroup)
+              : null;
+      String key =
+          (groupId == null ? "" : groupId) + "|" + day + "|" + start + "|" + end + "|" + room;
       if (!seen.add(key)) {
         continue;
       }
       Long roomId = room.isBlank() ? null : ensureRoom(room);
       provisioning.provisionClassSchedule(
-          courseId, null, "LECTURE", roomId, day.name(), start, end, instructor);
+          courseId, groupId, "LECTURE", roomId, day.name(), start, end, instructor);
     }
+  }
+
+  /** Splits a satnica groups field ("Grupa 1,Grupa 2") into trimmed, non-blank group codes. */
+  private static List<String> parseGroups(String groupsText) {
+    if (groupsText == null || groupsText.isBlank()) {
+      return List.of();
+    }
+    return Arrays.stream(groupsText.split(","))
+        .map(String::trim)
+        .filter(value -> !value.isBlank())
+        .toList();
+  }
+
+  /** Resolves (and caches) the student-group id for a course + group code, provisioning if new. */
+  private long ensureGroup(long courseId, String groupCode, Map<String, Long> cache) {
+    return cache.computeIfAbsent(
+        courseId + "|" + groupCode,
+        key -> provisioning.provisionGroup(courseId, groupCode, "LECTURE", "Grupa", 400));
   }
 
   /** Resolves (idempotently) a room id from a code, inferring its attributes if new. */

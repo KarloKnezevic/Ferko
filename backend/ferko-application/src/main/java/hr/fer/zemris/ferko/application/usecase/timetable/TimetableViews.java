@@ -29,10 +29,30 @@ public final class TimetableViews {
       int roomConflicts,
       int instructorConflicts,
       List<ConflictView> conflicts,
-      List<RoomUsageView> roomUtilization) {}
+      List<RoomUsageView> roomUtilization,
+      List<OverCapacityView> overCapacity,
+      List<RoomHeatView> heatmap) {}
 
   /** Weekly slot count for a room (busiest rooms first). */
   public record RoomUsageView(String room, int slots) {}
+
+  /** A scheduled slot whose enrolled course exceeds the assigned room's capacity. */
+  public record OverCapacityView(
+      String courseCode,
+      String courseName,
+      String room,
+      String dayOfWeek,
+      String startsAt,
+      String endsAt,
+      int enrolled,
+      int capacity) {}
+
+  /**
+   * Heatmap row for one room: weekly slot counts per weekday (Monday..Friday) for shading, the room
+   * capacity, the weekly total and whether any slot in the room is over capacity.
+   */
+  public record RoomHeatView(
+      String room, int capacity, List<Integer> perDay, int total, boolean overCapacity) {}
 
   /** A single detected conflict. {@code kind} is {@code ROOM} or {@code INSTRUCTOR}. */
   public record ConflictView(

@@ -196,6 +196,13 @@ tbody tr:hover .grade-cell { filter: brightness(0.97); }
 .slot-meta { display: flex; gap: 8px; align-items: center; font-size: 12px; }
 @media (max-width: 880px) { .week-board { grid-template-columns: 1fr; } }
 
+/* Room-load heatmap (raspored kvaliteta) */
+.heat-table { width: auto; min-width: 360px; }
+.heat-table th, .heat-table td { text-align: center; padding: 6px 10px; }
+.heat-table th:first-child, .heat-table td:first-child { text-align: left; }
+.heat-cell { font-variant-numeric: tabular-nums; min-width: 34px; }
+.heat-over { box-shadow: inset 3px 0 0 var(--warn); }
+
 /* Flow diagram (raspoređivanje) */
 .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 18px; }
 .flow-node {

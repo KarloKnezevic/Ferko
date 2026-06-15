@@ -1,5 +1,6 @@
 package hr.fer.zemris.ferko.scheduling;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,10 @@ public final class Optimizers {
 
   private Optimizers() {}
 
-  /** Stable identifiers of all supported optimizers. */
+  /** Identifier of the memetic hybrid (parallel islands + local refinement). */
+  public static final String HYBRID = "HYBRID";
+
+  /** Stable identifiers of the base metaheuristics (used for head-to-head comparison). */
   public static List<String> names() {
     return List.of(
         "GENETIC",
@@ -21,6 +25,13 @@ public final class Optimizers {
         "CLONALG");
   }
 
+  /** Identifiers selectable for a single generation run: the base algorithms plus the hybrid. */
+  public static List<String> selectable() {
+    List<String> all = new ArrayList<>(names());
+    all.add(HYBRID);
+    return List.copyOf(all);
+  }
+
   public static Optimizer create(String name, int populationSize, int iterations, long seed) {
     return switch (name) {
       case "GENETIC" -> new GeneticAlgorithm(new GaConfig(populationSize, iterations, 0.05, seed));
@@ -29,6 +40,7 @@ public final class Optimizers {
       case "PARTICLE_SWARM" -> new ParticleSwarm(populationSize, iterations, seed);
       case "IMMUNE_ALGORITHM" -> new ImmuneAlgorithm(populationSize, iterations, seed);
       case "CLONALG" -> new Clonalg(populationSize, iterations, seed);
+      case HYBRID -> hybrid(populationSize, iterations, seed);
       default -> throw new IllegalArgumentException("Unknown optimizer: " + name);
     };
   }
@@ -38,10 +50,13 @@ public final class Optimizers {
     return create(name, 60, 5000, seed);
   }
 
-  /** A parallel hybrid running every supported optimizer as an island and keeping the best. */
+  /**
+   * The memetic hybrid: every base optimizer runs as a parallel island, the best elite is migrated
+   * out and then intensified with local hill-climbing. See {@link HybridOptimizer}.
+   */
   public static Optimizer hybrid(int populationSize, int iterations, long seed) {
     List<Optimizer> islands =
         names().stream().map(name -> create(name, populationSize, iterations, seed)).toList();
-    return new IslandOptimizer(islands);
+    return new HybridOptimizer(islands);
   }
 }

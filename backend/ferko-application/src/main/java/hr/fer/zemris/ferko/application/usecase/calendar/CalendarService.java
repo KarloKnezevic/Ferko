@@ -10,15 +10,20 @@ import hr.fer.zemris.ferko.application.port.StudentRepository;
 import hr.fer.zemris.ferko.domain.model.AppUser;
 import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import hr.fer.zemris.ferko.domain.model.Course;
+import hr.fer.zemris.ferko.domain.model.Enrollment;
 import hr.fer.zemris.ferko.domain.model.Exam;
+import hr.fer.zemris.ferko.domain.model.GroupMembership;
 import hr.fer.zemris.ferko.domain.model.Student;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Builds the current user's calendar by aggregating the weekly teaching timetable and dated
@@ -59,7 +64,29 @@ public class CalendarService {
       return new CalendarView(List.of(), List.of());
     }
     long userId = user.get().id();
-    Set<Long> courseIds = coursesFor(userId);
+    Optional<Student> student = studentRepository.findByUserId(userId);
+
+    // For a student we additionally restrict the weekly slots to the groups they actually belong to
+    // (so a student in "Grupa 1" no longer sees every parallel section of a large course). A slot
+    // with no group is course-wide and always shown. Staff/admin see every slot of their courses.
+    Set<Long> courseIds;
+    Map<Long, Set<Long>> allowedGroupsByCourse = new LinkedHashMap<>();
+    boolean filterByGroup = student.isPresent();
+    if (filterByGroup) {
+      courseIds = new LinkedHashSet<>();
+      for (Enrollment enrollment : enrollmentRepository.findByStudent(student.get().id())) {
+        courseIds.add(enrollment.courseId());
+        Set<Long> groupIds =
+            enrollmentRepository.findMembershipsByEnrollment(enrollment.id()).stream()
+                .map(GroupMembership::groupId)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        allowedGroupsByCourse
+            .computeIfAbsent(enrollment.courseId(), key -> new LinkedHashSet<>())
+            .addAll(groupIds);
+      }
+    } else {
+      courseIds = staffCourses(userId);
+    }
 
     List<CalendarView.WeeklySlot> weekly = new ArrayList<>();
     List<CalendarView.UpcomingExam> exams = new ArrayList<>();
@@ -68,7 +95,11 @@ public class CalendarService {
       if (course == null) {
         continue;
       }
+      Set<Long> allowedGroups = allowedGroupsByCourse.getOrDefault(courseId, Set.of());
       for (ClassSchedule slot : scheduleRepository.findByCourse(courseId)) {
+        if (filterByGroup && slot.groupId() != null && !allowedGroups.contains(slot.groupId())) {
+          continue;
+        }
         weekly.add(
             new CalendarView.WeeklySlot(
                 slot.dayOfWeek().name(),
@@ -101,16 +132,9 @@ public class CalendarService {
     return new CalendarView(weekly, exams);
   }
 
-  private Set<Long> coursesFor(long userId) {
+  /** Courses where this user is assigned as teaching staff. */
+  private Set<Long> staffCourses(long userId) {
     Set<Long> courseIds = new LinkedHashSet<>();
-    Optional<Student> student = studentRepository.findByUserId(userId);
-    if (student.isPresent()) {
-      enrollmentRepository.findByStudent(student.get().id()).stream()
-          .map(e -> e.courseId())
-          .forEach(courseIds::add);
-      return courseIds;
-    }
-    // Staff/admin: courses where this user is assigned as teaching staff.
     for (Course course : courseRepository.findAll()) {
       boolean teaches =
           courseRepository.findStaffByCourse(course.id()).stream()

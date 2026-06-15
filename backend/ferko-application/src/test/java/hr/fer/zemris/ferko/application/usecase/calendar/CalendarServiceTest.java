@@ -15,9 +15,11 @@ import hr.fer.zemris.ferko.domain.model.EnrollmentStatus;
 import hr.fer.zemris.ferko.domain.model.Exam;
 import hr.fer.zemris.ferko.domain.model.ExamKind;
 import hr.fer.zemris.ferko.domain.model.ExamVisibility;
+import hr.fer.zemris.ferko.domain.model.GroupMembership;
 import hr.fer.zemris.ferko.domain.model.GroupType;
 import hr.fer.zemris.ferko.domain.model.Role;
 import hr.fer.zemris.ferko.domain.model.Student;
+import hr.fer.zemris.ferko.domain.model.StudentGroup;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -145,6 +147,72 @@ class CalendarServiceTest {
     assertEquals("08:00", view.weekly().get(0).startsAt());
     assertEquals(1, view.exams().size());
     assertEquals("MI1", view.exams().get(0).shortName());
+  }
+
+  @Test
+  void studentSeesOnlyTheirGroupSlotsPlusCourseWideOnes() {
+    long userId =
+        users
+            .save(
+                new AppUser(
+                    0L,
+                    "grupa.test",
+                    "h",
+                    "Grupa Student",
+                    "g@fer.hr",
+                    true,
+                    LocalDateTime.now(),
+                    EnumSet.of(Role.STUDENT)))
+            .id();
+    long studentId = students.save(new Student(0L, userId, "0036500077", "Računarstvo", 1)).id();
+    long enrollmentId =
+        enrollments
+            .save(
+                new Enrollment(
+                    0L, studentId, courseId, LocalDateTime.now(), EnrollmentStatus.ACTIVE))
+            .id();
+
+    long groupA =
+        courses
+            .addGroup(new StudentGroup(0L, courseId, "Grupa 1", GroupType.LECTURE, "Grupa", 60))
+            .id();
+    long groupB =
+        courses
+            .addGroup(new StudentGroup(0L, courseId, "Grupa 2", GroupType.LECTURE, "Grupa", 60))
+            .id();
+    enrollments.assignGroup(new GroupMembership(0L, enrollmentId, groupA));
+
+    // setUp() already added one course-wide (null group) Monday lecture. Add a group-A and group-B
+    // session at the same time in different rooms — the student must see only group A's.
+    schedule.save(
+        new ClassSchedule(
+            0L,
+            courseId,
+            groupA,
+            GroupType.LECTURE,
+            null,
+            DayOfWeek.TUESDAY,
+            LocalTime.of(8, 0),
+            LocalTime.of(10, 0),
+            "Prof A"));
+    schedule.save(
+        new ClassSchedule(
+            0L,
+            courseId,
+            groupB,
+            GroupType.LECTURE,
+            null,
+            DayOfWeek.TUESDAY,
+            LocalTime.of(8, 0),
+            LocalTime.of(10, 0),
+            "Prof B"));
+
+    CalendarView view = service.forUser("grupa.test");
+
+    // Course-wide Monday slot + the group-A Tuesday slot, but NOT the group-B slot.
+    assertEquals(2, view.weekly().size());
+    assertTrue(view.weekly().stream().anyMatch(s -> s.dayOfWeek().equals("MONDAY")));
+    assertEquals(1, view.weekly().stream().filter(s -> s.dayOfWeek().equals("TUESDAY")).count());
   }
 
   @Test

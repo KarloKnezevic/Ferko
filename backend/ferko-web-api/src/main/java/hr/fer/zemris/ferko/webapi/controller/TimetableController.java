@@ -122,6 +122,17 @@ public class TimetableController {
     return conflictMatrix.matrix(semester);
   }
 
+  /** Ranked free slots ("gaps") a colliding session can be moved into, best-first by soft score. */
+  @GetMapping("/timetable/resolution/candidates")
+  @PreAuthorize("hasRole('ADMIN')")
+  public java.util.List<
+          hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.CandidateView>
+      candidates(
+          @org.springframework.web.bind.annotation.RequestParam long slotId,
+          @org.springframework.web.bind.annotation.RequestParam(defaultValue = "8") int limit) {
+    return resolution.candidates(slotId, Math.min(Math.max(limit, 1), 25));
+  }
+
   @PostMapping("/timetable/resolution/move")
   @PreAuthorize("hasRole('ADMIN')")
   @org.springframework.transaction.annotation.Transactional

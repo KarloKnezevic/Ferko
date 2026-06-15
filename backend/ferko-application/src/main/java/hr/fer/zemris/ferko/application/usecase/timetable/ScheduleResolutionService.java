@@ -4,6 +4,7 @@ import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.CandidateView;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.CollisionView;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.HeatCell;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.MoveSuggestionView;
@@ -312,6 +313,132 @@ public class ScheduleResolutionService {
   }
 
   // ----- suggestion ------------------------------------------------------------------------------
+
+  /**
+   * Ranked list of free slots ("gaps") into which the session may be moved without breaking any
+   * hard constraint, best-first. Each is scored by a soft-constraint penalty inspired by Čupić's
+   * exam timetabling work — adapted to the weekly class timetable: keep change minimal, prefer
+   * less-loaded days (real gaps), spread a group's sessions across the week (avoid same-day
+   * pile-ups), and fit the room without large waste. Returns at most {@code limit} candidates.
+   */
+  public List<CandidateView> candidates(long slotId, int limit) {
+    List<ClassSchedule> slots = new ArrayList<>(scheduleRepository.findAll());
+    Context context = context();
+    ClassSchedule slot = byId(slots, slotId);
+    if (slot == null) {
+      return List.of();
+    }
+    Duration duration = Duration.between(slot.startsAt(), slot.endsAt());
+    int enrolled = context.enrolled(slot.courseId());
+    Map<DayOfWeek, List<ClassSchedule>> byDay = new HashMap<>();
+    Map<DayOfWeek, Integer> groupSessionsByDay = new HashMap<>();
+    Map<DayOfWeek, Integer> sessionsByDay = new HashMap<>();
+    for (ClassSchedule s : slots) {
+      byDay.computeIfAbsent(s.dayOfWeek(), key -> new ArrayList<>()).add(s);
+      sessionsByDay.merge(s.dayOfWeek(), 1, Integer::sum);
+      if (s.id() != slot.id() && sameGroup(slot, s)) {
+        groupSessionsByDay.merge(s.dayOfWeek(), 1, Integer::sum);
+      }
+    }
+
+    List<CandidateView> found = new ArrayList<>();
+    for (DayOfWeek day : WEEK) {
+      List<ClassSchedule> dayslots = byDay.getOrDefault(day, List.of());
+      for (LocalTime start : START_GRID) {
+        LocalTime end = start.plus(duration);
+        if (end.isAfter(LocalTime.of(22, 0))) {
+          continue;
+        }
+        for (Room room : context.rooms()) {
+          if (room.capacity() < enrolled) {
+            continue;
+          }
+          boolean current =
+              day == slot.dayOfWeek()
+                  && start.equals(slot.startsAt())
+                  && Objects.equals(room.id(), slot.roomId());
+          if (current) {
+            continue; // the present (colliding) placement is not a candidate
+          }
+          if (!isFree(slot, dayslots, start, end, room.id())) {
+            continue;
+          }
+          found.add(
+              scoreCandidate(
+                  slot,
+                  day,
+                  start,
+                  end,
+                  room,
+                  enrolled,
+                  groupSessionsByDay,
+                  sessionsByDay,
+                  context));
+        }
+      }
+    }
+    found.sort(java.util.Comparator.comparingDouble(CandidateView::score));
+    return found.size() > limit ? found.subList(0, limit) : found;
+  }
+
+  // Soft-constraint weights (lower total score = better). Group same-day pile-up dominates (a
+  // direct analogue of the paper's "avoid two exams for a student on the same day"); then minimal
+  // disruption to the existing plan; then preferring genuinely empty days (gaps); then a tight
+  // room.
+  private static final double W_GROUP_SAME_DAY = 5.0;
+  private static final double W_DIFFERENT_DAY = 2.0;
+  private static final double W_DIFFERENT_TIME = 0.5;
+  private static final double W_DAY_LOAD = 0.15;
+  private static final double W_CAPACITY_WASTE = 0.01;
+
+  private CandidateView scoreCandidate(
+      ClassSchedule slot,
+      DayOfWeek day,
+      LocalTime start,
+      LocalTime end,
+      Room room,
+      int enrolled,
+      Map<DayOfWeek, Integer> groupSessionsByDay,
+      Map<DayOfWeek, Integer> sessionsByDay,
+      Context context) {
+    int groupSameDay = groupSessionsByDay.getOrDefault(day, 0);
+    int dayLoad = sessionsByDay.getOrDefault(day, 0);
+    int freeSeats = room.capacity() - enrolled;
+    boolean sameDay = day == slot.dayOfWeek();
+    boolean sameTime = start.equals(slot.startsAt());
+
+    double score =
+        W_GROUP_SAME_DAY * groupSameDay
+            + (sameDay ? 0 : W_DIFFERENT_DAY)
+            + (sameTime ? 0 : W_DIFFERENT_TIME)
+            + W_DAY_LOAD * dayLoad
+            + W_CAPACITY_WASTE * freeSeats;
+
+    List<String> reasons = new ArrayList<>();
+    if (sameDay && Objects.equals(room.id(), slot.roomId())) {
+      reasons.add("Isti termin, ista dvorana");
+    } else if (sameDay) {
+      reasons.add("Isti dan");
+    } else {
+      reasons.add("Drugi dan");
+    }
+    if (groupSameDay == 0) {
+      reasons.add("Grupa nema drugih termina taj dan");
+    } else {
+      reasons.add(groupSameDay + " termin(a) grupe taj dan");
+    }
+    reasons.add(freeSeats + " slobodnih mjesta");
+    return new CandidateView(
+        day.name(),
+        start.format(HM),
+        end.format(HM),
+        room.id(),
+        context.roomCode(room.id()),
+        freeSeats,
+        Math.round(score * 100.0) / 100.0,
+        false,
+        reasons);
+  }
 
   /** Proposes a conflict-free placement for {@code slot}, or {@code null} when none is found. */
   private Placement propose(ClassSchedule slot, List<ClassSchedule> slots, Context context) {

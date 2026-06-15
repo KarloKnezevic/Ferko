@@ -63,4 +63,22 @@ public final class ScheduleResolutionViews {
       Long roomId,
       String roomCode,
       String note) {}
+
+  /**
+   * One ranked free-slot ("gap") a session can be moved into without breaking any hard constraint.
+   * {@code score} is a soft-constraint penalty (lower is better — the list is returned best-first);
+   * {@code reasons} explains the trade-offs (minimal disruption, day load, capacity fit, group
+   * spread) so the admin can choose deliberately. {@code current} marks the gap that keeps the
+   * session's present weekday/time (room change only).
+   */
+  public record CandidateView(
+      String dayOfWeek,
+      String startsAt,
+      String endsAt,
+      Long roomId,
+      String roomCode,
+      int freeSeats,
+      double score,
+      boolean current,
+      List<String> reasons) {}
 }

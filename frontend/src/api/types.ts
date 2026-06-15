@@ -456,6 +456,19 @@ export interface ResolutionHeatCell {
   count: number;
 }
 
+/** One ranked free slot ("gap") a colliding session can be moved into (lower score = better). */
+export interface ResolutionCandidate {
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  roomId: number | null;
+  roomCode: string;
+  freeSeats: number;
+  score: number;
+  current: boolean;
+  reasons: string[];
+}
+
 export interface ResolutionReport {
   totalSlots: number;
   roomCollisions: number;

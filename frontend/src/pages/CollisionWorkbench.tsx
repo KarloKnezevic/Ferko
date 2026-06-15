@@ -57,6 +57,21 @@ export function CollisionWorkbench() {
       }),
     onSuccess: invalidate,
   });
+  // Manual resolution: a ranked list of free slots ("gaps") for one colliding session.
+  const [gapsFor, setGapsFor] = useState<number | null>(null);
+  const gaps = useQuery({
+    queryKey: ['resolution-candidates', gapsFor],
+    queryFn: () => api.resolutionCandidates(gapsFor as number),
+    enabled: gapsFor !== null,
+  });
+  const applyMove = useMutation({
+    mutationFn: (m: { slotId: number; dayOfWeek: string; startsAt: string; roomId: number | null }) =>
+      api.resolveMove(m),
+    onSuccess: () => {
+      setGapsFor(null);
+      invalidate();
+    },
+  });
   const resolveAll = useMutation({ mutationFn: api.resolveAuto, onSuccess: invalidate });
   const generateAll = useMutation({
     mutationFn: api.generateFacultyTimetable,
@@ -276,29 +291,94 @@ export function CollisionWorkbench() {
               )}
               <ul className="conflict-list">
                 {detail.map((c, i) => (
-                  <li key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                    <span>
-                      <span className={`pill ${c.kind === 'ROOM' ? 'warn' : ''}`}>
-                        {KIND_HR[c.kind] ?? c.kind}
-                      </span>{' '}
-                      {c.startsAt}–{c.endsAt}: <strong>{c.slotLabel}</strong>
-                      {c.otherLabel && <> ↔ {c.otherLabel}</>}
-                    </span>
-                    {c.suggestion.feasible ? (
-                      <button
-                        className="ghost"
-                        style={{ whiteSpace: 'nowrap' }}
-                        disabled={resolveOne.isPending}
-                        title={`Premjesti u ${c.suggestion.roomCode}, ${DAY_HR[c.suggestion.dayOfWeek ?? ''] ?? c.suggestion.dayOfWeek} ${c.suggestion.startsAt}`}
-                        onClick={() => resolveOne.mutate(c)}
-                      >
-                        Riješi → {c.suggestion.roomCode} {DAY_HR[c.suggestion.dayOfWeek ?? '']}{' '}
-                        {c.suggestion.startsAt}
-                      </button>
-                    ) : (
-                      <span className="muted" style={{ whiteSpace: 'nowrap' }}>
-                        nema prijedloga
+                  <li key={i} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                      <span>
+                        <span className={`pill ${c.kind === 'ROOM' ? 'warn' : ''}`}>
+                          {KIND_HR[c.kind] ?? c.kind}
+                        </span>{' '}
+                        {c.startsAt}–{c.endsAt}: <strong>{c.slotLabel}</strong>
+                        {c.otherLabel && <> ↔ {c.otherLabel}</>}
                       </span>
+                      <span style={{ display: 'flex', gap: 8, whiteSpace: 'nowrap' }}>
+                        {c.suggestion.feasible ? (
+                          <button
+                            className="ghost"
+                            disabled={resolveOne.isPending}
+                            title={`Premjesti u ${c.suggestion.roomCode}, ${DAY_HR[c.suggestion.dayOfWeek ?? ''] ?? c.suggestion.dayOfWeek} ${c.suggestion.startsAt}`}
+                            onClick={() => resolveOne.mutate(c)}
+                          >
+                            Riješi → {c.suggestion.roomCode} {DAY_HR[c.suggestion.dayOfWeek ?? '']}{' '}
+                            {c.suggestion.startsAt}
+                          </button>
+                        ) : (
+                          <span className="muted">nema prijedloga</span>
+                        )}
+                        <button
+                          className="ghost"
+                          title="Ručno: prikaži rangirane slobodne termine (rupe) za ovaj termin"
+                          onClick={() => setGapsFor(gapsFor === c.slotId ? null : c.slotId)}
+                        >
+                          {gapsFor === c.slotId ? 'Sakrij rupe' : 'Slobodni termini'}
+                        </button>
+                      </span>
+                    </div>
+
+                    {gapsFor === c.slotId && (
+                      <div style={{ paddingLeft: 6, borderLeft: '3px solid var(--border)' }}>
+                        {gaps.isLoading && <span className="muted">Tražim slobodne termine…</span>}
+                        {applyMove.isError && (
+                          <div className="banner err">{(applyMove.error as Error).message}</div>
+                        )}
+                        {gaps.data && gaps.data.length === 0 && (
+                          <span className="muted">Nema slobodnog termina bez kolizije.</span>
+                        )}
+                        {gaps.data && gaps.data.length > 0 && (
+                          <table style={{ marginTop: 4 }}>
+                            <thead>
+                              <tr>
+                                <th>Dan</th>
+                                <th>Vrijeme</th>
+                                <th>Dvorana</th>
+                                <th>Mjesta</th>
+                                <th>Zašto</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {gaps.data.map((g, gi) => (
+                                <tr key={gi}>
+                                  <td>{DAY_HR[g.dayOfWeek] ?? g.dayOfWeek}</td>
+                                  <td>
+                                    {g.startsAt}–{g.endsAt}
+                                  </td>
+                                  <td>{g.roomCode}</td>
+                                  <td>{g.freeSeats}</td>
+                                  <td className="muted" style={{ fontSize: 12 }}>
+                                    {g.reasons.join(' · ')}
+                                  </td>
+                                  <td>
+                                    <button
+                                      className="ghost"
+                                      disabled={applyMove.isPending}
+                                      onClick={() =>
+                                        applyMove.mutate({
+                                          slotId: c.slotId,
+                                          dayOfWeek: g.dayOfWeek,
+                                          startsAt: g.startsAt,
+                                          roomId: g.roomId,
+                                        })
+                                      }
+                                    >
+                                      Premjesti
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        )}
+                      </div>
                     )}
                   </li>
                 ))}

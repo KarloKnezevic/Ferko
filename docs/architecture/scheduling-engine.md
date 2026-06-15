@@ -77,7 +77,13 @@ In addition, **`IslandOptimizer`** (`name() == "PARALLEL_ISLAND"`) is a coarse-g
 hybrid: it runs several independent optimizers concurrently and keeps the best solution across all
 of them. This realises the population-/algorithm-level parallelization of chapter 6 of the thesis
 and works with any mix of optimizers (several seeds of one algorithm, or all six families).
-`Optimizers.hybrid(...)` wires one island per supported metaheuristic.
+
+**`HybridOptimizer`** (`name() == "HYBRID"`) is the memetic combination exposed to operators: it runs
+all six families as islands (via `IslandOptimizer`), migrates out the best elite, then **intensifies**
+it with greedy single-gene hill-climbing until no local move improves the penalty. This pairs global
+exploration with local exploitation. `Optimizers.hybrid(...)` builds it, `Optimizers.selectable()`
+lists it alongside the six base algorithms for the generation UI, and the lecture/exam timetabling
+services accept `"HYBRID"` as the requested algorithm.
 
 ## Problem catalogue
 

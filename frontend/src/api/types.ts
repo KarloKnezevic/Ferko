@@ -395,12 +395,33 @@ export interface RoomUsage {
   slots: number;
 }
 
+export interface OverCapacitySlot {
+  courseCode: string;
+  courseName: string;
+  room: string;
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  enrolled: number;
+  capacity: number;
+}
+
+export interface RoomHeat {
+  room: string;
+  capacity: number;
+  perDay: number[];
+  total: number;
+  overCapacity: boolean;
+}
+
 export interface CollisionReport {
   totalSlots: number;
   roomConflicts: number;
   instructorConflicts: number;
   conflicts: TimetableConflict[];
   roomUtilization: RoomUsage[];
+  overCapacity: OverCapacitySlot[];
+  heatmap: RoomHeat[];
 }
 
 export interface AlgorithmComparison {

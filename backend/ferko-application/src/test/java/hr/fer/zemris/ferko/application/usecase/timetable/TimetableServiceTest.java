@@ -6,11 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.support.InMemoryAcademicRepositories;
 import hr.fer.zemris.ferko.application.usecase.timetable.TimetableViews.CollisionReportView;
+import hr.fer.zemris.ferko.application.usecase.timetable.TimetableViews.RoomHeatView;
 import hr.fer.zemris.ferko.domain.model.ClassSchedule;
 import hr.fer.zemris.ferko.domain.model.Course;
+import hr.fer.zemris.ferko.domain.model.Enrollment;
+import hr.fer.zemris.ferko.domain.model.EnrollmentStatus;
 import hr.fer.zemris.ferko.domain.model.GroupType;
 import hr.fer.zemris.ferko.domain.model.Room;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +25,11 @@ class TimetableServiceTest {
   private final InMemoryAcademicRepositories.Courses courses =
       new InMemoryAcademicRepositories.Courses();
   private final InMemoryAcademicRepositories.Rooms rooms = new InMemoryAcademicRepositories.Rooms();
+  private final InMemoryAcademicRepositories.Enrollments enrollments =
+      new InMemoryAcademicRepositories.Enrollments();
   private final FakeSchedule schedule = new FakeSchedule();
-  private final TimetableService service = new TimetableService(schedule, courses, rooms);
+  private final TimetableService service =
+      new TimetableService(schedule, courses, rooms, enrollments);
 
   @Test
   void detectsRoomAndInstructorConflicts() {
@@ -89,6 +96,32 @@ class TimetableServiceTest {
     CollisionReportView report = service.collisions();
     assertEquals(0, report.roomConflicts());
     assertEquals(0, report.instructorConflicts());
+  }
+
+  @Test
+  void reportsOverCapacityAndHeatmap() {
+    long big = courses.save(new Course(0L, "BIG", "Veliki", "2026LJ", 5, "", "")).id();
+    long small = rooms.save(new Room(0L, "S1", "S", 2, 1, false)).id();
+    for (int i = 0; i < 3; i++) {
+      enrollments.save(
+          new Enrollment(0L, 100 + i, big, LocalDateTime.now(), EnrollmentStatus.ACTIVE));
+    }
+    schedule.save(slot(big, small, DayOfWeek.MONDAY, 8, 10, "Prof"));
+    schedule.save(slot(big, small, DayOfWeek.TUESDAY, 8, 10, "Prof"));
+
+    CollisionReportView report = service.collisions();
+
+    // Both slots place a 3-student course into a 2-seat room.
+    assertEquals(2, report.overCapacity().size());
+    assertEquals(3, report.overCapacity().get(0).enrolled());
+    assertEquals(2, report.overCapacity().get(0).capacity());
+
+    assertEquals(1, report.heatmap().size());
+    RoomHeatView heat = report.heatmap().get(0);
+    assertEquals("S1", heat.room());
+    assertTrue(heat.overCapacity());
+    assertEquals(2, heat.total());
+    assertEquals(List.of(1, 1, 0, 0, 0), heat.perDay());
   }
 
   private static ClassSchedule slot(

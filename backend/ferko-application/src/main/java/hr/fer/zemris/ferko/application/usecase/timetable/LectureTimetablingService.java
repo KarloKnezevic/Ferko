@@ -239,7 +239,7 @@ public class LectureTimetablingService {
       return "GENETIC";
     }
     String normalized = algorithm.trim().toUpperCase(Locale.ROOT);
-    return Optimizers.names().contains(normalized) ? normalized : "GENETIC";
+    return Optimizers.selectable().contains(normalized) ? normalized : "GENETIC";
   }
 
   private static boolean shareStudent(Set<Long> a, Set<Long> b) {

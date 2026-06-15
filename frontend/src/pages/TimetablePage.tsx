@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n';
+import { fmtNum } from '../util/format';
 import type {
   GeneratedExamTimetable,
   GeneratedTimetable,
@@ -11,6 +12,7 @@ import type {
 } from '../api/types';
 
 const ALGORITHMS = [
+  'HYBRID',
   'GENETIC',
   'DIFFERENTIAL_EVOLUTION',
   'MAX_MIN_ANT_SYSTEM',
@@ -18,6 +20,16 @@ const ALGORITHMS = [
   'IMMUNE_ALGORITHM',
   'CLONALG',
 ];
+
+const HEAT_DAYS = ['Pon', 'Uto', 'Sri', 'Čet', 'Pet'];
+
+/** Background shade for a heatmap cell, scaled against the busiest cell in the grid. */
+function heatColor(value: number, max: number): string {
+  if (value <= 0) return 'transparent';
+  const intensity = max <= 0 ? 0 : value / max;
+  // Teal accent ramp; alpha grows with load.
+  return `rgba(10, 138, 138, ${(0.15 + 0.65 * intensity).toFixed(3)})`;
+}
 
 function Sparkline({ values }: { values: number[] }) {
   if (values.length < 2) return null;
@@ -57,7 +69,7 @@ export function TimetablePage() {
   const [filter, setFilter] = useState('');
   const [studyYear, setStudyYear] = useState(1);
   const [periods, setPeriods] = useState(15);
-  const [algorithm, setAlgorithm] = useState('GENETIC');
+  const [algorithm, setAlgorithm] = useState('HYBRID');
   const [generated, setGenerated] = useState<GeneratedTimetable | null>(null);
 
   const generate = useMutation({
@@ -115,6 +127,11 @@ export function TimetablePage() {
     return grouped;
   }, [timetable.data, filter]);
 
+  const heatMax = Math.max(
+    1,
+    ...(collisions.data?.heatmap ?? []).flatMap((r) => r.perDay),
+  );
+
   return (
     <div>
       <h1>{t('timetable.title')}</h1>
@@ -147,6 +164,67 @@ export function TimetablePage() {
                 </li>
               ))}
             </ul>
+          )}
+          {(collisions.data.overCapacity?.length ?? 0) > 0 && (
+            <>
+              <h3 style={{ marginTop: 16 }}>Prekapacitirane dvorane</h3>
+              <ul className="conflict-list">
+                {collisions.data.overCapacity.slice(0, 25).map((o, i) => (
+                  <li key={i}>
+                    <span className="pill warn">PREKAPACITET</span>{' '}
+                    <strong>{o.room}</strong> · {DAY_HR[o.dayOfWeek] ?? o.dayOfWeek} {o.startsAt}–
+                    {o.endsAt}: {o.courseCode} {o.courseName} —{' '}
+                    <strong>
+                      {o.enrolled}/{o.capacity}
+                    </strong>{' '}
+                    mjesta
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          {(collisions.data.heatmap?.length ?? 0) > 0 && (
+            <>
+              <h3 style={{ marginTop: 16 }}>Toplinska karta opterećenja dvorana</h3>
+              <p className="muted" style={{ marginTop: 0 }}>
+                Broj termina po danu. Tamnije = zauzetije; crveni rub označava prekapacitiranu
+                dvoranu.
+              </p>
+              <div style={{ overflowX: 'auto' }}>
+                <table className="heat-table">
+                  <thead>
+                    <tr>
+                      <th>Dvorana</th>
+                      <th>Kap.</th>
+                      {HEAT_DAYS.map((d) => (
+                        <th key={d}>{d}</th>
+                      ))}
+                      <th>Σ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {collisions.data.heatmap.slice(0, 20).map((r) => (
+                      <tr key={r.room}>
+                        <td className={r.overCapacity ? 'heat-over' : undefined}>
+                          <strong>{r.room}</strong>
+                        </td>
+                        <td>{r.capacity}</td>
+                        {r.perDay.map((v, i) => (
+                          <td
+                            key={i}
+                            className="heat-cell"
+                            style={{ background: heatColor(v, heatMax) }}
+                          >
+                            {v || ''}
+                          </td>
+                        ))}
+                        <td>{r.total}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
           {(collisions.data.roomUtilization?.length ?? 0) > 0 && (
             <>
@@ -217,6 +295,10 @@ export function TimetablePage() {
                     {generated.baselineConflicts} → {generated.resultConflicts}
                   </div>
                   <div className="label">{t('timetable.conflicts')}</div>
+                </div>
+                <div className="stat">
+                  <div className="value">{fmtNum(generated.resultConflicts)}</div>
+                  <div className="label">Fitnes (kazna)</div>
                 </div>
                 <div className="stat">
                   <div className="value">{generated.iterations}</div>

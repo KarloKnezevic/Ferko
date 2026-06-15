@@ -502,8 +502,10 @@ public class ApplicationBeans {
   public TimetableService timetableService(
       ClassScheduleRepository classScheduleRepository,
       CourseRepository courseRepository,
-      RoomRepository roomRepository) {
-    return new TimetableService(classScheduleRepository, courseRepository, roomRepository);
+      RoomRepository roomRepository,
+      EnrollmentRepository enrollmentRepository) {
+    return new TimetableService(
+        classScheduleRepository, courseRepository, roomRepository, enrollmentRepository);
   }
 
   @Bean

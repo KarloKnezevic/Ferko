@@ -167,11 +167,11 @@ export function TimetablePage() {
           )}
           {(collisions.data.overCapacity?.length ?? 0) > 0 && (
             <>
-              <h3 style={{ marginTop: 16 }}>Prekapacitirane dvorane</h3>
+              <h3 style={{ marginTop: 16 }}>{t('timetable.overCapacity')}</h3>
               <ul className="conflict-list">
                 {collisions.data.overCapacity.slice(0, 25).map((o, i) => (
                   <li key={i}>
-                    <span className="pill warn">PREKAPACITET</span>{' '}
+                    <span className="pill warn">{t('timetable.overCapacityPill')}</span>{' '}
                     <strong>{o.room}</strong> · {DAY_HR[o.dayOfWeek] ?? o.dayOfWeek} {o.startsAt}–
                     {o.endsAt}: {o.courseCode} {o.courseName} —{' '}
                     <strong>
@@ -185,10 +185,9 @@ export function TimetablePage() {
           )}
           {(collisions.data.heatmap?.length ?? 0) > 0 && (
             <>
-              <h3 style={{ marginTop: 16 }}>Toplinska karta opterećenja dvorana</h3>
+              <h3 style={{ marginTop: 16 }}>{t('timetable.heatmap')}</h3>
               <p className="muted" style={{ marginTop: 0 }}>
-                Broj termina po danu. Tamnije = zauzetije; crveni rub označava prekapacitiranu
-                dvoranu.
+                {t('timetable.heatmapNote')}
               </p>
               <div style={{ overflowX: 'auto' }}>
                 <table className="heat-table">
@@ -298,7 +297,7 @@ export function TimetablePage() {
                 </div>
                 <div className="stat">
                   <div className="value">{fmtNum(generated.resultConflicts)}</div>
-                  <div className="label">Fitnes (kazna)</div>
+                  <div className="label">{t('timetable.fitness')}</div>
                 </div>
                 <div className="stat">
                   <div className="value">{generated.iterations}</div>

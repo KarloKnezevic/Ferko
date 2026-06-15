@@ -333,7 +333,8 @@ classDiagram
 
 **Six families of metaheuristics:** genetic algorithm (GA), differential evolution (DE), Max-Min Ant
 System (MMAS), particle swarm optimization (PSO), a simple immune algorithm (SIA) and CLONALG; plus a
-parallel **island hybrid** (`IslandOptimizer`).
+parallel **island hybrid** (`IslandOptimizer`) and a **memetic hybrid** (`HybridOptimizer`, exposed as
+`HYBRID`) that runs all families as islands and then refines the best solution with local search.
 
 **Eight formal problems** from the thesis (ch. 4): simple scheduling, unscheduled students across
 lectures, conflict removal in a timetable, lab-session scheduling, exam seating, exam/room timetable,

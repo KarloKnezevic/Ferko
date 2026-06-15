@@ -70,6 +70,12 @@ const HR: Dict = {
   'examtt.legacy': 'Povijesni raspored (kolizije)',
   'examtt.examDate': 'Termin ispita',
   'timetable.roomUsage': 'Iskorištenost dvorana',
+  'timetable.fitness': 'Fitnes (kazna)',
+  'timetable.overCapacity': 'Prekapacitirane dvorane',
+  'timetable.overCapacityPill': 'PREKAPACITET',
+  'timetable.heatmap': 'Toplinska karta opterećenja dvorana',
+  'timetable.heatmapNote':
+    'Broj termina po danu. Tamnije = zauzetije; crveni rub označava prekapacitiranu dvoranu.',
   'timetable.compare': 'Usporedba algoritama (6 metaheuristika)',
   'timetable.compareNote':
     'Pokreće svih šest metaheuristika na istom problemu rasporeda predavanja i uspoređuje kvalitetu i konvergenciju.',
@@ -271,6 +277,12 @@ const EN: Dict = {
   'examtt.legacy': 'Legacy schedule (conflicts)',
   'examtt.examDate': 'Exam date',
   'timetable.roomUsage': 'Room utilisation',
+  'timetable.fitness': 'Fitness (penalty)',
+  'timetable.overCapacity': 'Over-capacity rooms',
+  'timetable.overCapacityPill': 'OVER CAPACITY',
+  'timetable.heatmap': 'Room load heatmap',
+  'timetable.heatmapNote':
+    'Slots per day. Darker = busier; a red edge marks an over-capacity room.',
   'timetable.compare': 'Algorithm comparison (6 metaheuristics)',
   'timetable.compareNote':
     'Runs all six metaheuristics on the same lecture-timetabling problem and compares quality and convergence.',

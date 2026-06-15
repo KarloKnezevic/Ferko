@@ -14,6 +14,7 @@ import hr.fer.zemris.ferko.domain.model.Course;
 import hr.fer.zemris.ferko.domain.model.Room;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class TimetableService {
 
   /** Enrolled-student count per course that appears in the timetable (queried once per course). */
   private Map<Long, Integer> enrolledByCourse(List<ClassSchedule> slots) {
-    Map<Long, Integer> enrolled = new java.util.HashMap<>();
+    Map<Long, Integer> enrolled = new HashMap<>();
     for (ClassSchedule slot : slots) {
       enrolled.computeIfAbsent(slot.courseId(), id -> enrollmentRepository.findByCourse(id).size());
     }
@@ -180,7 +181,7 @@ public class TimetableService {
   /** Busiest rooms first: weekly slot count per room. */
   private static List<TimetableViews.RoomUsageView> roomUtilization(
       List<ClassSchedule> slots, Map<Long, String> roomCodes) {
-    Map<Long, Integer> countByRoom = new java.util.HashMap<>();
+    Map<Long, Integer> countByRoom = new HashMap<>();
     for (ClassSchedule slot : slots) {
       if (slot.roomId() != null) {
         countByRoom.merge(slot.roomId(), 1, Integer::sum);

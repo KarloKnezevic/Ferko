@@ -57,7 +57,8 @@ classDiagram
 
 `Optimizers` is the registry/factory: callers (scheduling jobs and the UI) select and compare
 algorithms by stable name without depending on concrete classes. `createDefault` uses a sensible
-budget (population 60, 5000 iterations); `hybrid` builds an `IslandOptimizer` over every algorithm.
+budget (population 60, 5000 iterations); `hybrid` builds a `HybridOptimizer` (parallel islands over
+every algorithm, then local refinement); `selectable` lists the base algorithms plus `HYBRID`.
 
 ## Metaheuristics
 

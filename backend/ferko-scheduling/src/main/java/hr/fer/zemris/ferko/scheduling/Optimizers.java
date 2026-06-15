@@ -1,5 +1,6 @@
 package hr.fer.zemris.ferko.scheduling;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public final class Optimizers {
 
   /** Identifiers selectable for a single generation run: the base algorithms plus the hybrid. */
   public static List<String> selectable() {
-    List<String> all = new java.util.ArrayList<>(names());
+    List<String> all = new ArrayList<>(names());
     all.add(HYBRID);
     return List.copyOf(all);
   }

@@ -128,7 +128,8 @@ exam-scheduling model from Marko Cupic's doctoral dissertation (chapters 4.5 and
 - An `Optimizer` abstraction and a `Problem` abstraction (fitness/penalty evaluation).
 - Six metaheuristics, registered by name in `Optimizers`: `GENETIC`, `DIFFERENTIAL_EVOLUTION`,
   `MAX_MIN_ANT_SYSTEM`, `PARTICLE_SWARM`, `IMMUNE_ALGORITHM`, `CLONALG`, plus an `IslandOptimizer`
-  hybrid that runs them in parallel and keeps the best result.
+  that runs them in parallel and keeps the best result, and a memetic `HybridOptimizer` (`HYBRID`)
+  that follows the parallel islands with a local-search refinement and is the hybrid exposed to operators.
 - A family of problem definitions (`SeatingProblem`, `ExamTimetableProblem`, `LabSchedulingProblem`,
   `SeminarGroupsProblem`, `TeamSchedulingProblem`, `ConflictRemovalProblem`,
   `UnscheduledStudentsProblem`, `SimpleSchedulingProblem`).

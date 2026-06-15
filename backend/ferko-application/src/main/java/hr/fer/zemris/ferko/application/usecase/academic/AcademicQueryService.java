@@ -14,10 +14,13 @@ import hr.fer.zemris.ferko.domain.model.Room;
 import hr.fer.zemris.ferko.domain.model.Semester;
 import hr.fer.zemris.ferko.domain.model.Student;
 import hr.fer.zemris.ferko.domain.model.StudentGroup;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /** Read-side facade exposing academic data as interface-friendly views. */
@@ -53,11 +56,59 @@ public class AcademicQueryService {
     return semesterRepository.findActive().map(AcademicQueryService::toView);
   }
 
+  /** Roles that grant faculty-wide visibility of every course regardless of enrollment/teaching. */
+  private static final Set<String> GLOBAL_ROLES = Set.of("ADMIN", "STUSLU");
+
   public List<CourseSummaryView> listCourses(String semesterCode) {
-    List<Course> courses =
-        semesterCode == null || semesterCode.isBlank()
-            ? courseRepository.findAll()
-            : courseRepository.findBySemester(semesterCode);
+    return toSummaries(coursesIn(semesterCode));
+  }
+
+  /**
+   * Lists courses scoped to the authenticated principal. Holders of a global role (ADMIN, STUSLU)
+   * see every course; everyone else sees only the courses they attend (as a student) or teach (as
+   * staff), so students never enumerate the full catalogue.
+   *
+   * @param username authenticated principal name
+   * @param roles role names without the {@code ROLE_} prefix
+   * @param semesterCode optional semester filter; blank/null means all semesters
+   */
+  public List<CourseSummaryView> listCoursesForPrincipal(
+      String username, Collection<String> roles, String semesterCode) {
+    if (roles != null && roles.stream().anyMatch(GLOBAL_ROLES::contains)) {
+      return listCourses(semesterCode);
+    }
+    Optional<AppUser> user = userRepository.findByUsername(username);
+    if (user.isEmpty()) {
+      return List.of();
+    }
+    long userId = user.get().id();
+    Set<Long> visible = new LinkedHashSet<>();
+    studentRepository
+        .findByUserId(userId)
+        .ifPresent(
+            student ->
+                enrollmentRepository.findByStudent(student.id()).stream()
+                    .map(Enrollment::courseId)
+                    .forEach(visible::add));
+    for (Course course : courseRepository.findAll()) {
+      boolean teaches =
+          courseRepository.findStaffByCourse(course.id()).stream()
+              .anyMatch(member -> member.userId() == userId);
+      if (teaches) {
+        visible.add(course.id());
+      }
+    }
+    return toSummaries(
+        coursesIn(semesterCode).stream().filter(c -> visible.contains(c.id())).toList());
+  }
+
+  private List<Course> coursesIn(String semesterCode) {
+    return semesterCode == null || semesterCode.isBlank()
+        ? courseRepository.findAll()
+        : courseRepository.findBySemester(semesterCode);
+  }
+
+  private List<CourseSummaryView> toSummaries(List<Course> courses) {
     return courses.stream()
         .map(
             course ->

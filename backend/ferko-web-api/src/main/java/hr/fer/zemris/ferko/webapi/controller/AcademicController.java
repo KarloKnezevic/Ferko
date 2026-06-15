@@ -8,8 +8,12 @@ import hr.fer.zemris.ferko.application.usecase.academic.RoomView;
 import hr.fer.zemris.ferko.application.usecase.academic.SemesterView;
 import hr.fer.zemris.ferko.application.usecase.academic.StudentView;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +31,11 @@ public class AcademicController {
       "hasAnyRole('ADMIN', 'STUSLU', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT')";
 
   private final AcademicQueryService query;
+  private final CourseAccessGuard courseAccessGuard;
 
-  public AcademicController(AcademicQueryService query) {
+  public AcademicController(AcademicQueryService query, CourseAccessGuard courseAccessGuard) {
     this.query = query;
+    this.courseAccessGuard = courseAccessGuard;
   }
 
   @GetMapping("/semesters")
@@ -46,12 +52,23 @@ public class AcademicController {
   }
 
   @GetMapping("/courses")
-  public List<CourseSummaryView> courses(@RequestParam(required = false) String semester) {
-    return query.listCourses(semester);
+  public List<CourseSummaryView> courses(
+      @RequestParam(required = false) String semester, Authentication authentication) {
+    return query.listCoursesForPrincipal(
+        authentication.getName(), rolesOf(authentication), semester);
+  }
+
+  private static Set<String> rolesOf(Authentication authentication) {
+    return authentication.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .filter(authority -> authority.startsWith("ROLE_"))
+        .map(authority -> authority.substring("ROLE_".length()))
+        .collect(Collectors.toSet());
   }
 
   @GetMapping("/courses/{id}")
-  public CourseDetailView course(@PathVariable long id) {
+  public CourseDetailView course(@PathVariable long id, Authentication authentication) {
+    courseAccessGuard.requireCourseAccess(authentication, id);
     return query
         .courseDetail(id)
         .orElseThrow(
@@ -81,6 +98,7 @@ public class AcademicController {
   }
 
   @GetMapping("/rooms")
+  @PreAuthorize(STAFF)
   public List<RoomView> rooms() {
     return query.listRooms();
   }

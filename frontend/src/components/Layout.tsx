@@ -37,10 +37,14 @@ export function Layout() {
           {hasRole('ASISTENT', 'ASISTENT_ORGANIZATOR', 'NASTAVNIK', 'NOSITELJ') && (
             <NavLink to="/moja-dezurstva">{t('nav.myDuties')}</NavLink>
           )}
-          <NavLink to="/raspored">{t('nav.timetable')}</NavLink>
+          {hasRole('ADMIN', 'STUSLU', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT') && (
+            <NavLink to="/raspored">{t('nav.timetable')}</NavLink>
+          )}
           <NavLink to="/kalendar">{t('nav.calendar')}</NavLink>
           <NavLink to="/obavijesti">{t('nav.notices')}</NavLink>
-          <NavLink to="/prostorije">{t('nav.rooms')}</NavLink>
+          {hasRole('ADMIN', 'STUSLU', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT') && (
+            <NavLink to="/prostorije">{t('nav.rooms')}</NavLink>
+          )}
           {hasRole('ADMIN', 'STUSLU') && <NavLink to="/studenti">{t('nav.students')}</NavLink>}
           {hasRole('ADMIN') && <NavLink to="/admin">{t('nav.admin')}</NavLink>}
           <NavLink to="/e-portfolio">{t('nav.portfolio')}</NavLink>

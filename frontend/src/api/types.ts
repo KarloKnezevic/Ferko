@@ -448,13 +448,23 @@ export interface ResolutionCollision {
   suggestion: MoveSuggestion;
 }
 
+/** One aggregated heatmap bucket (uncapped): collisions of a kind in a room on a weekday. */
+export interface ResolutionHeatCell {
+  room: string;
+  dayOfWeek: string;
+  kind: string;
+  count: number;
+}
+
 export interface ResolutionReport {
   totalSlots: number;
   roomCollisions: number;
   instructorCollisions: number;
   groupCollisions: number;
   capacityViolations: number;
+  totalCollisions: number;
   conflictFree: boolean;
+  heatmap: ResolutionHeatCell[];
   collisions: ResolutionCollision[];
 }
 

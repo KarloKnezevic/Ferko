@@ -5,6 +5,7 @@ import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.CollisionView;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.HeatCell;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.MoveSuggestionView;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.ResolutionReportView;
 import hr.fer.zemris.ferko.domain.model.ClassSchedule;
@@ -17,6 +18,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -221,6 +223,9 @@ public class ScheduleResolutionService {
     int instructor = 0;
     int group = 0;
     int capacity = 0;
+    // Aggregate EVERY collision (not just the capped detailed subset) into (room, weekday, kind)
+    // buckets. A UI built from this heatmap therefore always sums back to the per-kind counters.
+    Map<HeatKey, Integer> heat = new LinkedHashMap<>();
     List<CollisionView> views = new ArrayList<>();
     for (Collision collision : collisions) {
       switch (collision.kind()) {
@@ -229,12 +234,30 @@ public class ScheduleResolutionService {
         case "GROUP" -> group++;
         default -> capacity++;
       }
+      ClassSchedule slot = byId(slots, collision.slotId());
+      if (slot != null) {
+        HeatKey key =
+            new HeatKey(context.roomCode(slot.roomId()), slot.dayOfWeek().name(), collision.kind());
+        heat.merge(key, 1, Integer::sum);
+      }
       if (views.size() < MAX_DETAILED) {
         views.add(toView(collision, slots, context));
       }
     }
+    List<HeatCell> heatmap = new ArrayList<>();
+    heat.forEach(
+        (key, count) -> heatmap.add(new HeatCell(key.room(), key.day(), key.kind(), count)));
+    int total = room + instructor + group + capacity;
     return new ResolutionReportView(
-        slots.size(), room, instructor, group, capacity, collisions.isEmpty(), views);
+        slots.size(),
+        room,
+        instructor,
+        group,
+        capacity,
+        total,
+        collisions.isEmpty(),
+        heatmap,
+        views);
   }
 
   private List<Collision> detect(List<ClassSchedule> slots, Context context) {
@@ -519,6 +542,9 @@ public class ScheduleResolutionService {
   }
 
   private record Collision(String kind, long slotId, Long otherSlotId) {}
+
+  /** Aggregation key for the uncapped collision heatmap: room code, weekday name and kind. */
+  private record HeatKey(String room, String day, String kind) {}
 
   private record Placement(DayOfWeek day, LocalTime start, LocalTime end, Long roomId) {}
 }

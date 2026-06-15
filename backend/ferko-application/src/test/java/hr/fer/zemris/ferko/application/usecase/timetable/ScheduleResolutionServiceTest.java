@@ -189,6 +189,29 @@ class ScheduleResolutionServiceTest {
   }
 
   @Test
+  void heatmapAggregatesEveryCollisionAndSumsToTheKindCounters() {
+    long room1 = rooms.save(new Room(0L, "HX", "H", 100, 1, false)).id();
+    // Same course/room/time twice -> one ROOM and one GROUP collision, both in room HX on Monday.
+    slot(room1, DayOfWeek.MONDAY, 8, 10, "Prof A");
+    slot(room1, DayOfWeek.MONDAY, 8, 10, "Prof B");
+
+    ResolutionReportView report = service.report();
+
+    int kindTotal =
+        report.roomCollisions()
+            + report.instructorCollisions()
+            + report.groupCollisions()
+            + report.capacityViolations();
+    assertEquals(kindTotal, report.totalCollisions());
+    // The heatmap is uncapped: its cells sum back to the grand total exactly.
+    int heatTotal = report.heatmap().stream().mapToInt(c -> c.count()).sum();
+    assertEquals(report.totalCollisions(), heatTotal);
+    // Every collision here is in room HX on Monday.
+    assertTrue(report.heatmap().stream().allMatch(c -> c.room().equals("HX")));
+    assertTrue(report.heatmap().stream().allMatch(c -> c.dayOfWeek().equals("MONDAY")));
+  }
+
+  @Test
   void cleanScheduleIsConflictFree() {
     long r1 = rooms.save(new Room(0L, "RA", "R", 100, 1, false)).id();
     long r2 = rooms.save(new Room(0L, "RB", "R", 100, 1, false)).id();

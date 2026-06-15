@@ -9,6 +9,12 @@ public final class ScheduleResolutionViews {
 
   /**
    * Faculty-wide hard-constraint report. A conflict-free timetable has all four counters at zero.
+   *
+   * <p>{@code totalCollisions} is the grand total ({@code room + instructor + group + capacity})
+   * and equals the sum of every {@link HeatCell#count()} in {@code heatmap}. The {@code heatmap} is
+   * aggregated over <em>all</em> collisions (never capped), so a UI built from it always sums back
+   * to the per-kind counters. {@code collisions} is the capped detailed list (with move
+   * suggestions) used for click-through; it may hold fewer entries than {@code totalCollisions}.
    */
   public record ResolutionReportView(
       int totalSlots,
@@ -16,8 +22,17 @@ public final class ScheduleResolutionViews {
       int instructorCollisions,
       int groupCollisions,
       int capacityViolations,
+      int totalCollisions,
       boolean conflictFree,
+      List<HeatCell> heatmap,
       List<CollisionView> collisions) {}
+
+  /**
+   * One aggregated heatmap bucket: the number of collisions of a single {@code kind} ({@code ROOM},
+   * {@code INSTRUCTOR}, {@code GROUP} or {@code CAPACITY}) occurring in {@code room} on a given
+   * {@code dayOfWeek}. Computed over every collision, not just the detailed (capped) subset.
+   */
+  public record HeatCell(String room, String dayOfWeek, String kind, int count) {}
 
   /**
    * One hard-constraint violation. {@code kind} is {@code ROOM}, {@code INSTRUCTOR}, {@code GROUP}

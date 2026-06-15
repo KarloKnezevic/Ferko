@@ -29,6 +29,9 @@ export function CollisionWorkbench() {
   const queryClient = useQueryClient();
   const report = useQuery({ queryKey: ['timetable-resolution'], queryFn: api.timetableResolution });
   const [selected, setSelected] = useState<{ room: string; day: string } | null>(null);
+  const [kindFilter, setKindFilter] = useState<'ALL' | 'ROOM' | 'INSTRUCTOR' | 'GROUP' | 'CAPACITY'>(
+    'ALL',
+  );
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['timetable-resolution'] });
@@ -57,16 +60,19 @@ export function CollisionWorkbench() {
   const busy = resolveAll.isPending || generateAll.isPending;
 
   const collisions = report.data?.collisions ?? [];
+  const heatmap = report.data?.heatmap ?? [];
 
-  // Room × day collision grid (rooms with at least one collision).
+  // Room × weekday grid built from the UNCAPPED heatmap, so its totals always match the per-kind
+  // counters. Optionally narrowed to a single collision kind via the filter chips.
   const grid = useMemo(() => {
     const counts = new Map<string, Map<string, number>>();
     const rooms = new Set<string>();
-    for (const c of collisions) {
-      const room = c.room || '—';
+    for (const cell of heatmap) {
+      if (kindFilter !== 'ALL' && cell.kind !== kindFilter) continue;
+      const room = cell.room || '—';
       rooms.add(room);
       const row = counts.get(room) ?? new Map<string, number>();
-      row.set(c.dayOfWeek, (row.get(c.dayOfWeek) ?? 0) + 1);
+      row.set(cell.dayOfWeek, (row.get(cell.dayOfWeek) ?? 0) + cell.count);
       counts.set(room, row);
     }
     const rows = [...rooms]
@@ -75,14 +81,26 @@ export function CollisionWorkbench() {
         perDay: DAYS.map((d) => counts.get(room)?.get(d) ?? 0),
         total: DAYS.reduce((sum, d) => sum + (counts.get(room)?.get(d) ?? 0), 0),
       }))
+      .filter((r) => r.total > 0)
       .sort((a, b) => b.total - a.total);
+    const perDayTotals = DAYS.map((_, i) => rows.reduce((s, r) => s + r.perDay[i], 0));
+    const grandTotal = perDayTotals.reduce((s, v) => s + v, 0);
     const max = Math.max(1, ...rows.flatMap((r) => r.perDay));
-    return { rows, max };
-  }, [collisions]);
+    return { rows, max, perDayTotals, grandTotal };
+  }, [heatmap, kindFilter]);
 
+  // Click-through detail uses the (server-capped) detailed list; the cell may hold more than shown.
   const detail = selected
-    ? collisions.filter((c) => (c.room || '—') === selected.room && c.dayOfWeek === selected.day)
+    ? collisions.filter(
+        (c) =>
+          (c.room || '—') === selected.room &&
+          c.dayOfWeek === selected.day &&
+          (kindFilter === 'ALL' || c.kind === kindFilter),
+      )
     : [];
+  const selectedCellTotal = selected
+    ? (grid.rows.find((r) => r.room === selected.room)?.perDay[DAYS.indexOf(selected.day)] ?? 0)
+    : 0;
 
   if (report.isLoading) return <div className="card"><p className="muted">Učitavanje…</p></div>;
   const data = report.data;
@@ -96,10 +114,7 @@ export function CollisionWorkbench() {
           {data.conflictFree ? (
             <span className="pill ok">Nema kolizija ✓</span>
           ) : (
-            <span className="pill warn">
-              {data.roomCollisions + data.instructorCollisions + data.groupCollisions + data.capacityViolations}{' '}
-              kolizija
-            </span>
+            <span className="pill warn">{data.totalCollisions} kolizija</span>
           )}
           <button
             disabled={busy}
@@ -126,23 +141,40 @@ export function CollisionWorkbench() {
         </div>
       )}
 
+      {/* Per-kind totals double as heatmap filters; click one to narrow the map, click again for all. */}
       <div className="card-grid" style={{ marginTop: 12 }}>
-        <div className="stat">
-          <div className="value">{data.roomCollisions}</div>
-          <div className="label">Dvorana 1×</div>
-        </div>
-        <div className="stat">
-          <div className="value">{data.instructorCollisions}</div>
-          <div className="label">Nastavnik 1×</div>
-        </div>
-        <div className="stat">
-          <div className="value">{data.groupCollisions}</div>
-          <div className="label">Grupa 1×</div>
-        </div>
-        <div className="stat">
-          <div className="value">{data.capacityViolations}</div>
-          <div className="label">Kapacitet</div>
-        </div>
+        {(
+          [
+            ['ALL', 'Sve kolizije', data.totalCollisions],
+            ['ROOM', 'Dvorana', data.roomCollisions],
+            ['INSTRUCTOR', 'Nastavnik', data.instructorCollisions],
+            ['GROUP', 'Grupa', data.groupCollisions],
+            ['CAPACITY', 'Kapacitet', data.capacityViolations],
+          ] as const
+        ).map(([kind, label, value]) => {
+          const active = kindFilter === kind;
+          return (
+            <button
+              key={kind}
+              className="stat"
+              type="button"
+              onClick={() => {
+                setKindFilter(kind);
+                setSelected(null);
+              }}
+              style={{
+                cursor: 'pointer',
+                textAlign: 'left',
+                border: active ? '2px solid var(--fer-blue)' : '1px solid var(--border, #ddd)',
+                background: active ? 'rgba(0, 56, 107, 0.06)' : undefined,
+              }}
+              title={`Prikaži samo: ${label}`}
+            >
+              <div className="value">{value}</div>
+              <div className="label">{label}</div>
+            </button>
+          );
+        })}
       </div>
 
       {data.conflictFree && (
@@ -154,6 +186,13 @@ export function CollisionWorkbench() {
       {!data.conflictFree && (
         <>
           <h3 style={{ marginTop: 16 }}>Toplinska karta kolizija (kliknite ćeliju za detalje)</h3>
+          <p className="muted" style={{ marginTop: -4, marginBottom: 8 }}>
+            Dvorana × radni dan. Zbroj svih ćelija jednak je ukupnom broju kolizija
+            {kindFilter === 'ALL'
+              ? ` (${grid.grandTotal}).`
+              : ` za vrstu „${KIND_HR[kindFilter]}” (${grid.grandTotal}).`}{' '}
+            Kapacitet = kolegij prelazi kapacitet svih dvorana.
+          </p>
           <div style={{ overflowX: 'auto' }}>
             <table className="heat-table">
               <thead>
@@ -193,13 +232,29 @@ export function CollisionWorkbench() {
                   </tr>
                 ))}
               </tbody>
+              <tfoot>
+                <tr>
+                  <th>Σ po danu</th>
+                  {grid.perDayTotals.map((v, i) => (
+                    <th key={i}>{v || ''}</th>
+                  ))}
+                  <th>{grid.grandTotal}</th>
+                </tr>
+              </tfoot>
             </table>
           </div>
 
           {selected && (
             <div style={{ marginTop: 16 }}>
               <h3 style={{ marginBottom: 8 }}>
-                {selected.room} · {DAY_HR[selected.day] ?? selected.day} — {detail.length} kolizija
+                {selected.room} · {DAY_HR[selected.day] ?? selected.day} — {selectedCellTotal}{' '}
+                kolizija
+                {detail.length < selectedCellTotal && (
+                  <span className="muted" style={{ fontWeight: 400, fontSize: 13 }}>
+                    {' '}
+                    (prikazano prvih {detail.length})
+                  </span>
+                )}
               </h3>
               {resolveOne.isError && (
                 <div className="banner err">{(resolveOne.error as Error).message}</div>

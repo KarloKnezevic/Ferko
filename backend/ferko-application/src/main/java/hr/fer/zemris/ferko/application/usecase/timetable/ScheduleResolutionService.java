@@ -105,7 +105,41 @@ public class ScheduleResolutionService {
   /** Greedily applies suggested moves until the timetable is conflict-free or no move helps. */
   public ResolutionReportView autoResolve() {
     List<ClassSchedule> slots = new ArrayList<>(scheduleRepository.findAll());
+    repair(slots, context());
+    persist(slots);
+    return buildReport(slots);
+  }
+
+  /**
+   * Generates a fresh faculty-wide placement for every session (all courses, groups and years) and
+   * then repairs any residual hard collisions. Each session keeps its course/group/type/duration
+   * and is greedily first-fit into a conflict-free weekday/time/room (most-constrained sessions, by
+   * enrolment then duration, placed first), after which {@link #repair} drives the remainder toward
+   * zero. The aim is a conflict-free final timetable; the returned report states whether that was
+   * reached and lists any sessions that could not be placed without a clash.
+   */
+  public ResolutionReportView generateFacultyWide() {
     Context context = context();
+    List<ClassSchedule> events = new ArrayList<>(scheduleRepository.findAll());
+    events.sort(
+        java.util.Comparator.<ClassSchedule>comparingInt(e -> context.enrolled(e.courseId()))
+            .reversed()
+            .thenComparing(
+                e -> Duration.between(e.startsAt(), e.endsAt()),
+                java.util.Comparator.reverseOrder())
+            .thenComparingLong(ClassSchedule::id));
+    List<ClassSchedule> placed = new ArrayList<>();
+    for (ClassSchedule event : events) {
+      Placement spot = firstFit(event, placed, context);
+      placed.add(withPlacement(event, spot));
+    }
+    repair(placed, context);
+    persist(placed);
+    return buildReport(placed);
+  }
+
+  /** Greedy repair: keep applying a suggested move to some collision until none helps. */
+  private void repair(List<ClassSchedule> slots, Context context) {
     int rounds = 0;
     while (rounds++ < MAX_AUTO_ROUNDS) {
       List<Collision> collisions = detect(slots, context);
@@ -118,8 +152,6 @@ public class ScheduleResolutionService {
         Placement move = propose(slot, slots, context);
         if (move != null) {
           apply(slots, slot, move);
-          scheduleRepository.updatePlacement(
-              slot.id(), move.day(), move.start(), move.end(), move.roomId());
           progressed = true;
           break; // re-detect from a clean state after each applied move
         }
@@ -128,7 +160,56 @@ public class ScheduleResolutionService {
         break; // remaining collisions have no feasible move
       }
     }
-    return buildReport(slots);
+  }
+
+  /** Persists the (possibly repositioned) placement of every slot. */
+  private void persist(List<ClassSchedule> slots) {
+    for (ClassSchedule slot : slots) {
+      scheduleRepository.updatePlacement(
+          slot.id(), slot.dayOfWeek(), slot.startsAt(), slot.endsAt(), slot.roomId());
+    }
+  }
+
+  /** First conflict-free weekday/time/room for an event against the already-placed set. */
+  private Placement firstFit(ClassSchedule event, List<ClassSchedule> placed, Context context) {
+    Duration duration = Duration.between(event.startsAt(), event.endsAt());
+    int enrolled = context.enrolled(event.courseId());
+    Map<DayOfWeek, List<ClassSchedule>> byDay = new HashMap<>();
+    for (ClassSchedule slot : placed) {
+      byDay.computeIfAbsent(slot.dayOfWeek(), key -> new ArrayList<>()).add(slot);
+    }
+    for (DayOfWeek day : WEEK) {
+      List<ClassSchedule> dayslots = byDay.getOrDefault(day, List.of());
+      for (LocalTime start : START_GRID) {
+        LocalTime end = start.plus(duration);
+        if (end.isAfter(LocalTime.of(22, 0))) {
+          continue;
+        }
+        for (Room room : context.rooms()) {
+          if (room.capacity() < enrolled) {
+            continue;
+          }
+          if (isFree(event, dayslots, start, end, room.id())) {
+            return new Placement(day, start, end, room.id());
+          }
+        }
+      }
+    }
+    // No conflict-free spot: keep the event's current placement and let repair try later.
+    return new Placement(event.dayOfWeek(), event.startsAt(), event.endsAt(), event.roomId());
+  }
+
+  private static ClassSchedule withPlacement(ClassSchedule event, Placement spot) {
+    return new ClassSchedule(
+        event.id(),
+        event.courseId(),
+        event.groupId(),
+        event.type(),
+        spot.roomId(),
+        spot.day(),
+        spot.start(),
+        spot.end(),
+        event.instructor());
   }
 
   // ----- detection -------------------------------------------------------------------------------

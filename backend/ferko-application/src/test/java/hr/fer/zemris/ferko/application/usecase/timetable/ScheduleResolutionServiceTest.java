@@ -159,6 +159,36 @@ class ScheduleResolutionServiceTest {
   }
 
   @Test
+  void generateFacultyWideProducesAConflictFreeTimetable() {
+    // Several rooms so the generator has room to spread sessions out.
+    for (int i = 0; i < 6; i++) {
+      rooms.save(new Room(0L, "G" + i, "G", 200, 1, false));
+    }
+    long other = courses.save(new Course(0L, "MAT", "Matematika", "2026LJ", 5, "", "")).id();
+    // A pile of colliding sessions: same course/room/time and cross-room overlaps.
+    slot(1L, DayOfWeek.MONDAY, 8, 10, "Prof A");
+    slot(1L, DayOfWeek.MONDAY, 8, 10, "Prof A");
+    slot(1L, DayOfWeek.MONDAY, 8, 10, "Prof B");
+    schedule.save(
+        new ClassSchedule(
+            0L,
+            other,
+            null,
+            GroupType.LECTURE,
+            1L,
+            DayOfWeek.MONDAY,
+            LocalTime.of(8, 0),
+            LocalTime.of(10, 0),
+            "Prof A"));
+
+    ResolutionReportView before = service.report();
+    assertFalse(before.conflictFree());
+
+    ResolutionReportView after = service.generateFacultyWide();
+    assertTrue(after.conflictFree(), "faculty-wide generation should produce a conflict-free plan");
+  }
+
+  @Test
   void cleanScheduleIsConflictFree() {
     long r1 = rooms.save(new Room(0L, "RA", "R", 100, 1, false)).id();
     long r2 = rooms.save(new Room(0L, "RB", "R", 100, 1, false)).id();

@@ -136,6 +136,20 @@ public class TimetableController {
     return report;
   }
 
+  @PostMapping("/timetable/resolution/generate")
+  @PreAuthorize("hasRole('ADMIN')")
+  @org.springframework.transaction.annotation.Transactional
+  public ResolutionReportView generateFacultyWide(Authentication authentication) {
+    ResolutionReportView report = resolution.generateFacultyWide();
+    audit.record(
+        authentication.getName(),
+        "TIMETABLE_FACULTY_GENERATED",
+        "timetable",
+        null,
+        "slots=" + report.totalSlots() + ", conflictFree=" + report.conflictFree());
+    return report;
+  }
+
   /**
    * Generation request: scope is either an explicit {@code courseIds} list or a {@code studyYear};
    * {@code periods} weekly slots (default 15 = 5 days x 3 blocks); {@code algorithm} optional.

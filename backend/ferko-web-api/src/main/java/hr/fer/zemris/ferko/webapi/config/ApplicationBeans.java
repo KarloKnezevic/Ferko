@@ -18,6 +18,7 @@ import hr.fer.zemris.ferko.application.port.GradingRepository;
 import hr.fer.zemris.ferko.application.port.GroupExchangeRepository;
 import hr.fer.zemris.ferko.application.port.MailSender;
 import hr.fer.zemris.ferko.application.port.NoticeRepository;
+import hr.fer.zemris.ferko.application.port.PasswordHasher;
 import hr.fer.zemris.ferko.application.port.PortfolioRepository;
 import hr.fer.zemris.ferko.application.port.RepositoryFileRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
@@ -30,6 +31,7 @@ import hr.fer.zemris.ferko.application.usecase.PingUseCase;
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicProvisioningService;
 import hr.fer.zemris.ferko.application.usecase.academic.AcademicQueryService;
 import hr.fer.zemris.ferko.application.usecase.access.AccessControlService;
+import hr.fer.zemris.ferko.application.usecase.admin.AdminStudentService;
 import hr.fer.zemris.ferko.application.usecase.audit.AuditService;
 import hr.fer.zemris.ferko.application.usecase.auth.LoadAuthUserUseCase;
 import hr.fer.zemris.ferko.application.usecase.auth.ProvisionUserUseCase;
@@ -607,5 +609,28 @@ public class ApplicationBeans {
         courseRepository,
         enrollmentRepository,
         classScheduleRepository);
+  }
+
+  @Bean
+  public PasswordHasher passwordHasher(
+      org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
+    return passwordEncoder::encode;
+  }
+
+  @Bean
+  public AdminStudentService adminStudentService(
+      AppUserRepository appUserRepository,
+      StudentRepository studentRepository,
+      StudentGradesService studentGradesService,
+      AcademicSummaryService academicSummaryService,
+      CalendarService calendarService,
+      PasswordHasher passwordHasher) {
+    return new AdminStudentService(
+        appUserRepository,
+        studentRepository,
+        studentGradesService,
+        academicSummaryService,
+        calendarService,
+        passwordHasher);
   }
 }

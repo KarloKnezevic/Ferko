@@ -173,11 +173,22 @@ tbody tr:hover .grade-cell { filter: brightness(0.97); }
 
 /* Calendar */
 .week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
-.week-day-name { font-weight: 700; color: var(--fer-blue); margin-bottom: 8px; }
-.slot { border-left: 4px solid var(--accent); background: var(--zebra); padding: 8px 10px; border-radius: 4px; margin-bottom: 8px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.cal-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.legend-dot.lecture { background: var(--accent); }
+.legend-dot.lab { background: var(--fer-blue-light); }
+.week-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; }
+.week-col { background: var(--zebra); border: 1px solid var(--border); border-radius: 8px; padding: 10px; min-height: 70px; }
+.week-day-name { font-weight: 700; color: var(--fer-blue); margin-bottom: 10px; text-align: center; font-size: 13px; }
+.week-empty { color: var(--muted); text-align: center; padding: 8px 0; }
+.slot { border-left: 4px solid var(--accent); background: var(--surface); padding: 8px 10px; border-radius: 6px; margin-bottom: 8px; box-shadow: var(--shadow); }
 .slot.lab { border-left-color: var(--fer-blue-light); }
-.slot-time { font-weight: 600; font-variant-numeric: tabular-nums; }
-.slot-course { font-weight: 600; }
+.slot-time { font-weight: 600; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+.slot-course { font-weight: 600; margin: 2px 0; line-height: 1.25; }
+.slot-meta { display: flex; gap: 8px; align-items: center; font-size: 12px; }
+@media (max-width: 880px) { .week-board { grid-template-columns: 1fr; } }
 
 /* Flow diagram (raspoređivanje) */
 .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 18px; }

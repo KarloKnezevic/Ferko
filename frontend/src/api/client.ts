@@ -36,6 +36,8 @@ import type {
   PointsOverviewRow,
   Room,
   RepoFile,
+  StudentStudySummary,
+  TeachingLoad,
   RoomSeating,
   SeatingResult,
   Semester,
@@ -136,6 +138,9 @@ export const api = {
   publishExam: (examId: number) =>
     request<void>(`/api/v1/academic/exams/${examId}/publish`, { method: 'POST' }),
   myProfile: () => request<MyProfile>(`/api/v1/academic/my/profile`),
+  myStudySummary: () =>
+    request<StudentStudySummary>(`/api/v1/academic/my/study-summary`),
+  myTeachingLoad: () => request<TeachingLoad>(`/api/v1/academic/my/teaching-load`),
   myPortfolio: () => request<PortfolioEntry[]>(`/api/v1/academic/my/portfolio`),
   addPortfolioEntry: (body: {
     title: string;

@@ -47,6 +47,7 @@ import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.literature.CourseLiteratureService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
 import hr.fer.zemris.ferko.application.usecase.portfolio.PortfolioService;
+import hr.fer.zemris.ferko.application.usecase.profile.AcademicSummaryService;
 import hr.fer.zemris.ferko.application.usecase.profile.ProfileService;
 import hr.fer.zemris.ferko.application.usecase.repository.RepositoryService;
 import hr.fer.zemris.ferko.application.usecase.schedule.CourseScheduleService;
@@ -568,5 +569,20 @@ public class ApplicationBeans {
         enrollmentRepository,
         courseRepository,
         gradingRepository);
+  }
+
+  @Bean
+  public AcademicSummaryService academicSummaryService(
+      StudentGradesService studentGradesService,
+      AppUserRepository appUserRepository,
+      CourseRepository courseRepository,
+      EnrollmentRepository enrollmentRepository,
+      ClassScheduleRepository classScheduleRepository) {
+    return new AcademicSummaryService(
+        studentGradesService,
+        appUserRepository,
+        courseRepository,
+        enrollmentRepository,
+        classScheduleRepository);
   }
 }

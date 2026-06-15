@@ -287,7 +287,7 @@ Completed:
 - `ADR-002-authentication-target-oidc-first.md`
 - `ADR-003-database-migration-policy-postgresql-flyway.md`
 5. Architecture fitness tests enforcing module dependency boundaries in CI.
-6. Legacy architecture map and extraction candidates documented in `docs/architecture/LEGACY_ARCHITECTURE_MAP.md`.
+6. Legacy architecture map and extraction candidates documented in `docs/architecture/architecture.md`.
 7. First reference extraction slice (`ToDo`) implemented with domain/application/infrastructure/API layers.
 8. `ToDo` repository moved from in-memory to Flyway-managed SQL persistence (JDBC adapter).
 9. PostgreSQL Testcontainers integration test added for `ToDo` JDBC repository path.

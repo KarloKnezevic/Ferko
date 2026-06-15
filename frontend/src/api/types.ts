@@ -468,6 +468,29 @@ export interface ResolutionReport {
   collisions: ResolutionCollision[];
 }
 
+/** One axis entry of the course-overlap matrix: a course and its own enrolment. */
+export interface CourseMatrixAxis {
+  courseId: number;
+  code: string;
+  name: string;
+  enrolled: number;
+}
+
+/** Shared-student count between courses at axis indices i and j (i < j). */
+export interface CourseMatrixCell {
+  i: number;
+  j: number;
+  shared: number;
+}
+
+/** Course-overlap conflict matrix: redder cell = more shared students; empty = none. */
+export interface CourseConflictMatrix {
+  semesterCode: string | null;
+  axis: CourseMatrixAxis[];
+  cells: CourseMatrixCell[];
+  maxShared: number;
+}
+
 export interface AlgorithmComparison {
   algorithm: string;
   conflicts: number;

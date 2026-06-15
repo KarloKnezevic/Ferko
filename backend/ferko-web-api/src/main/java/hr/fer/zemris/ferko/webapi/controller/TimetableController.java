@@ -1,6 +1,8 @@
 package hr.fer.zemris.ferko.webapi.controller;
 
 import hr.fer.zemris.ferko.application.usecase.audit.AuditService;
+import hr.fer.zemris.ferko.application.usecase.timetable.CourseConflictMatrixService;
+import hr.fer.zemris.ferko.application.usecase.timetable.CourseConflictMatrixViews.CourseConflictMatrixView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingService;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.AppliedTimetableView;
 import hr.fer.zemris.ferko.application.usecase.timetable.LectureTimetablingViews.ComparisonView;
@@ -30,16 +32,19 @@ public class TimetableController {
   private final TimetableService timetable;
   private final LectureTimetablingService lectureTimetabling;
   private final ScheduleResolutionService resolution;
+  private final CourseConflictMatrixService conflictMatrix;
   private final AuditService audit;
 
   public TimetableController(
       TimetableService timetable,
       LectureTimetablingService lectureTimetabling,
       ScheduleResolutionService resolution,
+      CourseConflictMatrixService conflictMatrix,
       AuditService audit) {
     this.timetable = timetable;
     this.lectureTimetabling = lectureTimetabling;
     this.resolution = resolution;
+    this.conflictMatrix = conflictMatrix;
     this.audit = audit;
   }
 
@@ -103,6 +108,18 @@ public class TimetableController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResolutionReportView resolutionReport() {
     return resolution.report();
+  }
+
+  /**
+   * Course-overlap conflict matrix (shared students between course pairs) for a semester, or the
+   * active semester when {@code semester} is omitted. Drives the admin overlap heatmap.
+   */
+  @GetMapping("/timetable/conflict-matrix")
+  @PreAuthorize("hasRole('ADMIN')")
+  public CourseConflictMatrixView conflictMatrix(
+      @org.springframework.web.bind.annotation.RequestParam(value = "semester", required = false)
+          String semester) {
+    return conflictMatrix.matrix(semester);
   }
 
   @PostMapping("/timetable/resolution/move")

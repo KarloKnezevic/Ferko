@@ -260,3 +260,47 @@ tbody tr:hover .grade-cell { filter: brightness(0.97); }
 /* Timetable conflict list */
 .conflict-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .conflict-list li { font-size: 13px; padding: 6px 8px; background: var(--surface, #f7f8fa); border-radius: 6px; }
+
+/* Modal / overlay dialog (rendered above everything via a portal) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(8, 20, 36, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 4vh 16px;
+  overflow-y: auto;
+}
+.modal-panel {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 50px rgba(8, 20, 36, 0.35);
+  width: 100%;
+  max-width: 640px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal-panel.wide { max-width: 1100px; }
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-close {
+  border: none;
+  background: transparent;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--fer-blue);
+  padding: 0 6px;
+}
+.modal-close:hover { color: var(--fer-blue-dark); }
+.modal-body { padding: 18px; overflow: auto; }

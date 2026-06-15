@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n';
+import { fmtNum } from '../util/format';
 import type { AutoGradeResult } from '../api/types';
 
 function gradeCellClass(value: number, max: number): string {
@@ -269,12 +270,12 @@ export function GradingPage() {
                   const v = row.pointsByComponent[c.shortName] ?? 0;
                   return (
                     <td key={c.id} className={`grade-cell ${gradeCellClass(v, c.maxPoints)}`}>
-                      {v}
+                      {fmtNum(v)}
                     </td>
                   );
                 })}
                 <td>
-                  <strong>{row.total}</strong>
+                  <strong>{fmtNum(row.total)}</strong>
                 </td>
                 <td>{row.finalGrade > 0 ? row.finalGrade : '—'}</td>
               </tr>

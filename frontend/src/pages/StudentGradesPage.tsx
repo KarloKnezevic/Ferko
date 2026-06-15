@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
+import { fmtNum } from '../util/format';
 
 export function StudentGradesPage() {
   const grades = useQuery({ queryKey: ['my-grades'], queryFn: api.myGrades });
@@ -40,8 +41,8 @@ export function StudentGradesPage() {
                       <td>
                         <strong>{c.shortName}</strong> — {c.name}
                       </td>
-                      <td>{c.points}</td>
-                      <td>{c.maxPoints}</td>
+                      <td>{fmtNum(c.points)}</td>
+                      <td>{fmtNum(c.maxPoints)}</td>
                     </tr>
                   ))}
                   <tr>
@@ -49,9 +50,9 @@ export function StudentGradesPage() {
                       <strong>Ukupno</strong>
                     </td>
                     <td>
-                      <strong>{course.totalPoints}</strong>
+                      <strong>{fmtNum(course.totalPoints)}</strong>
                     </td>
-                    <td>{course.maxPoints}</td>
+                    <td>{fmtNum(course.maxPoints)}</td>
                   </tr>
                 </tbody>
               </table>

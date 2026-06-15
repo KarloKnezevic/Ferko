@@ -160,6 +160,48 @@ class AcademicServicesTest {
   }
 
   @Test
+  void classScheduleIsDistinctPerGroupButIdempotentWithinAGroup() {
+    long courseId = provisioning.provisionCourse("PG", "Paralelne grupe", "2024Z", 5, "o", "l");
+    long room = provisioning.provisionRoom("X1", "X", 50, 1, false);
+
+    // Two groups alternate in the SAME room at the SAME day/time → must stay two distinct slots.
+    long g1 =
+        provisioning.provisionClassSchedule(
+            courseId,
+            11L,
+            "LECTURE",
+            room,
+            "MONDAY",
+            java.time.LocalTime.of(8, 0),
+            java.time.LocalTime.of(10, 0),
+            "Prof");
+    long g2 =
+        provisioning.provisionClassSchedule(
+            courseId,
+            22L,
+            "LECTURE",
+            room,
+            "MONDAY",
+            java.time.LocalTime.of(8, 0),
+            java.time.LocalTime.of(10, 0),
+            "Prof");
+    assertTrue(g1 != g2, "different groups in the same room/time must not collapse");
+
+    // Re-provisioning the same group is idempotent.
+    long g1again =
+        provisioning.provisionClassSchedule(
+            courseId,
+            11L,
+            "LECTURE",
+            room,
+            "MONDAY",
+            java.time.LocalTime.of(8, 0),
+            java.time.LocalTime.of(10, 0),
+            "Prof");
+    assertEquals(g1, g1again);
+  }
+
+  @Test
   void scopesCourseListingToEnrolmentTeachingAndGlobalRole() {
     long attended = provisioning.provisionCourse("PROG", "Programiranje", "2024Z", 6, "o", "l");
     long taught = provisioning.provisionCourse("ALG", "Algoritmi", "2024Z", 5, "o", "l");

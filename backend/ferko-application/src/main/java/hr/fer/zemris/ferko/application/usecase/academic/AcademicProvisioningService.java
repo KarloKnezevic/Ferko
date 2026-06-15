@@ -71,8 +71,10 @@ public class AcademicProvisioningService {
       String instructor) {
     GroupType groupType = GroupType.valueOf(type);
     DayOfWeek day = DayOfWeek.valueOf(dayOfWeek);
-    // Idempotent: a slot is identified by its course, type, weekday, time span and room, so
-    // re-running the seeder on a persistent database does not duplicate the timetable.
+    // Idempotent: a slot is identified by its course, group, type, weekday, time span and room, so
+    // re-running the seeder on a persistent database does not duplicate the timetable. The group is
+    // part of the identity so two groups alternating in the same room/time are kept as distinct
+    // slots (otherwise the second group's session would be lost).
     return classScheduleRepository.findByCourse(courseId).stream()
         .filter(
             slot ->
@@ -80,7 +82,8 @@ public class AcademicProvisioningService {
                     && slot.dayOfWeek() == day
                     && slot.startsAt().equals(startsAt)
                     && slot.endsAt().equals(endsAt)
-                    && java.util.Objects.equals(slot.roomId(), roomId))
+                    && java.util.Objects.equals(slot.roomId(), roomId)
+                    && java.util.Objects.equals(slot.groupId(), groupId))
         .map(ClassSchedule::id)
         .findFirst()
         .orElseGet(

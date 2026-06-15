@@ -4,6 +4,7 @@ import { api } from '../api/client';
 import type { ResolutionCollision } from '../api/types';
 import { Modal } from '../components/Modal';
 import { CourseConflictMatrix } from '../components/CourseConflictMatrix';
+import { RoomScheduleBoard } from '../components/RoomScheduleBoard';
 
 const DAYS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 const DAY_HR: Record<string, string> = {
@@ -35,6 +36,7 @@ export function CollisionWorkbench() {
     'ALL',
   );
   const [showMatrix, setShowMatrix] = useState(false);
+  const [showBoard, setShowBoard] = useState(false);
   const matrix = useQuery({
     queryKey: ['course-conflict-matrix'],
     queryFn: () => api.courseConflictMatrix(),
@@ -162,6 +164,13 @@ export function CollisionWorkbench() {
             onClick={() => setShowMatrix(true)}
           >
             Matrica preklapanja
+          </button>
+          <button
+            className="ghost"
+            title="Povuci-i-ispusti tjedni raspored po dvorani"
+            onClick={() => setShowBoard(true)}
+          >
+            Raspored (povuci-ispusti)
           </button>
         </div>
       </div>
@@ -404,6 +413,15 @@ export function CollisionWorkbench() {
           <div className="banner err">{(matrix.error as Error).message}</div>
         )}
         {matrix.data && <CourseConflictMatrix matrix={matrix.data} />}
+      </Modal>
+
+      <Modal
+        open={showBoard}
+        onClose={() => setShowBoard(false)}
+        title="Tjedni raspored po dvorani — povuci i ispusti"
+        wide
+      >
+        <RoomScheduleBoard />
       </Modal>
     </div>
   );

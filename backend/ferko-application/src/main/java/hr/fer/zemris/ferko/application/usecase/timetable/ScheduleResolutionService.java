@@ -4,6 +4,9 @@ import hr.fer.zemris.ferko.application.port.ClassScheduleRepository;
 import hr.fer.zemris.ferko.application.port.CourseRepository;
 import hr.fer.zemris.ferko.application.port.EnrollmentRepository;
 import hr.fer.zemris.ferko.application.port.RoomRepository;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.BoardRoom;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.BoardSession;
+import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.BoardView;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.CandidateView;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.CollisionView;
 import hr.fer.zemris.ferko.application.usecase.timetable.ScheduleResolutionViews.HeatCell;
@@ -310,6 +313,59 @@ public class ScheduleResolutionService {
       return false;
     }
     return a.groupId() == null || b.groupId() == null || Objects.equals(a.groupId(), b.groupId());
+  }
+
+  // ----- board -----------------------------------------------------------------------------------
+
+  /**
+   * The drag-and-drop board: the list of rooms plus, for the selected room (defaulting to the
+   * busiest when none is given), its weekly sessions carrying their {@code slotId} so the UI can
+   * move one by dropping it on a free cell. Scoped to a single room to keep the grid small.
+   */
+  public BoardView board(Long roomId) {
+    List<ClassSchedule> slots = new ArrayList<>(scheduleRepository.findAll());
+    Context context = context();
+    List<Room> rooms = new ArrayList<>(context.rooms());
+    rooms.sort(java.util.Comparator.comparing(Room::code));
+    List<BoardRoom> boardRooms = new ArrayList<>();
+    for (Room room : rooms) {
+      boardRooms.add(new BoardRoom(room.id(), room.code(), room.capacity()));
+    }
+    Long selected = roomId;
+    if (selected == null && !rooms.isEmpty()) {
+      // Default to the room with the most sessions, so the board opens on something worth editing.
+      Map<Long, Long> counts = new HashMap<>();
+      for (ClassSchedule s : slots) {
+        if (s.roomId() != null) {
+          counts.merge(s.roomId(), 1L, Long::sum);
+        }
+      }
+      selected =
+          counts.entrySet().stream()
+              .max(Map.Entry.comparingByValue())
+              .map(Map.Entry::getKey)
+              .orElse(rooms.get(0).id());
+    }
+    List<BoardSession> sessions = new ArrayList<>();
+    if (selected != null) {
+      int capacity = context.roomCapacity(selected);
+      for (ClassSchedule s : slots) {
+        if (!Objects.equals(s.roomId(), selected)) {
+          continue;
+        }
+        int enrolled = context.enrolled(s.courseId());
+        sessions.add(
+            new BoardSession(
+                s.id(),
+                s.dayOfWeek().name(),
+                s.startsAt().format(HM),
+                s.endsAt().format(HM),
+                label(s, context),
+                enrolled,
+                enrolled > capacity));
+      }
+    }
+    return new BoardView(boardRooms, selected, sessions);
   }
 
   // ----- suggestion ------------------------------------------------------------------------------

@@ -304,3 +304,11 @@ tbody tr:hover .grade-cell { filter: brightness(0.97); }
 }
 .modal-close:hover { color: var(--fer-blue-dark); }
 .modal-body { padding: 18px; overflow: auto; }
+
+/* Drag-and-drop room schedule board */
+.board-table { border-collapse: collapse; width: 100%; }
+.board-table th, .board-table td { border: 1px solid var(--border); padding: 2px; vertical-align: top; }
+.board-table thead th { background: var(--fer-blue); color: #fff; text-align: center; padding: 6px; }
+.board-cell { height: 48px; min-width: 120px; transition: background 0.1s ease; }
+.board-card { border-radius: 6px; padding: 4px 6px; cursor: grab; box-shadow: var(--shadow); }
+.board-card:active { cursor: grabbing; }

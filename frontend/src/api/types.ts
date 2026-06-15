@@ -469,6 +469,29 @@ export interface ResolutionCandidate {
   reasons: string[];
 }
 
+/** Drag-and-drop board: a room and its weekly sessions (each with a slotId to move). */
+export interface BoardRoom {
+  id: number;
+  code: string;
+  capacity: number;
+}
+
+export interface BoardSession {
+  slotId: number;
+  dayOfWeek: string;
+  startsAt: string;
+  endsAt: string;
+  label: string;
+  enrolled: number;
+  overCapacity: boolean;
+}
+
+export interface ResolutionBoard {
+  rooms: BoardRoom[];
+  selectedRoomId: number | null;
+  sessions: BoardSession[];
+}
+
 export interface ResolutionReport {
   totalSlots: number;
   roomCollisions: number;

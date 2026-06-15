@@ -242,6 +242,27 @@ class ScheduleResolutionServiceTest {
   }
 
   @Test
+  void boardListsRoomsAndTheSelectedRoomsSessions() {
+    long roomA = rooms.save(new Room(0L, "DA", "D", 100, 1, false)).id();
+    long roomB = rooms.save(new Room(0L, "DB", "D", 100, 1, false)).id();
+    var s1 = slot(roomA, DayOfWeek.MONDAY, 8, 10, "Prof A");
+    slot(roomA, DayOfWeek.TUESDAY, 10, 12, "Prof A");
+    slot(roomB, DayOfWeek.WEDNESDAY, 8, 10, "Prof B");
+
+    var board = service.board(roomA);
+
+    assertTrue(board.rooms().size() >= 2);
+    assertEquals(roomA, board.selectedRoomId());
+    assertEquals(2, board.sessions().size()); // only room A's two sessions
+    assertTrue(board.sessions().stream().anyMatch(b -> b.slotId() == s1.id()));
+    assertTrue(board.sessions().stream().allMatch(b -> !b.overCapacity()));
+
+    // With no room given, the board defaults to the busiest room (room A has the most sessions).
+    var defaulted = service.board(null);
+    assertEquals(roomA, defaulted.selectedRoomId());
+  }
+
+  @Test
   void cleanScheduleIsConflictFree() {
     long r1 = rooms.save(new Room(0L, "RA", "R", 100, 1, false)).id();
     long r2 = rooms.save(new Room(0L, "RB", "R", 100, 1, false)).id();

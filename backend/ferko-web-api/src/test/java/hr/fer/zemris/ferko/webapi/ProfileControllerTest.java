@@ -55,4 +55,25 @@ class ProfileControllerTest {
   void anonymousIsUnauthorized() throws Exception {
     mockMvc.perform(get("/api/v1/academic/my/profile")).andExpect(status().isUnauthorized());
   }
+
+  @Test
+  void studentHasStudySummary() throws Exception {
+    MockHttpSession session = login("student.ana");
+    mockMvc
+        .perform(get("/api/v1/academic/my/study-summary").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.enrolledCourses").isNumber())
+        .andExpect(jsonPath("$.ectsEnrolled").isNumber())
+        .andExpect(jsonPath("$.weightedGpa").isNumber());
+  }
+
+  @Test
+  void lecturerHasTeachingLoad() throws Exception {
+    MockHttpSession session = login("lecturer.marko");
+    mockMvc
+        .perform(get("/api/v1/academic/my/teaching-load").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.courseCount").isNumber())
+        .andExpect(jsonPath("$.courses").isArray());
+  }
 }

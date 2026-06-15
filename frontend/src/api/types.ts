@@ -515,6 +515,32 @@ export interface CalendarView {
   exams: UpcomingExam[];
 }
 
+export interface StudentStudySummary {
+  enrolledCourses: number;
+  gradedCourses: number;
+  passedCourses: number;
+  ectsEnrolled: number;
+  ectsEarned: number;
+  averageGrade: number;
+  weightedGpa: number;
+}
+
+export interface TeachingCourse {
+  courseId: number;
+  code: string;
+  name: string;
+  roles: string;
+  enrolledStudents: number;
+  weeklyHours: number;
+}
+
+export interface TeachingLoad {
+  courseCount: number;
+  totalStudents: number;
+  weeklyHours: number;
+  courses: TeachingCourse[];
+}
+
 export interface Notice {
   id: number;
   courseId: number | null;

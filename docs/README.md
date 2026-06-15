@@ -25,6 +25,7 @@ Documentation for the modernized FER academic portal. Start with the root
 
 - [Production deployment](./operations/production-deployment.md) — production compose, profile, environment, topology
 - [Containerization](./operations/containerization-baseline.md)
+- [Releases](./operations/releases.md) — cutting a release and the published GHCR image
 
 ## API contracts
 

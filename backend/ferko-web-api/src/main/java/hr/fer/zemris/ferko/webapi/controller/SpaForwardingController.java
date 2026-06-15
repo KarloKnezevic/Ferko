@@ -11,7 +11,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SpaForwardingController {
 
-  @GetMapping({"/login", "/kolegiji/**", "/prostorije", "/studenti"})
+  // Every top-level client route in the SPA (see frontend App.tsx). New routes must be added here
+  // so that deep links and browser refreshes resolve, not just in-app navigation.
+  @GetMapping({
+    "/login",
+    "/kolegiji",
+    "/kolegiji/**",
+    "/prostorije",
+    "/studenti",
+    "/raspored",
+    "/kalendar",
+    "/obavijesti",
+    "/moje-provjere",
+    "/moji-bodovi",
+    "/moja-dezurstva",
+    "/profil",
+    "/e-portfolio",
+    "/admin"
+  })
   public String forwardToIndex() {
     return "forward:/index.html";
   }

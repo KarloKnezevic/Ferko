@@ -24,6 +24,7 @@
 - [What is FERKO](#what-is-ferko)
 - [Heritage — prof. dr. sc. Marko Čupić](#heritage--prof-dr-sc-marko-čupić)
 - [Feature overview](#feature-overview)
+- [Screenshots](#screenshots)
 - [Quick start](#quick-start)
 - [Demo accounts](#demo-accounts)
 - [Pre-seeded demo data](#pre-seeded-demo-data)
@@ -36,6 +37,7 @@
 - [Quality and testing](#quality-and-testing)
 - [Project structure](#project-structure)
 - [Documentation](#documentation)
+- [Releases](#releases)
 - [Credits](#credits)
 - [License](#license)
 
@@ -97,6 +99,29 @@ FERKO models **seven roles** (`STUDENT`, `NASTAVNIK`, `NOSITELJ`, `ASISTENT`,
 | **STUSLU** | Student enrollment, placement into groups, viewing the enrolled |
 | **Administration** | Semester creation, user management, synchronisation status, read-only settings, **audit trail** of privileged actions |
 | **Platform** | Bilingual HR/EN UI, calendar of all activities, email pipeline, login rate limiting, observability (`/actuator`), production Compose profile |
+
+---
+
+## Screenshots
+
+> Captured from the running, seeded application. Regenerate with
+> [`scripts/screenshots.mjs`](scripts/screenshots.mjs) against a running instance.
+
+| Dashboard | Sign in |
+|-----------|---------|
+| [![Dashboard](docs/images/dashboard.png)](docs/images/dashboard.png) | [![Sign in](docs/images/login.png)](docs/images/login.png) |
+
+| Courses | Rooms |
+|---------|-------|
+| [![Courses](docs/images/courses.png)](docs/images/courses.png) | [![Rooms](docs/images/rooms.png)](docs/images/rooms.png) |
+
+**Teaching timetable** — the faculty-wide weekly grid with the evolutionary generation, exam-timetable and algorithm-comparison panels:
+
+[![Timetable](docs/images/timetable.png)](docs/images/timetable.png)
+
+**Administration console** — users, configuration, semesters and the audit trail:
+
+[![Administration](docs/images/admin.png)](docs/images/admin.png)
 
 ---
 
@@ -474,6 +499,22 @@ ferko/
 | [docs/user-guide.md](docs/user-guide.md) | End-user guide per role and workflow |
 | [docs/architecture/contributing.md](docs/architecture/contributing.md) | Development rhythm, the vertical slice, conventions |
 | [docs/operations/production-deployment.md](docs/operations/production-deployment.md) | Production Compose, prod profile, env, topology |
+| [docs/operations/releases.md](docs/operations/releases.md) | Cutting a release and the published GHCR image |
+
+---
+
+## Releases
+
+Tagging a `v<major>.<minor>.<patch>` commit publishes a multi-architecture image to the GitHub
+Container Registry (`ghcr.io/<owner>/ferko-web-api`) via
+[`.github/workflows/release-image-ghcr.yml`](.github/workflows/release-image-ghcr.yml):
+
+```bash
+git tag v1.0.0 && git push origin v1.0.0
+# then:  docker pull ghcr.io/<owner>/ferko-web-api:1.0.0
+```
+
+See [docs/operations/releases.md](docs/operations/releases.md) for the full process and run command.
 
 ---
 

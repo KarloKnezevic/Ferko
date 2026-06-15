@@ -116,6 +116,62 @@ class GradingControllerTest {
   }
 
   @Test
+  void perCourseThresholdsDefaultThenCustomAndCompute() throws Exception {
+    MockHttpSession session = login("lecturer.marko");
+
+    mockMvc
+        .perform(get("/api/v1/academic/courses/1/grade-thresholds").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.excellent").value(88))
+        .andExpect(jsonPath("$.custom").value(false));
+
+    mockMvc
+        .perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(
+                    "/api/v1/academic/courses/1/grade-thresholds")
+                .session(session)
+                .contentType("application/json")
+                .content("{\"excellent\":90,\"veryGood\":78,\"good\":65,\"sufficient\":55}"))
+        .andExpect(status().isNoContent());
+
+    mockMvc
+        .perform(get("/api/v1/academic/courses/1/grade-thresholds").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.excellent").value(90))
+        .andExpect(jsonPath("$.custom").value(true));
+
+    mockMvc
+        .perform(post("/api/v1/academic/courses/1/grades/compute").session(session))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.graded").isNumber());
+  }
+
+  @Test
+  void invalidThresholdsRejected() throws Exception {
+    mockMvc
+        .perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(
+                    "/api/v1/academic/courses/1/grade-thresholds")
+                .session(login("lecturer.marko"))
+                .contentType("application/json")
+                // not strictly decreasing
+                .content("{\"excellent\":60,\"veryGood\":75,\"good\":62,\"sufficient\":50}"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void studentCannotSetThresholds() throws Exception {
+    mockMvc
+        .perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(
+                    "/api/v1/academic/courses/1/grade-thresholds")
+                .session(login("student.ana"))
+                .contentType("application/json")
+                .content("{\"excellent\":90,\"veryGood\":78,\"good\":65,\"sufficient\":55}"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void studentCannotEnterPoints() throws Exception {
     MockHttpSession session = login("student.ana");
     mockMvc

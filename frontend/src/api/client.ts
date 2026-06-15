@@ -29,6 +29,7 @@ import type {
   PortfolioEntry,
   GroupExchange,
   GradeComponentView,
+  GradeThresholds,
   Notice,
   GradeView,
   PointsOverviewRow,
@@ -371,6 +372,20 @@ export const api = {
     request<void>(`/api/v1/academic/courses/${courseId}/grades`, {
       method: 'POST',
       body: JSON.stringify(body),
+    }),
+  gradeThresholds: (courseId: number) =>
+    request<GradeThresholds>(`/api/v1/academic/courses/${courseId}/grade-thresholds`),
+  setGradeThresholds: (
+    courseId: number,
+    body: { excellent: number; veryGood: number; good: number; sufficient: number },
+  ) =>
+    request<void>(`/api/v1/academic/courses/${courseId}/grade-thresholds`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
+  computeFinalGrades: (courseId: number) =>
+    request<{ graded: number }>(`/api/v1/academic/courses/${courseId}/grades/compute`, {
+      method: 'POST',
     }),
 
   // Auto-grading answer sheets

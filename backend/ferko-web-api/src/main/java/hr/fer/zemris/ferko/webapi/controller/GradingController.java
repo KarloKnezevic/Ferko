@@ -1,9 +1,14 @@
 package hr.fer.zemris.ferko.webapi.controller;
 
 import hr.fer.zemris.ferko.application.usecase.grading.GradeComponentView;
+import hr.fer.zemris.ferko.application.usecase.grading.GradeThresholdService;
+import hr.fer.zemris.ferko.application.usecase.grading.GradeThresholdService.ThresholdsView;
 import hr.fer.zemris.ferko.application.usecase.grading.GradeView;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.grading.PointsOverviewRow;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import java.security.Principal;
 import java.util.List;
@@ -12,10 +17,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Grading: components, points entry, the points overview ("preglednik bodova") and final grades.
@@ -28,9 +35,36 @@ public class GradingController {
       "hasAnyRole('ADMIN', 'NOSITELJ', 'NASTAVNIK', 'ASISTENT_ORGANIZATOR', 'ASISTENT')";
 
   private final GradingService grading;
+  private final GradeThresholdService thresholds;
 
-  public GradingController(GradingService grading) {
+  public GradingController(GradingService grading, GradeThresholdService thresholds) {
     this.grading = grading;
+    this.thresholds = thresholds;
+  }
+
+  @GetMapping("/grade-thresholds")
+  public ThresholdsView gradeThresholds(@PathVariable long courseId) {
+    return thresholds.thresholdsFor(courseId);
+  }
+
+  @PutMapping("/grade-thresholds")
+  @PreAuthorize(CAN_MANAGE)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void setGradeThresholds(
+      @PathVariable long courseId, @Valid @RequestBody ThresholdsRequest request) {
+    try {
+      thresholds.save(
+          courseId, request.excellent(), request.veryGood(), request.good(), request.sufficient());
+    } catch (IllegalArgumentException ex) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+  }
+
+  @PostMapping("/grades/compute")
+  @PreAuthorize(CAN_MANAGE)
+  public ComputeResult computeFinalGrades(@PathVariable long courseId, Principal principal) {
+    int graded = thresholds.computeFinalGrades(courseId, principalName(principal));
+    return new ComputeResult(graded);
   }
 
   @GetMapping("/grade-components")
@@ -94,4 +128,14 @@ public class GradingController {
 
   /** Request to assign a final grade. */
   public record AssignGradeRequest(long studentId, int finalGrade) {}
+
+  /** Request to set per-course grade thresholds (each a points percentage in 1..100). */
+  public record ThresholdsRequest(
+      @Min(1) @Max(100) int excellent,
+      @Min(1) @Max(100) int veryGood,
+      @Min(1) @Max(100) int good,
+      @Min(1) @Max(100) int sufficient) {}
+
+  /** Number of final grades (re)computed. */
+  public record ComputeResult(int graded) {}
 }

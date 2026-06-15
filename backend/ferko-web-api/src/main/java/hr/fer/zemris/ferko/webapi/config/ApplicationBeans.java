@@ -13,6 +13,7 @@ import hr.fer.zemris.ferko.application.port.ExamAssistantRepository;
 import hr.fer.zemris.ferko.application.port.ExamRepository;
 import hr.fer.zemris.ferko.application.port.FileStorage;
 import hr.fer.zemris.ferko.application.port.ForumRepository;
+import hr.fer.zemris.ferko.application.port.GradeThresholdRepository;
 import hr.fer.zemris.ferko.application.port.GradingRepository;
 import hr.fer.zemris.ferko.application.port.GroupExchangeRepository;
 import hr.fer.zemris.ferko.application.port.MailSender;
@@ -41,6 +42,7 @@ import hr.fer.zemris.ferko.application.usecase.exam.ExamSchedulingService;
 import hr.fer.zemris.ferko.application.usecase.exam.InvigilationService;
 import hr.fer.zemris.ferko.application.usecase.exchange.GroupExchangeService;
 import hr.fer.zemris.ferko.application.usecase.forum.ForumService;
+import hr.fer.zemris.ferko.application.usecase.grading.GradeThresholdService;
 import hr.fer.zemris.ferko.application.usecase.grading.GradingService;
 import hr.fer.zemris.ferko.application.usecase.literature.CourseLiteratureService;
 import hr.fer.zemris.ferko.application.usecase.notice.NoticeService;
@@ -72,6 +74,7 @@ import hr.fer.zemris.ferko.infrastructure.adapter.JdbcEnrollmentRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamAssistantRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcExamRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcForumRepository;
+import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradeThresholdRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGradingRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcGroupExchangeRepository;
 import hr.fer.zemris.ferko.infrastructure.adapter.JdbcNoticeRepository;
@@ -328,6 +331,26 @@ public class ApplicationBeans {
       AppUserRepository appUserRepository) {
     return new GradingService(
         gradingRepository, enrollmentRepository, studentRepository, appUserRepository);
+  }
+
+  @Bean
+  public GradeThresholdRepository gradeThresholdRepository(JdbcTemplate jdbcTemplate) {
+    return new JdbcGradeThresholdRepository(jdbcTemplate);
+  }
+
+  @Bean
+  public GradeThresholdService gradeThresholdService(
+      GradeThresholdRepository gradeThresholdRepository,
+      GradingRepository gradingRepository,
+      FerkoProperties properties) {
+    FerkoProperties.Grading defaults = properties.getGrading();
+    return new GradeThresholdService(
+        gradeThresholdRepository,
+        gradingRepository,
+        defaults.getExcellent(),
+        defaults.getVeryGood(),
+        defaults.getGood(),
+        defaults.getSufficient());
   }
 
   @Bean

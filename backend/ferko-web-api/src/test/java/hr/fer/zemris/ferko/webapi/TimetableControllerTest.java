@@ -170,6 +170,25 @@ class TimetableControllerTest {
   }
 
   @Test
+  void adminSeesRankedMoveCandidates() throws Exception {
+    mockMvc
+        .perform(
+            get("/api/v1/academic/timetable/resolution/candidates?slotId=1&limit=5")
+                .session(login("admin.ferko")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isArray());
+  }
+
+  @Test
+  void studentCannotSeeMoveCandidates() throws Exception {
+    mockMvc
+        .perform(
+            get("/api/v1/academic/timetable/resolution/candidates?slotId=1")
+                .session(login("student.ana")))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void studentCannotAutoResolve() throws Exception {
     mockMvc
         .perform(post("/api/v1/academic/timetable/resolution/auto").session(login("student.ana")))

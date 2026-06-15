@@ -212,6 +212,36 @@ class ScheduleResolutionServiceTest {
   }
 
   @Test
+  void candidatesAreRankedFeasibleGapsExcludingTheCurrentPlacement() {
+    long room1 = rooms.save(new Room(0L, "CX", "C", 100, 1, false)).id();
+    long room2 = rooms.save(new Room(0L, "CY", "C", 100, 1, false)).id();
+    // Two sessions of the same course collide (same room + group) on Monday 8–10.
+    var a = slot(room1, DayOfWeek.MONDAY, 8, 10, "Prof A");
+    slot(room1, DayOfWeek.MONDAY, 8, 10, "Prof B");
+
+    var candidates = service.candidates(a.id(), 8);
+
+    assertFalse(candidates.isEmpty(), "there should be free gaps to move into");
+    // Best-first: scores are non-decreasing.
+    for (int i = 1; i < candidates.size(); i++) {
+      assertTrue(candidates.get(i).score() >= candidates.get(i - 1).score());
+    }
+    // The current (colliding) placement is never offered, and every gap reports free seats.
+    assertTrue(
+        candidates.stream()
+            .noneMatch(
+                c ->
+                    c.dayOfWeek().equals("MONDAY")
+                        && c.startsAt().equals("08:00")
+                        && java.util.Objects.equals(c.roomId(), room1)));
+    assertTrue(candidates.stream().allMatch(c -> c.freeSeats() >= 0));
+    // Moving the session to the best candidate yields a conflict-free timetable.
+    var best = candidates.get(0);
+    service.move(a.id(), best.dayOfWeek(), best.startsAt(), best.roomId());
+    assertTrue(service.report().conflictFree());
+  }
+
+  @Test
   void cleanScheduleIsConflictFree() {
     long r1 = rooms.save(new Room(0L, "RA", "R", 100, 1, false)).id();
     long r2 = rooms.save(new Room(0L, "RB", "R", 100, 1, false)).id();

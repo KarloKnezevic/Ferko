@@ -39,6 +39,7 @@ import type {
   Room,
   RepoFile,
   ResolutionReport,
+  ResolutionCandidate,
   CourseConflictMatrix,
   StudentStudySummary,
   TeachingLoad,
@@ -327,6 +328,10 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(body),
     }),
+  resolutionCandidates: (slotId: number, limit = 8) =>
+    request<ResolutionCandidate[]>(
+      `/api/v1/academic/timetable/resolution/candidates?slotId=${slotId}&limit=${limit}`,
+    ),
   resolveAuto: () =>
     request<ResolutionReport>('/api/v1/academic/timetable/resolution/auto', { method: 'POST' }),
   generateFacultyTimetable: () =>
